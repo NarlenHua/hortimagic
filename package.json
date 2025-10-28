@@ -1,0 +1,43 @@
+{
+  "name": "hortimagic",
+  "private": false,
+  "version": "1.0.0",
+  "author": "Narlen",
+  "description": "园艺魔法，花园插件",
+  "keywords": [
+    "iirose",
+    "plugins",
+    "hortimagic"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NarlenHua/hortimagic.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lit": "^3.3.1",
+    "terser": "^5.44.0",
+    "tiny-emitter": "^2.1.0",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1",
+    "typescript": "~5.9.3",
+    "vite": "^7.1.7"
+  },
+  "main": "dist/Horticraft.life.js",
+  "module": "dist/HortiCraft.es.js",
+  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src/components",
+    "types"
+  ]
+}

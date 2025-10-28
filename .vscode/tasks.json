@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceRoot}"
+  },
+  "tasks": [
+    {
+      "label": "iirose_build",
+      "type": "shell",
+      "command": "npm run build"
+    },
+    {
+      "label": "add_description",
+      "type": "shell",
+      "command": "npx tsx .//script//addDescription.ts"
+    },
+    {
+      "label": "publish",
+      "type": "shell",
+      "command": "npm publish --registry https://registry.npmjs.org"
+    },
+    {
+      "label": "generate_script",
+      "type": "shell",
+      "dependsOn": [
+        "iirose_build",
+        "add_description"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}
