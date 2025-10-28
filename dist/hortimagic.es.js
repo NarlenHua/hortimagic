@@ -2150,9 +2150,10 @@ HmNotification.styles = i$4`
 :host{
   display: block;
   width: auto;
-  z-index: 9999999;
   margin: 2px;
   animation: slideInRight 0.3s ease-out forwards;
+  position: relative;
+  z-index: 999999;
 }
 
 :host([leaving]) {
@@ -2188,8 +2189,7 @@ HmNotification.styles = i$4`
   align-items: center;
   width:fit-content;
   max-width: 320px;
-  border-radius: 10px;
-  
+  border-radius: 10px;  
 }
 .hm-notification-main{
   margin-right: 8px;
@@ -3496,6 +3496,7 @@ const menu = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
 let movePanelHolder = document.createElement("div");
 function initMovePanelHolder() {
   movePanelHolder.id = "hmMovePanelHolder";
+  movePanelHolder.style.zIndex = "999999";
   document.body.append(movePanelHolder);
 }
 const movePanel = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -3506,6 +3507,7 @@ const movePanel = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePro
 let notificationHolder = document.createElement("div");
 function initNotificationHolder() {
   notificationHolder.id = "hmNotificationHolder";
+  notificationHolder.style.zIndex = "999999";
   document.body.append(notificationHolder);
 }
 let notice = {
@@ -3555,6 +3557,7 @@ const notification = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.define
 let dialogHolder = document.createElement("div");
 function initDialogHolder() {
   dialogHolder.id = "hmDialogHolder";
+  dialogHolder.style.zIndex = "999999";
   document.body.append(dialogHolder);
 }
 const dialog = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -3915,7 +3918,7 @@ async function initScriptApp() {
   return menuItem;
 }
 const name = "hortimagic";
-const version = "1.0.0";
+const version = "1.0.1";
 const author = "Narlen";
 const description = "园艺魔法，花园插件";
 const keywords = ["iirose", "plugins", "hortimagic"];

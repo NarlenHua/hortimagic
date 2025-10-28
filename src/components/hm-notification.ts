@@ -61,9 +61,10 @@ export class HmNotification extends LitElement {
 :host{
   display: block;
   width: auto;
-  z-index: 9999999;
   margin: 2px;
   animation: slideInRight 0.3s ease-out forwards;
+  position: relative;
+  z-index: 999999;
 }
 
 :host([leaving]) {
@@ -99,8 +100,7 @@ export class HmNotification extends LitElement {
   align-items: center;
   width:fit-content;
   max-width: 320px;
-  border-radius: 10px;
-  
+  border-radius: 10px;  
 }
 .hm-notification-main{
   margin-right: 8px;
