@@ -4075,7 +4075,7 @@ const scriptApp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePro
   initScriptApp
 }, Symbol.toStringTag, { value: "Module" }));
 const name = "hortimagic";
-const version = "1.0.4";
+const version = "1.0.4dev1";
 const changelog = "增加了存储库";
 const author = "Narlen";
 const description = "园艺魔法，花园插件";
