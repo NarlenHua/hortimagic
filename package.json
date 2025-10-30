@@ -1,8 +1,8 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.0.3",
-  "changelog": "修复了对话框注册较晚的bug,增加了初始化完成的标志",
+  "version": "1.0.4",
+  "changelog": "增加了存储库",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",
   "keywords": [
