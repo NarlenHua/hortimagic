@@ -6,6 +6,7 @@ import * as encoder from "./encoder";
 import * as decoder from "./decoder";
 import * as elements_hooks from "./elements-hooks";
 import * as script_tools from "./script-tools";
+import * as Store from "./Store";
 export {
   tools,
   iirose_socket,
@@ -14,5 +15,6 @@ export {
   encoder,
   decoder,
   elements_hooks,
-  script_tools
+  script_tools,
+  Store
 };
