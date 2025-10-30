@@ -25,8 +25,10 @@ export class HmMovePanel extends LitElement {
   bodyColor = 'rgba(23, 23, 23, 0.9)';
   @property({ type: String, attribute: 'footer-background-color' })
   footerBackgroundColor = 'rgba(255,255,255,0.7)';
+  /** 按钮背景 */
   @property({ type: String, attribute: 'button-background-color' })
-  buttonBackgroundColor = 'rgba(255,255,255,0.9)';
+  buttonBackground = 'rgba(255,255,255,0.9)';
+  /** 按钮文字色 */
   @property({ type: String, attribute: 'button-color' })
   buttonColor = 'rgba(66,134,182,0.9)';
   /** 标题 */
@@ -314,7 +316,7 @@ export class HmMovePanel extends LitElement {
       class="footer-button footer-button-left"  
       icon="magic-wand"
       width="100%"
-      backgroundColor="${this.buttonBackgroundColor}"
+      background="${this.buttonBackground}"
       color="${this.buttonColor}"
       @click="${this._handleLeftButtonClick}"
     >
@@ -324,8 +326,8 @@ export class HmMovePanel extends LitElement {
       class="footer-button footer-button-right"
       icon="magic-wand"
       width="100%"
-      backgroundColor="${this.buttonColor}"
-      color="${this.buttonBackgroundColor}"
+      background="${this.buttonColor}"
+      color="${this.buttonBackground}"
       @click="${this._handleRightButtonClick}"
     >
       ${this.rightButtonText}

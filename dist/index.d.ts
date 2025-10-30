@@ -104,17 +104,18 @@ declare namespace core {
         encoder,
         decoder,
         elements_hooks,
-        script_tools
+        script_tools,
+        Store
     }
 }
 export { core }
 
 declare class Danmu {
-    /**  */
+    /** 用户名 */
     username: string;
     /**  */
     avatar: string;
-    /**  */
+    /** 消息 */
     message: string;
     /**  */
     color: string;
@@ -122,7 +123,7 @@ declare class Danmu {
     gender: string;
     /**  */
     timeStamp: string;
-    /**  */
+    /** 唯一id */
     uid: string;
     /** 消息类型 */
     readonly messageClass = "danmu";
@@ -640,7 +641,9 @@ declare class HmMovePanel extends LitElement {
     bodyBackgroundColor: string;
     bodyColor: string;
     footerBackgroundColor: string;
-    buttonBackgroundColor: string;
+    /** 按钮背景 */
+    buttonBackground: string;
+    /** 按钮文字色 */
     buttonColor: string;
     /** 标题 */
     titleContent: string;
@@ -1219,6 +1222,46 @@ declare class Stock {
  * @returns
  */
 declare function stockRequest(count: number | undefined): string;
+
+declare namespace Store {
+    export {
+        Store_2 as Store
+    }
+}
+
+/**
+ * 仓库类
+ * @description 仓库类，用于存储数据，并监听数据变化
+ *
+ */
+declare class Store_2 {
+    /**
+     * 事件触发器
+     * @example ```js
+     * // 使用案例
+     * emitter.on("eventName", (data) => {})
+     * emitter.emit("eventName", data)
+     * emitter.off("eventName", (data) => {})
+     * emitter.once("eventName", (data) => {})
+     * // 原型
+     * on(event: string, callback: Function, ctx?: any): this;
+     * once(event: string, callback: Function, ctx?: any): this;
+     * emit(event: string, ...args: any[]): this;
+     * off(event: string, callback?: Function): this;
+     * ```
+     */
+    emitter: TinyEmitter;
+    private storeMap;
+    clear(): void;
+    set(key: string, value: any): void;
+    get(key: string): any;
+    has(key: string): boolean;
+    delete(key: string): boolean;
+    size(): number;
+    keys(): MapIterator<any>;
+    values(): MapIterator<any>;
+    entries(): MapIterator<[any, any]>;
+}
 
 /**
  * 切换房间

@@ -122,7 +122,7 @@ export class HmButton extends LitElement {
   render() {
     const buttonStyle = `
           ${this.color ? `color: ${this.color};` : ''}
-          ${this.background ? `background-color: ${this.background};` : ''}
+          ${this.background ? `background: ${this.background};` : ''}
           ${this.width ? `width: ${this.width};` : ''}
           ${this.height ? `height: ${this.height};` : ''}
           ${this.fontSize ? `font-size: ${this.fontSize};` : '14px'}
