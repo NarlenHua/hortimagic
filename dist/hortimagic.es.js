@@ -876,7 +876,7 @@ const index$3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   decoder,
   elements_hooks: elementsHooks,
   encoder,
-  eventEmitter,
+  event_emitter: eventEmitter,
   iirose_socket: iiroseSocket,
   script_tools: scriptTools,
   tools
@@ -1472,14 +1472,14 @@ function r(r2) {
     return await this.updateComplete, this.renderRoot?.querySelector(r2) ?? null;
   } });
 }
-var __defProp$b = Object.defineProperty;
-var __getOwnPropDesc$b = Object.getOwnPropertyDescriptor;
-var __decorateClass$b = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$b(target, key) : target;
+var __defProp$c = Object.defineProperty;
+var __getOwnPropDesc$a = Object.getOwnPropertyDescriptor;
+var __decorateClass$c = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$a(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$b(target, key, result);
+  if (kind && result) __defProp$c(target, key, result);
   return result;
 };
 let movePanelItemList = [];
@@ -1769,61 +1769,61 @@ HmMovePanel.styles = i$4`
   transform: scale(0.98);
 }
 `;
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: Number })
 ], HmMovePanel.prototype, "width", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: Number })
 ], HmMovePanel.prototype, "height", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "header-background-color" })
 ], HmMovePanel.prototype, "headerBackgroundColor", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "header-color" })
 ], HmMovePanel.prototype, "headerColor", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "body-background-color" })
 ], HmMovePanel.prototype, "bodyBackgroundColor", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "body-color" })
 ], HmMovePanel.prototype, "bodyColor", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "footer-background-color" })
 ], HmMovePanel.prototype, "footerBackgroundColor", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "button-background-color" })
 ], HmMovePanel.prototype, "buttonBackgroundColor", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "button-color" })
 ], HmMovePanel.prototype, "buttonColor", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String })
 ], HmMovePanel.prototype, "titleContent", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "left-button-text" })
 ], HmMovePanel.prototype, "leftButtonText", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String, attribute: "right-button-text" })
 ], HmMovePanel.prototype, "rightButtonText", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: Boolean, attribute: "is-display" })
 ], HmMovePanel.prototype, "isDisplay", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: Number })
 ], HmMovePanel.prototype, "zIndex", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: String })
 ], HmMovePanel.prototype, "icon", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: Number })
 ], HmMovePanel.prototype, "left", 2);
-__decorateClass$b([
+__decorateClass$c([
   n2({ type: Number })
 ], HmMovePanel.prototype, "top", 2);
-__decorateClass$b([
+__decorateClass$c([
   r(".body")
 ], HmMovePanel.prototype, "body", 2);
-HmMovePanel = __decorateClass$b([
+HmMovePanel = __decorateClass$c([
   t$2("hm-move-panel")
 ], HmMovePanel);
 const hmMovePanel = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -1887,14 +1887,14 @@ class t extends e {
 }
 t.directiveName = "unsafeSVG", t.resultType = 2;
 const o = e$1(t);
-var __defProp$a = Object.defineProperty;
-var __getOwnPropDesc$a = Object.getOwnPropertyDescriptor;
-var __decorateClass$a = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$a(target, key) : target;
+var __defProp$b = Object.defineProperty;
+var __getOwnPropDesc$9 = Object.getOwnPropertyDescriptor;
+var __decorateClass$b = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$9(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$a(target, key, result);
+  if (kind && result) __defProp$b(target, key, result);
   return result;
 };
 const iconMap = /* @__PURE__ */ new Map([
@@ -1906,7 +1906,9 @@ const iconMap = /* @__PURE__ */ new Map([
   ["template", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><mask id="SVGZZ153dkC"><path fill="#4d4d4d" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M23 4H4v22h19zm21 30H4v9h40zm0-30H31v8h13zm0 14H31v8h13z"/></mask></defs><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGZZ153dkC)"/></svg>'],
   ["js", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M10.77 7.3h.002c1.045.393 2.479.93 2.479 2.45a2.5 2.5 0 0 1-.224 1.02a2.5 2.5 0 0 1-1.515 1.364a2.5 2.5 0 0 1-1.035.115a2 2 0 0 1-.214.012a2.5 2.5 0 0 1-1.673-.65a2.52 2.52 0 0 1-.838-1.859c0-.202.078-.39.22-.532a.77.77 0 0 1 1.06 0a.74.74 0 0 1 .221.53c0 .952 1.041 1 1.25 1s1.25-.048 1.25-1c0-.413-.447-.648-1.514-1.048h-.003C9.19 8.307 7.753 7.77 7.753 6.25q.005-.537.224-1.02a2.5 2.5 0 0 1 .614-.842a2.5 2.5 0 0 1 .9-.52a3.5 3.5 0 0 1 2.023 0a2.52 2.52 0 0 1 1.738 2.381c0 .201-.078.39-.22.531a.77.77 0 0 1-1.061 0a.74.74 0 0 1-.22-.53c0-.952-1.041-1-1.25-1s-1.25.048-1.25 1c0 .413.447.648 1.514 1.048zM5.751 4.5c0-.2.078-.388.22-.53a.77.77 0 0 1 1.06 0c.142.141.22.33.22.53v5a2.75 2.75 0 0 1-4.695 1.945A2.73 2.73 0 0 1 1.75 9.5V9c0-.2.078-.388.22-.53a.77.77 0 0 1 1.061 0c.142.141.22.33.22.53v.5c0 .33.134.652.366.884c.465.465 1.303.465 1.768 0c.232-.233.366-.555.366-.884z"/></svg>'],
   ["filter", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3 4c2.01 2.59 7 9 7 9v7h4v-7s4.98-6.41 7-9z"/></svg>'],
-  ["filter-off", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.004 1.59L3 1.586L1.586 3l4.928 4.928L10 12.818V21h4v-5.585l7 7l1.41-1.41L3 1.595zm12.266 9.446L21 3H7.234z"/></svg>']
+  ["filter-off", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.004 1.59L3 1.586L1.586 3l4.928 4.928L10 12.818V21h4v-5.585l7 7l1.41-1.41L3 1.595zm12.266 9.446L21 3H7.234z"/></svg>'],
+  ["eye", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-2v-1h-1v-1H9v-1H8v-2h2v-1h1V8h2v1h1v1h1v1z"/><path fill="currentColor" d="M22 11V9h-1V8h-1V7h-1V6h-2V5H7v1H5v1H4v1H3v1H2v2H1v2h1v2h1v1h1v1h1v1h2v1h10v-1h2v-1h1v-1h1v-1h1v-2h1v-2zm-4 2h-1v2h-1v1h-1v1h-2v1h-2v-1H9v-1H8v-1H7v-2H6v-2h1V9h1V8h1V7h2V6h2v1h2v1h1v1h1v2h1z"/></svg>'],
+  ["eye-off", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M2 13H1v-2h1V9h1V8h1V7h1V6h2V5h8v1h-1v1h-1V6h-2v1H9v1H8v1H7v2H6v2h1v1H6v1H5v1H3v-1H2z"/><path fill="currentColor" d="M8 11h1v1H8zm3-3h1v1h-1zm-2 9H8v1H7v1H6v1H5v1H4v1H3v-1H2v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1V9h1V8h1V7h1V6h1V5h1V4h1V3h1V2h1v1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9zm3-2h1v1h-1zm1-1h1v1h-1zm2-2h1v1h-1zm-1 1h1v1h-1z"/><path fill="currentColor" d="M23 11v2h-1v2h-1v1h-1v1h-1v1h-2v1H9v-1h1v-1h1v1h2v-1h2v-1h1v-1h1v-2h1v-2h-1v-1h1V9h1V8h2v1h1v2z"/></svg>']
 ]);
 function registerIcon(name2, svgContent) {
   iconMap.set(name2, svgContent);
@@ -1952,13 +1954,13 @@ HmIcon.styles = i$4`
   height: 100%;
 }
 `;
-__decorateClass$a([
+__decorateClass$b([
   n2({ type: String })
 ], HmIcon.prototype, "icon", 2);
-__decorateClass$a([
+__decorateClass$b([
   n2({ type: String })
 ], HmIcon.prototype, "size", 2);
-HmIcon = __decorateClass$a([
+HmIcon = __decorateClass$b([
   t$2("hm-icon")
 ], HmIcon);
 const hmIcon = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -1969,14 +1971,14 @@ const hmIcon = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   getIcon,
   registerIcon
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$9 = Object.defineProperty;
-var __getOwnPropDesc$9 = Object.getOwnPropertyDescriptor;
-var __decorateClass$9 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$9(target, key) : target;
+var __defProp$a = Object.defineProperty;
+var __getOwnPropDesc$8 = Object.getOwnPropertyDescriptor;
+var __decorateClass$a = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$8(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$9(target, key, result);
+  if (kind && result) __defProp$a(target, key, result);
   return result;
 };
 let HmMenu = class extends i$1 {
@@ -2063,19 +2065,19 @@ HmMenu.styles = i$4`
  background:rgb(255,255,255);
 }
 `;
-__decorateClass$9([
+__decorateClass$a([
   n2({ type: String })
 ], HmMenu.prototype, "icon", 2);
-__decorateClass$9([
+__decorateClass$a([
   n2({ type: String })
 ], HmMenu.prototype, "content", 2);
-__decorateClass$9([
+__decorateClass$a([
   n2({ type: Boolean })
 ], HmMenu.prototype, "flag", 2);
-__decorateClass$9([
+__decorateClass$a([
   n2({ type: Boolean })
 ], HmMenu.prototype, "isMenuItem", 2);
-HmMenu = __decorateClass$9([
+HmMenu = __decorateClass$a([
   t$2("hm-menu")
 ], HmMenu);
 const hmMenu = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -2084,14 +2086,14 @@ const hmMenu = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
     return HmMenu;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$8 = Object.defineProperty;
-var __getOwnPropDesc$8 = Object.getOwnPropertyDescriptor;
-var __decorateClass$8 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$8(target, key) : target;
+var __defProp$9 = Object.defineProperty;
+var __getOwnPropDesc$7 = Object.getOwnPropertyDescriptor;
+var __decorateClass$9 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$7(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$8(target, key, result);
+  if (kind && result) __defProp$9(target, key, result);
   return result;
 };
 let HmNotification = class extends i$1 {
@@ -2210,28 +2212,28 @@ HmNotification.styles = i$4`
   height: 44px;
 }
 `;
-__decorateClass$8([
+__decorateClass$9([
   n2()
 ], HmNotification.prototype, "leftIcon", 2);
-__decorateClass$8([
+__decorateClass$9([
   n2()
 ], HmNotification.prototype, "title", 2);
-__decorateClass$8([
+__decorateClass$9([
   n2()
 ], HmNotification.prototype, "content", 2);
-__decorateClass$8([
+__decorateClass$9([
   n2()
 ], HmNotification.prototype, "rightIcon", 2);
-__decorateClass$8([
+__decorateClass$9([
   n2()
 ], HmNotification.prototype, "displayTime", 2);
-__decorateClass$8([
+__decorateClass$9([
   n2()
 ], HmNotification.prototype, "color", 2);
-__decorateClass$8([
+__decorateClass$9([
   n2()
 ], HmNotification.prototype, "backgroundColor", 2);
-HmNotification = __decorateClass$8([
+HmNotification = __decorateClass$9([
   t$2("hm-notification")
 ], HmNotification);
 const hmNotification = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -2240,14 +2242,14 @@ const hmNotification = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defi
     return HmNotification;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$7 = Object.defineProperty;
-var __getOwnPropDesc$7 = Object.getOwnPropertyDescriptor;
-var __decorateClass$7 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$7(target, key) : target;
+var __defProp$8 = Object.defineProperty;
+var __getOwnPropDesc$6 = Object.getOwnPropertyDescriptor;
+var __decorateClass$8 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$6(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$7(target, key, result);
+  if (kind && result) __defProp$8(target, key, result);
   return result;
 };
 let HmButton = class extends i$1 {
@@ -2355,34 +2357,34 @@ HmButton.styles = i$4`
         align-items: center;
       }
     `;
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: String })
 ], HmButton.prototype, "icon", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: String })
 ], HmButton.prototype, "content", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: String })
 ], HmButton.prototype, "fontSize", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: String })
 ], HmButton.prototype, "color", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: String })
 ], HmButton.prototype, "background", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: String })
 ], HmButton.prototype, "width", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: String })
 ], HmButton.prototype, "height", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: Boolean })
 ], HmButton.prototype, "enable", 2);
-__decorateClass$7([
+__decorateClass$8([
   n2({ type: Boolean })
 ], HmButton.prototype, "loading", 2);
-HmButton = __decorateClass$7([
+HmButton = __decorateClass$8([
   t$2("hm-button")
 ], HmButton);
 const hmButton = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -2391,14 +2393,14 @@ const hmButton = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProp
     return HmButton;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$6 = Object.defineProperty;
-var __getOwnPropDesc$6 = Object.getOwnPropertyDescriptor;
-var __decorateClass$6 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$6(target, key) : target;
+var __defProp$7 = Object.defineProperty;
+var __getOwnPropDesc$5 = Object.getOwnPropertyDescriptor;
+var __decorateClass$7 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$5(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$6(target, key, result);
+  if (kind && result) __defProp$7(target, key, result);
   return result;
 };
 let HmCell = class extends i$1 {
@@ -2528,22 +2530,22 @@ HmCell.styles = i$4`
       text-shadow: var(--hm-cell-hover-text-shadow, 0 0 5px rgba(24, 144, 255, 0.2));
     }
   `;
-__decorateClass$6([
+__decorateClass$7([
   n2()
 ], HmCell.prototype, "titleName", 2);
-__decorateClass$6([
+__decorateClass$7([
   n2()
 ], HmCell.prototype, "descripthion", 2);
-__decorateClass$6([
+__decorateClass$7([
   n2()
 ], HmCell.prototype, "content", 2);
-__decorateClass$6([
+__decorateClass$7([
   n2()
 ], HmCell.prototype, "titleClickCallback", 2);
-__decorateClass$6([
+__decorateClass$7([
   n2()
 ], HmCell.prototype, "contentClickCallback", 2);
-HmCell = __decorateClass$6([
+HmCell = __decorateClass$7([
   t$2("hm-cell")
 ], HmCell);
 const hmCell = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -2552,14 +2554,14 @@ const hmCell = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
     return HmCell;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$5 = Object.defineProperty;
-var __getOwnPropDesc$5 = Object.getOwnPropertyDescriptor;
-var __decorateClass$5 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$5(target, key) : target;
+var __defProp$6 = Object.defineProperty;
+var __getOwnPropDesc$4 = Object.getOwnPropertyDescriptor;
+var __decorateClass$6 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$4(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$5(target, key, result);
+  if (kind && result) __defProp$6(target, key, result);
   return result;
 };
 let HmSwipeCell = class extends i$1 {
@@ -2859,52 +2861,52 @@ HmSwipeCell.styles = i$4`
         width: 100%;
         }
     `;
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_isDragging", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_startX", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_currentTranslate", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_prevTranslate", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_animationId", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_velocity", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_lastX", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_lastTime", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "_isOpen", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "rightButtonName", 2);
-__decorateClass$5([
+__decorateClass$6([
   n2()
 ], HmSwipeCell.prototype, "rightButtonCallback", 2);
-__decorateClass$5([
+__decorateClass$6([
   e$2(".slider")
 ], HmSwipeCell.prototype, "sliderElement", 2);
-__decorateClass$5([
+__decorateClass$6([
   e$2(".content")
 ], HmSwipeCell.prototype, "contentElement", 2);
-__decorateClass$5([
+__decorateClass$6([
   e$2(".left-actions")
 ], HmSwipeCell.prototype, "leftActions", 2);
-__decorateClass$5([
+__decorateClass$6([
   e$2(".right-actions")
 ], HmSwipeCell.prototype, "rightActions", 2);
-HmSwipeCell = __decorateClass$5([
+HmSwipeCell = __decorateClass$6([
   t$2("hm-swipe-cell")
 ], HmSwipeCell);
 const hmSwipeCell = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -2913,14 +2915,14 @@ const hmSwipeCell = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineP
     return HmSwipeCell;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$4 = Object.defineProperty;
-var __getOwnPropDesc$4 = Object.getOwnPropertyDescriptor;
-var __decorateClass$4 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$4(target, key) : target;
+var __defProp$5 = Object.defineProperty;
+var __getOwnPropDesc$3 = Object.getOwnPropertyDescriptor;
+var __decorateClass$5 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$3(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$4(target, key, result);
+  if (kind && result) __defProp$5(target, key, result);
   return result;
 };
 let HmSwitch = class extends i$1 {
@@ -3041,31 +3043,31 @@ HmSwitch.styles = i$4`
         justify-content: center;
       }
     `;
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: Boolean })
 ], HmSwitch.prototype, "checked", 2);
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: Boolean })
 ], HmSwitch.prototype, "disabled", 2);
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: Boolean })
 ], HmSwitch.prototype, "loading", 2);
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: String })
 ], HmSwitch.prototype, "color", 2);
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: String })
 ], HmSwitch.prototype, "openContent", 2);
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: String })
 ], HmSwitch.prototype, "closeContent", 2);
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: String })
 ], HmSwitch.prototype, "openIcon", 2);
-__decorateClass$4([
+__decorateClass$5([
   n2({ type: String })
 ], HmSwitch.prototype, "closeIcon", 2);
-HmSwitch = __decorateClass$4([
+HmSwitch = __decorateClass$5([
   t$2("hm-switch")
 ], HmSwitch);
 const hmSwitch = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -3074,14 +3076,14 @@ const hmSwitch = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProp
     return HmSwitch;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$3 = Object.defineProperty;
-var __getOwnPropDesc$3 = Object.getOwnPropertyDescriptor;
-var __decorateClass$3 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$3(target, key) : target;
+var __defProp$4 = Object.defineProperty;
+var __getOwnPropDesc$2 = Object.getOwnPropertyDescriptor;
+var __decorateClass$4 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$2(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$3(target, key, result);
+  if (kind && result) __defProp$4(target, key, result);
   return result;
 };
 let HmAccordion = class extends i$1 {
@@ -3201,16 +3203,16 @@ HmAccordion.styles = i$4`
       background-color: #f8f9fa;
     }
   `;
-__decorateClass$3([
+__decorateClass$4([
   n2({ type: String, attribute: "max-height" })
 ], HmAccordion.prototype, "maxHeight", 2);
-__decorateClass$3([
+__decorateClass$4([
   n2({ type: Array })
 ], HmAccordion.prototype, "items", 2);
-__decorateClass$3([
+__decorateClass$4([
   n2({ type: Boolean })
 ], HmAccordion.prototype, "expanded", 2);
-HmAccordion = __decorateClass$3([
+HmAccordion = __decorateClass$4([
   t$2("hm-accordion")
 ], HmAccordion);
 const hmAccordion = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -3219,14 +3221,14 @@ const hmAccordion = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineP
     return HmAccordion;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$2 = Object.defineProperty;
-var __getOwnPropDesc$2 = Object.getOwnPropertyDescriptor;
-var __decorateClass$2 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$2(target, key) : target;
+var __defProp$3 = Object.defineProperty;
+var __getOwnPropDesc$1 = Object.getOwnPropertyDescriptor;
+var __decorateClass$3 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$1(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$2(target, key, result);
+  if (kind && result) __defProp$3(target, key, result);
   return result;
 };
 let HmInput = class extends i$1 {
@@ -3311,28 +3313,28 @@ HmInput.styles = i$4`
         height: 16px;
     }
 `;
-__decorateClass$2([
+__decorateClass$3([
   n2({ type: String })
 ], HmInput.prototype, "type", 2);
-__decorateClass$2([
+__decorateClass$3([
   n2({ type: String })
 ], HmInput.prototype, "icon", 2);
-__decorateClass$2([
+__decorateClass$3([
   n2({ type: String })
 ], HmInput.prototype, "label", 2);
-__decorateClass$2([
+__decorateClass$3([
   n2({ type: String })
 ], HmInput.prototype, "placeholder", 2);
-__decorateClass$2([
+__decorateClass$3([
   n2({ type: Boolean })
 ], HmInput.prototype, "enable", 2);
-__decorateClass$2([
+__decorateClass$3([
   n2({ type: Boolean })
 ], HmInput.prototype, "readonly", 2);
-__decorateClass$2([
+__decorateClass$3([
   n2()
 ], HmInput.prototype, "value", 2);
-HmInput = __decorateClass$2([
+HmInput = __decorateClass$3([
   t$2("hm-input")
 ], HmInput);
 const hmInput = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -3341,14 +3343,14 @@ const hmInput = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
     return HmInput;
   }
 }, Symbol.toStringTag, { value: "Module" }));
-var __defProp$1 = Object.defineProperty;
-var __getOwnPropDesc$1 = Object.getOwnPropertyDescriptor;
-var __decorateClass$1 = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$1(target, key) : target;
+var __defProp$2 = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __decorateClass$2 = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$1(target, key, result);
+  if (kind && result) __defProp$2(target, key, result);
   return result;
 };
 let HmDialog = class extends i$1 {
@@ -3415,7 +3417,7 @@ HmDialog.styles = i$4`
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1000;
+            z-index: 999999;
         }
         :host([isopen]) {
             display: block;
@@ -3439,6 +3441,7 @@ HmDialog.styles = i$4`
             min-width: 300px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             padding: 20px;
+            color:rgb(0,0,0)
         }
         
         .footer {
@@ -3452,10 +3455,10 @@ HmDialog.styles = i$4`
             min-width: 80px;
         }
     `;
-__decorateClass$1([
+__decorateClass$2([
   n2({ type: Boolean, attribute: "isopen" })
 ], HmDialog.prototype, "isOpen", 2);
-HmDialog = __decorateClass$1([
+HmDialog = __decorateClass$2([
   t$2("hm-dialog")
 ], HmDialog);
 const hmDialog = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
@@ -3510,6 +3513,100 @@ function initNotificationHolder() {
   notificationHolder.style.zIndex = "999999";
   document.body.append(notificationHolder);
 }
+const notification = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  initNotificationHolder,
+  notificationHolder
+}, Symbol.toStringTag, { value: "Module" }));
+let dialogHolder = document.createElement("div");
+function initDialogHolder() {
+  dialogHolder.id = "hmDialogHolder";
+  dialogHolder.style.zIndex = "999999";
+  document.body.append(dialogHolder);
+}
+const dialog = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  dialogHolder,
+  initDialogHolder
+}, Symbol.toStringTag, { value: "Module" }));
+var __defProp$1 = Object.defineProperty;
+var __decorateClass$1 = (decorators, target, key, kind) => {
+  var result = void 0;
+  for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
+    if (decorator = decorators[i3])
+      result = decorator(target, key, result) || result;
+  if (result) __defProp$1(target, key, result);
+  return result;
+};
+class HmDialogApp extends i$1 {
+  constructor() {
+    super(...arguments);
+    this.dialogOpen = false;
+    this.message = "请做出选择";
+    this.closeCallback = null;
+    this.cancelCallback = null;
+    this.confirmCallback = null;
+  }
+  /** 触发点击事件 */
+  handelClick() {
+    this.dispatchEvent(new CustomEvent("hmclick"));
+  }
+  static {
+    this.styles = i$4`
+`;
+  }
+  render() {
+    return x`
+<hm-dialog
+  ?isopen="${this.dialogOpen}"
+  @hm-dialog-close="${() => {
+      this.dialogOpen = false;
+    }}"
+  @hm-dialog-cancel="${() => {
+      if (this.cancelCallback) this.cancelCallback();
+    }}"
+  @hm-dialog-confirm="${() => {
+      if (this.confirmCallback) this.confirmCallback();
+    }}"
+>
+  <p>${this.message}</p>
+</hm-dialog>
+        `;
+  }
+}
+__decorateClass$1([
+  n2({ type: Boolean })
+], HmDialogApp.prototype, "dialogOpen");
+__decorateClass$1([
+  n2({ type: String })
+], HmDialogApp.prototype, "message");
+__decorateClass$1([
+  n2({ type: Function })
+], HmDialogApp.prototype, "closeCallback");
+__decorateClass$1([
+  n2({ type: Function })
+], HmDialogApp.prototype, "cancelCallback");
+__decorateClass$1([
+  n2({ type: Function })
+], HmDialogApp.prototype, "confirmCallback");
+let dialogApp;
+async function initDialogApp() {
+  customElements.define("hm-dialog-app", HmDialogApp);
+  dialogApp = document.createElement("hm-dialog-app");
+  dialogApp.dialogOpen = false;
+  dialogApp.message = "请做出选择";
+  dialogApp.closeCallback = null;
+  dialogApp.cancelCallback = null;
+  dialogApp.confirmCallback = null;
+  dialogHolder.append(dialogApp);
+}
+const dialogApp$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  get dialogApp() {
+    return dialogApp;
+  },
+  initDialogApp
+}, Symbol.toStringTag, { value: "Module" }));
 let notice = {
   success(title, content, displayTime = 2e3) {
     let notice2 = document.createElement("hm-notification");
@@ -3548,22 +3645,27 @@ let notice = {
     notificationHolder.append(notice2);
   }
 };
-const notification = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  initNotificationHolder,
-  notice,
-  notificationHolder
-}, Symbol.toStringTag, { value: "Module" }));
-let dialogHolder = document.createElement("div");
-function initDialogHolder() {
-  dialogHolder.id = "hmDialogHolder";
-  dialogHolder.style.zIndex = "999999";
-  document.body.append(dialogHolder);
+function confirm(message, confirmCallback, cancelCallback, closeCallback) {
+  dialogApp.message = message;
+  if (confirmCallback)
+    dialogApp.confirmCallback = confirmCallback;
+  else
+    dialogApp.confirmCallback = null;
+  if (cancelCallback)
+    dialogApp.cancelCallback = cancelCallback;
+  else
+    dialogApp.cancelCallback = null;
+  if (closeCallback)
+    dialogApp.closeCallback = closeCallback;
+  else
+    dialogApp.closeCallback = null;
+  dialogApp.dialogOpen = true;
+  console.debug("弹窗已打开", dialogApp);
 }
-const dialog = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const appTools = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  dialogHolder,
-  initDialogHolder
+  confirm,
+  notice
 }, Symbol.toStringTag, { value: "Module" }));
 async function initExampleApp() {
   let panel = document.createElement("hm-move-panel");
@@ -3723,16 +3825,15 @@ const exampleApp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePr
   initExampleApp
 }, Symbol.toStringTag, { value: "Module" }));
 var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __decorateClass = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+  var result = void 0;
   for (var i3 = decorators.length - 1, decorator; i3 >= 0; i3--)
     if (decorator = decorators[i3])
-      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp(target, key, result);
+      result = decorator(target, key, result) || result;
+  if (result) __defProp(target, key, result);
   return result;
 };
-let HmScriptApp = class extends i$1 {
+class HmScriptApp extends i$1 {
   constructor() {
     super(...arguments);
     this.scriptName = "";
@@ -3741,6 +3842,14 @@ let HmScriptApp = class extends i$1 {
     this.scriptIngected = false;
     this.dialogOpen = false;
     this.scriptList = scriptList;
+  }
+  static {
+    this.styles = i$4`
+:host {
+  display:block;
+  width: 100%;
+}
+`;
   }
   render() {
     return x`
@@ -3871,35 +3980,27 @@ let HmScriptApp = class extends i$1 {
 
     `;
   }
-};
-HmScriptApp.styles = i$4`
-:host {
-  display:block;
-  width: 100%;
 }
-`;
 __decorateClass([
   n2({ type: String })
-], HmScriptApp.prototype, "scriptName", 2);
+], HmScriptApp.prototype, "scriptName");
 __decorateClass([
   n2({ type: String })
-], HmScriptApp.prototype, "scriptUrl", 2);
+], HmScriptApp.prototype, "scriptUrl");
 __decorateClass([
   n2({ type: Boolean })
-], HmScriptApp.prototype, "scriptEnable", 2);
+], HmScriptApp.prototype, "scriptEnable");
 __decorateClass([
   n2({ type: Boolean })
-], HmScriptApp.prototype, "scriptIngected", 2);
+], HmScriptApp.prototype, "scriptIngected");
 __decorateClass([
   n2({ type: Boolean })
-], HmScriptApp.prototype, "dialogOpen", 2);
+], HmScriptApp.prototype, "dialogOpen");
 __decorateClass([
   n2({ type: Array })
-], HmScriptApp.prototype, "scriptList", 2);
-HmScriptApp = __decorateClass([
-  t$2("hm-script-app")
-], HmScriptApp);
+], HmScriptApp.prototype, "scriptList");
 async function initScriptApp() {
+  customElements.define("hm-script-app", HmScriptApp);
   let panel = document.createElement("hm-move-panel");
   panel.titleContent = "脚本管理";
   panel.icon = "js";
@@ -3917,8 +4018,13 @@ async function initScriptApp() {
   });
   return menuItem;
 }
+const scriptApp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  initScriptApp
+}, Symbol.toStringTag, { value: "Module" }));
 const name = "hortimagic";
-const version = "1.0.1";
+const version = "1.0.2";
+const changelog = "增加了对话框函数，添加了一些图标，增加了一些说明文件注释";
 const author = "Narlen";
 const description = "园艺魔法，花园插件";
 const keywords = ["iirose", "plugins", "hortimagic"];
@@ -3937,6 +4043,7 @@ const pkg = {
   name,
   "private": false,
   version,
+  changelog,
   author,
   description,
   keywords,
@@ -3972,6 +4079,7 @@ async function init() {
     menuHolder.appendChild(menu2);
     let exampleMenu = await initExampleApp();
     let scriptMenu = await initScriptApp();
+    await initDialogApp();
     menu2.addEventListener("hm-menu-click", function() {
       exampleMenu.flag = menu2.flag;
       scriptMenu.flag = menu2.flag;
@@ -3988,8 +4096,11 @@ const mainApp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
 }, Symbol.toStringTag, { value: "Module" }));
 const index$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
+  app_tools: appTools,
+  dialog_app: dialogApp$1,
   example_app: exampleApp,
-  main_app: mainApp
+  main_app: mainApp,
+  script_app: scriptApp
 }, Symbol.toStringTag, { value: "Module" }));
 const index = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
@@ -4003,6 +4114,8 @@ const information = {
   name: pkg.name,
   /** 项目版本 */
   version: pkg.version,
+  /** 项目更新日志 */
+  changelog: pkg.changelog,
   /** 项目描述 */
   description: pkg.description,
   /** 项目作者 */

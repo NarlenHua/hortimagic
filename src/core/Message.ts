@@ -42,11 +42,11 @@ class Private {
     readonly messageClass = 'private';
 }
 class Hidden {
-    /**  */
+    /** 消息的标题，名字？主题 */
     messageName: string = '';
-    /**  */
+    /** 发送过来的唯一标识 */
     uid: string = '';
-    /**  */
+    /** 数据 */
     data: string = '';
     /** 消息类型 */
     readonly messageClass = 'hidden';

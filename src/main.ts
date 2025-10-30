@@ -10,6 +10,8 @@ const information = {
     name: pkg.name,
     /** 项目版本 */
     version: pkg.version,
+    /** 项目更新日志 */
+    changelog: pkg.changelog,
     /** 项目描述 */
     description: pkg.description,
     /** 项目作者 */

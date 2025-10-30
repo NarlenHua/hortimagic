@@ -1,7 +1,8 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
+  "changelog": "增加了对话框函数，添加了一些图标，增加了一些说明文件注释",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",
   "keywords": [

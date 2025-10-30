@@ -1,12 +1,11 @@
 import { movePanelHolder } from '../holders/move-panel';
 import { LitElement, css, html, render } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import *as script_tool from '../core/script-tools';
-import { notice } from '../holders/notification';
+import { notice } from './app-tools';
 
 
-@customElement('hm-script-app')
-export class HmScriptApp extends LitElement {
+class HmScriptApp extends LitElement {
   @property({ type: String })
   scriptName = '';
   @property({ type: String })
@@ -155,6 +154,7 @@ export class HmScriptApp extends LitElement {
 }
 
 async function initScriptApp() {
+  customElements.define('hm-script-app', HmScriptApp);
   let panel = document.createElement('hm-move-panel');
   panel.titleContent = '脚本管理';
   panel.icon = 'js';

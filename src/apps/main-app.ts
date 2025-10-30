@@ -3,13 +3,15 @@ import { initSocket } from "../core/iirose-socket";
 import { ingectlocalScript } from "../core/script-tools";
 import { initMenuHolder, menuHolder } from "../holders/menu";
 import { initMovePanelHolder } from "../holders/move-panel";
-import { initNotificationHolder, notice } from "../holders/notification";
+import { initNotificationHolder } from "../holders/notification";
 import { initDialogHolder } from "../holders/dialog";
 
 import { initExampleApp } from "./example-app";
 import { initScriptApp } from "./script-app";
 
 import pkg from '../../package.json' with { type: 'json' };
+import { initDialogApp } from "./dialog-app";
+import { notice } from "./app-tools";
 async function init() {
     try {
         // 初始化所有容器
@@ -38,6 +40,10 @@ async function init() {
         // /** 二级菜单 */
         let exampleMenu = await initExampleApp();
         let scriptMenu = await initScriptApp();
+        /** 没有菜单的app */
+        await initDialogApp();
+
+        /** 菜单点击事件,开关对应的活动窗口 */
         menu.addEventListener('hm-menu-click', function () {
             // menu.flag 会自己改变
             exampleMenu.flag = menu.flag;

@@ -1,7 +1,7 @@
 // import { html, render } from 'lit-html';
 import { html, render } from 'lit';
 import { movePanelHolder } from '../holders/move-panel';
-import { notice } from '../holders/notification';
+import { notice } from './app-tools';
 
 async function initExampleApp() {
   let panel = document.createElement('hm-move-panel');

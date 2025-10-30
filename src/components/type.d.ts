@@ -46,3 +46,5 @@ declare global {
 //     return html``;
 //   }
 // }
+
+// customElements.define('hm-', Hm);

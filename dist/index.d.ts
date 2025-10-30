@@ -24,10 +24,20 @@ declare function afterOnmessage(message: string): Promise<string>;
 
 declare function afterSend(message: string): string;
 
+export declare namespace app_tools {
+    export {
+        notice,
+        confirm_2 as confirm
+    }
+}
+
 declare namespace apps {
     export {
         main_app,
-        example_app
+        example_app,
+        dialog_app,
+        script_app,
+        app_tools
     }
 }
 export { apps }
@@ -73,11 +83,23 @@ declare function compressCSS(css: string): string;
  */
 declare function compressHTML(html: string): string;
 
+/**
+ * 确认弹窗函数
+ * @param message 消息提示
+ * @param confirmCallback 选择确认时的回调函数
+ * @param cancelCallback 选择取消时的回调函数
+ * @param closeCallback 关闭弹窗时的回调函数
+ * @example ```javascript
+ * hortimagic.apps.app_tools.confirm('hhhhhhhhhhhhhh',()=>{console.log('qqqqqqqqqqq')},()=>{console.log('cccccccccccc')})
+ * ```
+ */
+declare function confirm_2(message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function): void;
+
 declare namespace core {
     export {
         tools,
         iirose_socket,
-        eventEmitter,
+        event_emitter,
         Message,
         encoder,
         decoder,
@@ -130,6 +152,15 @@ export declare namespace dialog {
         dialogHolder
     }
 }
+
+export declare namespace dialog_app {
+    export {
+        dialogApp,
+        initDialogApp
+    }
+}
+
+declare let dialogApp: HmDialogApp;
 
 /** 移动面板容器 */
 declare let dialogHolder: HTMLDivElement;
@@ -186,7 +217,7 @@ declare namespace encoder {
     }
 }
 
-declare namespace eventEmitter {
+declare namespace event_emitter {
     export {
         TinyEmitter,
         emitter
@@ -286,11 +317,11 @@ declare function getUserProfilePictureUrl(): string | null;
 declare function getUserUid(): string | null;
 
 declare class Hidden {
-    /**  */
+    /** 消息的标题，名字？主题 */
     messageName: string;
-    /**  */
+    /** 发送过来的唯一标识 */
     uid: string;
-    /**  */
+    /** 数据 */
     data: string;
     /** 消息类型 */
     readonly messageClass = "hidden";
@@ -532,6 +563,18 @@ declare class HmDialog extends LitElement {
     /** 取消，触发 dialog-close dialog-cancel事件*/
     cancel(): void;
     updated(changedProperties: Map<string, unknown>): void;
+    render(): TemplateResult<1>;
+}
+
+declare class HmDialogApp extends LitElement {
+    dialogOpen: boolean;
+    message: string;
+    closeCallback: Function | null;
+    cancelCallback: Function | null;
+    confirmCallback: Function | null;
+    /** 触发点击事件 */
+    handelClick(): void;
+    static styles: CSSResult;
     render(): TemplateResult<1>;
 }
 
@@ -852,6 +895,8 @@ export declare const information: {
     name: string;
     /** 项目版本 */
     version: string;
+    /** 项目更新日志 */
+    changelog: string;
     /** 项目描述 */
     description: string;
     /** 项目作者 */
@@ -874,6 +919,9 @@ declare function ingectlocalScript(): void;
 
 declare function init(): Promise<void>;
 
+/** 初始化对话框模块 */
+declare function initDialogApp(): Promise<void>;
+
 /** 初始化移动面板容器 */
 declare function initDialogHolder(): void;
 
@@ -891,6 +939,8 @@ declare function initMovePanelHolder(): void;
 
 /** 初始化通知容器 */
 declare function initNotificationHolder(): void;
+
+declare function initScriptApp(): Promise<HmMenu>;
 
 declare function initSocket(): Promise<void>;
 
@@ -972,6 +1022,9 @@ declare let movePanelItemMaxZindex: number;
  */
 declare function musicCard(typeId: string, title: string, singerName: string, coverUrl: string, color: string, resolutionRatio: string): string;
 
+/**
+ * 消失通知函数
+ */
 declare let notice: {
     success(title: string, content: string, displayTime?: number): void;
     warning(title: string, content: string, displayTime?: number): void;
@@ -982,8 +1035,7 @@ declare let notice: {
 export declare namespace notification {
     export {
         initNotificationHolder,
-        notificationHolder,
-        notice
+        notificationHolder
     }
 }
 
@@ -1092,6 +1144,12 @@ declare class Script {
     /** 是否已经注入,手动修改 */
     ingected: boolean;
     constructor(name: string, url: string, enable?: boolean, ingected?: boolean);
+}
+
+export declare namespace script_app {
+    export {
+        initScriptApp
+    }
 }
 
 declare namespace script_tools {

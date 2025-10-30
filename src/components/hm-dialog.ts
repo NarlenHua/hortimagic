@@ -28,7 +28,7 @@ export class HmDialog extends LitElement {
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1000;
+            z-index: 999999;
         }
         :host([isopen]) {
             display: block;
@@ -52,6 +52,7 @@ export class HmDialog extends LitElement {
             min-width: 300px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             padding: 20px;
+            color:rgb(0,0,0)
         }
         
         .footer {
@@ -82,20 +83,20 @@ export class HmDialog extends LitElement {
         this.isOpen = false;
         this.dispatchEvent(new CustomEvent('hm-dialog-close'));
     }
-    
+
     /** 确认，触发 dialog-close dialog-confirm事件*/
     confirm() {
         // console.debug("确认对话框事件");
         this.close();
         this.dispatchEvent(new CustomEvent('hm-dialog-confirm'));
     }
-    
+
     /** 取消，触发 dialog-close dialog-cancel事件*/
     cancel() {
         this.close();
         this.dispatchEvent(new CustomEvent('hm-dialog-cancel'));
     }
-    
+
     updated(changedProperties: Map<string, unknown>) {
         if (changedProperties.has('isOpen')) {
             if (this.isOpen) {
@@ -105,7 +106,7 @@ export class HmDialog extends LitElement {
             }
         }
     }
-    
+
     render() {
         return html`
 <div class="overlay"
