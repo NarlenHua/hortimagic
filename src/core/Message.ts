@@ -52,11 +52,11 @@ class Hidden {
     readonly messageClass = 'hidden';
 }
 class Danmu {
-    /**  */
+    /** 用户名 */
     username: string = '';
     /**  */
     avatar: string = '';
-    /**  */
+    /** 消息 */
     message: string = '';
     /**  */
     color: string = '';
@@ -64,7 +64,7 @@ class Danmu {
     gender: string = '';
     /**  */
     timeStamp: string = '';
-    /**  */
+    /** 唯一id */
     uid: string = '';
     /** 消息类型 */
     readonly messageClass = 'danmu';
