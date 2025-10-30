@@ -22,9 +22,14 @@ const information = {
     repository: pkg.repository,
     /** 项目构建时间 */
     buildTime: new Date().toISOString(),
+
+    /** 项目是否注入完成 */
+    ingected: false
 }
+
 async function main() {
-    apps.main_app.init();
+    await apps.main_app.init();
+    information.ingected = true;
 }
 main()
 export {

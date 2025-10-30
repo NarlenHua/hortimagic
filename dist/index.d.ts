@@ -910,6 +910,8 @@ export declare const information: {
     };
     /** 项目构建时间 */
     buildTime: string;
+    /** 项目是否注入完成 */
+    ingected: boolean;
 };
 
 /**

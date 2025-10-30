@@ -15,10 +15,12 @@ import { notice } from "./app-tools";
 async function init() {
     try {
         // 初始化所有容器
-        initNotificationHolder();
+        initNotificationHolder(); //先注入通知容器
+        initDialogHolder();
+        /** 先注弹窗app */
+        await initDialogApp();
         initMenuHolder();
         initMovePanelHolder();
-        initDialogHolder();
         // 初始化网络
         notice.normal(pkg.name, '注入网络钩子函数')
         await initSocket();
@@ -40,8 +42,7 @@ async function init() {
         // /** 二级菜单 */
         let exampleMenu = await initExampleApp();
         let scriptMenu = await initScriptApp();
-        /** 没有菜单的app */
-        await initDialogApp();
+
 
         /** 菜单点击事件,开关对应的活动窗口 */
         menu.addEventListener('hm-menu-click', function () {
@@ -51,7 +52,7 @@ async function init() {
         });
         menuHolder.append(menu, exampleMenu, scriptMenu);
         // menuHolder.append(menu, exampleMenu);
-        notice.success(pkg.name, `${pkg.version} 已加载`, 3000);
+        notice.success(pkg.name, `${pkg.version} 已加载`);
     } catch (error) {
         console.error(error);
     }

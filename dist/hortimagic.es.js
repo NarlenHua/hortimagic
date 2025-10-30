@@ -4023,8 +4023,8 @@ const scriptApp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePro
   initScriptApp
 }, Symbol.toStringTag, { value: "Module" }));
 const name = "hortimagic";
-const version = "1.0.2";
-const changelog = "增加了对话框函数，添加了一些图标，增加了一些说明文件注释";
+const version = "1.0.3";
+const changelog = "修复了对话框注册较晚的bug,增加了初始化完成的标志";
 const author = "Narlen";
 const description = "园艺魔法，花园插件";
 const keywords = ["iirose", "plugins", "hortimagic"];
@@ -4062,9 +4062,10 @@ const pkg = {
 async function init() {
   try {
     initNotificationHolder();
+    initDialogHolder();
+    await initDialogApp();
     initMenuHolder();
     initMovePanelHolder();
-    initDialogHolder();
     notice.normal(pkg.name, "注入网络钩子函数");
     await initSocket();
     notice.normal(pkg.name, "注入钩子函数");
@@ -4079,13 +4080,12 @@ async function init() {
     menuHolder.appendChild(menu2);
     let exampleMenu = await initExampleApp();
     let scriptMenu = await initScriptApp();
-    await initDialogApp();
     menu2.addEventListener("hm-menu-click", function() {
       exampleMenu.flag = menu2.flag;
       scriptMenu.flag = menu2.flag;
     });
     menuHolder.append(menu2, exampleMenu, scriptMenu);
-    notice.success(pkg.name, `${pkg.version} 已加载`, 3e3);
+    notice.success(pkg.name, `${pkg.version} 已加载`);
   } catch (error) {
     console.error(error);
   }
@@ -4125,10 +4125,13 @@ const information = {
   /** 项目仓库 */
   repository: pkg.repository,
   /** 项目构建时间 */
-  buildTime: (/* @__PURE__ */ new Date()).toISOString()
+  buildTime: (/* @__PURE__ */ new Date()).toISOString(),
+  /** 项目是否注入完成 */
+  ingected: false
 };
 async function main() {
-  init();
+  await init();
+  information.ingected = true;
 }
 main();
 export {
