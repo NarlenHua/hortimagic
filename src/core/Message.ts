@@ -1,5 +1,5 @@
 
-class Public {
+export class Public {
     /** 时间戳 */
     timeStamp: string = '';
     /** 头像链接 */
@@ -19,9 +19,9 @@ class Public {
     /** 消息UID */
     messageUid: string = '';
     /** 消息类别 */
-    readonly messageClass = 'public';
+    // readonly messageClass = 'public';
 }
-class Private {
+export class Private {
     /** 时间戳 */
     timeStamp: string = '';
     /** 头像链接 */
@@ -39,9 +39,9 @@ class Private {
     /** 消息唯一标识 */
     messageUid: string = '';
     /** 消息类型 */
-    readonly messageClass = 'private';
+    // readonly messageClass = 'private';
 }
-class Hidden {
+export class Hidden {
     /** 消息的标题，名字？主题 */
     messageName: string = '';
     /** 发送过来的唯一标识 */
@@ -49,9 +49,9 @@ class Hidden {
     /** 数据 */
     data: string = '';
     /** 消息类型 */
-    readonly messageClass = 'hidden';
+    // readonly messageClass = 'hidden';
 }
-class Danmu {
+export class Danmu {
     /** 用户名 */
     username: string = '';
     /**  */
@@ -67,9 +67,9 @@ class Danmu {
     /** 唯一id */
     uid: string = '';
     /** 消息类型 */
-    readonly messageClass = 'danmu';
+    // readonly messageClass = 'danmu';
 }
-class Withdrawn {
+export class Withdrawn {
     /** 可选的，撤回私聊对象窗口的UID */
     privateUID: string = '';
     /** 需要要撤回的气泡用户uid */
@@ -79,15 +79,15 @@ class Withdrawn {
     /** 数据唯一标识，上面两个组合在一起 */
     dataUid: string = '';
     /** 消息类型 */
-    readonly messageClass = 'withdrawn';
+    // readonly messageClass = 'withdrawn';
 }
-class System {
+export class System {
     /** 消息列表 */
     userMessageList: string[] = [];
     /** 消息类型 */
-    readonly messageClass = 'system';
+    // readonly messageClass = 'system';
 }
-class Stock {
+export class Stock {
     /** 
      * '*' 表示股价过低无法买股票
      * '>' 表示卖出的股票超出数量
@@ -106,22 +106,11 @@ class Stock {
     /** 账户余额 */
     balance: number = NaN;
     /** 消息类型 */
-    readonly messageClass = 'stock';
+    // readonly messageClass = 'stock';
 }
-class Unkonw {
+export class Unkonw {
     /** 未知消息的原型 */
     message: string = '';
     /** 消息类型 */
-    readonly messageClass = 'unkonw';
-}
-
-export {
-    Public,
-    Private,
-    Hidden,
-    Danmu,
-    Withdrawn,
-    System,
-    Stock,
-    Unkonw
+    // readonly messageClass = 'unkonw';
 }

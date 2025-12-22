@@ -1,6 +1,8 @@
-import { decodeMessage, messageObjList } from "./decoder";
-import { emitter } from "./event-emitter";
+import { decodeMessage, judegMessageClass, messageObjList } from "./decoder";
+import { EventEmitter } from "./EventEmitter";
 import { sleep } from "./tools";
+
+export const messageEmitter = new EventEmitter();
 
 // 发送消息
 async function beforeSend(message: string): Promise<string | null> {
@@ -33,11 +35,11 @@ function originalOnmessage(message: string) { return message; }
 async function afterOnmessage(message: string) {
     // console.log('准备触发', message, messageObjList);
     for (let messageObj of messageObjList) {
-        console.log(`触发${messageObj.messageClass}事件`, {
+        console.log(`触发${judegMessageClass(messageObj)}消息`, {
             message,
             messageObj
         });
-        emitter.emit(messageObj.messageClass, messageObj)
+        messageEmitter.emit(judegMessageClass(messageObj), messageObj)
     };
     return message;
 }

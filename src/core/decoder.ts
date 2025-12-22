@@ -1,7 +1,7 @@
 import { Public, Private, Hidden, Danmu, Withdrawn, Stock, System, Unkonw } from "./Message";
 
 /** 解析好后的消息列表 */
-let messageObjList: (
+export let messageObjList: (
     Public |
     Private |
     Hidden |
@@ -12,6 +12,39 @@ let messageObjList: (
     Unkonw
 )[] = [];
 
+/**
+ * 判断消息类型并返回对应的类型字符串
+ * @param message 
+ */
+export function judegMessageClass(messageObj:
+    Public |
+    Private |
+    Hidden |
+    Danmu |
+    Withdrawn |
+    System |
+    Stock |
+    Unkonw
+) {
+    //判断消息类型并返回对应的类型字符串
+    if (messageObj instanceof Public) {
+        return 'public';
+    } else if (messageObj instanceof Private) {
+        return 'private';
+    } else if (messageObj instanceof Hidden) {
+        return 'hidden';
+    } else if (messageObj instanceof Danmu) {
+        return 'danmu';
+    } else if (messageObj instanceof Withdrawn) {
+        return 'withdrawn';
+    } else if (messageObj instanceof System) {
+        return 'system';
+    } else if (messageObj instanceof Stock) {
+        return 'stock';
+    } else {
+        return 'unknown';
+    }
+}
 function publicChat(message: string) {
     let messageObj = new Public();
     let message_list = message.split('>');
@@ -149,7 +182,7 @@ function unkonw(message: string) {
     return messageObj;
 }
 
-function decodeMessage(message: string) {
+export function decodeMessage(message: string) {
     messageObjList = [];
     if (/^"[^"].*/gs.test(message)) {
         // 房间的消息
@@ -185,8 +218,4 @@ function decodeMessage(message: string) {
         messageObjList.push(unkonw(message));
     }
     // console.log('正在解码消息', { message, list: messageObjList });
-}
-export {
-    messageObjList,
-    decodeMessage,
 }

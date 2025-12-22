@@ -88,9 +88,9 @@ declare function confirm_2(message: string, confirmCallback?: Function, cancelCa
 declare namespace core {
     export {
         tools,
-        iirose_socket,
-        event_emitter,
         Message,
+        iirose_socket,
+        EventEmitter_2 as EventEmitter,
         encoder,
         decoder,
         elements_hooks,
@@ -115,8 +115,6 @@ declare class Danmu {
     timeStamp: string;
     /** 唯一id */
     uid: string;
-    /** 消息类型 */
-    readonly messageClass = "danmu";
 }
 
 /**
@@ -130,10 +128,11 @@ declare function danmu(message: string, color: string, v?: string): string;
 
 declare function decodeMessage(message: string): void;
 
-declare namespace decoder {
+export declare namespace decoder {
     export {
-        messageObjList,
-        decodeMessage
+        judegMessageClass,
+        decodeMessage,
+        messageObjList
     }
 }
 
@@ -192,7 +191,7 @@ declare let elements: {
     moveinputSendBtnSend: Element | null;
 };
 
-declare namespace elements_hooks {
+export declare namespace elements_hooks {
     export {
         elements,
         refreshAll,
@@ -201,12 +200,7 @@ declare namespace elements_hooks {
     }
 }
 
-/**
- * 事件触发器
- */
-declare let emitter: TinyEmitter;
-
-declare namespace encoder {
+export declare namespace encoder {
     export {
         publicChat,
         privateChat,
@@ -220,10 +214,124 @@ declare namespace encoder {
     }
 }
 
-declare namespace event_emitter {
+/**
+ * 事件触发器类，用于管理事件的订阅和发布
+ *
+ * @example
+ * ```typescript
+ * const emitter = new EventEmitter();
+ *
+ * // 订阅事件
+ * emitter.on('data', (message) => {
+ *   console.log('Received:', message);
+ * });
+ *
+ * // 发布事件
+ * emitter.emit('data', 'Hello World');
+ *
+ * // 订阅一次性事件
+ * emitter.once('startup', () => {
+ *   console.log('Startup event triggered');
+ * });
+ *
+ * // 取消订阅特定监听器
+ * const listener = (data) => console.log(data);
+ * emitter.on('update', listener);
+ * emitter.off('update', listener);
+ *
+ * // 取消订阅整个事件
+ * emitter.off('update');
+ * ```
+ */
+declare class EventEmitter {
+    private events;
+    /**
+     * 添加事件监听器
+     * @param event 事件名称
+     * @param listener 监听器函数
+     * @returns 返回当前实例，支持链式调用
+     *
+     * @example
+     * ```typescript
+     * const emitter = new EventEmitter();
+     *
+     * // 添加监听器
+     * emitter.on('click', (data) => {
+     *   console.log('Button clicked with data:', data);
+     * });
+     *
+     * // 链式调用
+     * emitter
+     *   .on('event1', () => console.log('Event 1'))
+     *   .on('event2', () => console.log('Event 2'));
+     * ```
+     */
+    on(event: string, listener: Listener): this;
+    /**
+     * 添加一次性事件监听器，触发后自动移除
+     * @param event 事件名称
+     * @param listener 监听器函数
+     * @returns 返回当前实例，支持链式调用
+     *
+     * @example
+     * ```typescript
+     * const emitter = new EventEmitter();
+     *
+     * // 添加一次性监听器
+     * emitter.once('initialized', () => {
+     *   console.log('Initialized - this will only run once');
+     * });
+     *
+     * emitter.emit('initialized'); // 输出: Initialized - this will only run once
+     * emitter.emit('initialized'); // 无输出
+     * ```
+     */
+    once(event: string, listener: Listener): this;
+    /**
+     * 移除事件监听器
+     * @param event 事件名称
+     * @param listener 可选，指定要移除的监听器函数，如果不提供则移除该事件的所有监听器
+     * @returns 返回当前实例，支持链式调用
+     *
+     * @example
+     * ```typescript
+     * const emitter = new EventEmitter();
+     *
+     * const handler = (data) => console.log(data);
+     * emitter.on('data', handler);
+     *
+     * // 移除特定监听器
+     * emitter.off('data', handler);
+     *
+     * // 移除事件的所有监听器
+     * emitter.off('data');
+     * ```
+     */
+    off(event: string, listener?: Listener): this;
+    /**
+     * 触发事件
+     * @param event 事件名称
+     * @param args 传递给监听器的参数
+     * @returns 如果有监听器则返回true，否则返回false
+     *
+     * @example
+     * ```typescript
+     * const emitter = new EventEmitter();
+     *
+     * emitter.on('greet', (name, age) => {
+     *   console.log(`Hello ${name}, you are ${age} years old`);
+     * });
+     *
+     * // 触发事件并传递参数
+     * emitter.emit('greet', 'Alice', 30);
+     * ```
+     */
+    emit(event: string, ...args: any[]): boolean;
+}
+
+export declare namespace EventEmitter_2 {
     export {
-        TinyEmitter,
-        emitter
+        EventEmitter
     }
 }
 
@@ -321,8 +429,6 @@ declare class Hidden {
     uid: string;
     /** 数据 */
     data: string;
-    /** 消息类型 */
-    readonly messageClass = "hidden";
 }
 
 /**
@@ -909,8 +1015,9 @@ declare function htmlSpecialCharsEscape(e: string): string;
  */
 declare const iconMap: Map<string, string>;
 
-declare namespace iirose_socket {
+export declare namespace iirose_socket {
     export {
+        messageEmitter,
         sockets,
         initSocket
     }
@@ -982,12 +1089,20 @@ declare function injectScript(script: Script): boolean;
 declare function injectScriptList(list: Script[]): void;
 
 /**
+ * 判断消息类型并返回对应的类型字符串
+ * @param message
+ */
+declare function judegMessageClass(messageObj: Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw): "hidden" | "public" | "private" | "danmu" | "withdrawn" | "system" | "stock" | "unknown";
+
+/**
  * 编码点赞消息
  * @param targetUid 目标id
  * @param content 正文
  * @returns 格式化好的消息
  */
 declare function like(targetUid: string, content?: string): string;
+
+declare type Listener = (...args: any[]) => void;
 
 export declare namespace main_app {
     export {
@@ -1004,7 +1119,7 @@ export declare namespace menu {
 
 declare let menuHolder: HTMLDivElement;
 
-declare namespace Message {
+export declare namespace Message {
     export {
         Public,
         Private,
@@ -1016,6 +1131,8 @@ declare namespace Message {
         Unkonw
     }
 }
+
+declare const messageEmitter: EventEmitter;
 
 /** 解析好后的消息列表 */
 declare let messageObjList: (Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw)[];
@@ -1090,8 +1207,6 @@ declare class Private {
     uid: string;
     /** 消息唯一标识 */
     messageUid: string;
-    /** 消息类型 */
-    readonly messageClass = "private";
 }
 
 /**
@@ -1122,8 +1237,6 @@ declare class Public {
     designation: string;
     /** 消息UID */
     messageUid: string;
-    /** 消息类别 */
-    readonly messageClass = "public";
 }
 
 /**
@@ -1172,7 +1285,7 @@ declare class Script {
     constructor(name: string, url: string, enable?: boolean, ingected?: boolean);
 }
 
-declare namespace script_tools {
+export declare namespace script_tools {
     export {
         Script,
         scriptList,
@@ -1227,8 +1340,6 @@ declare class Stock {
     totalEquity: number;
     /** 账户余额 */
     balance: number;
-    /** 消息类型 */
-    readonly messageClass = "stock";
 }
 
 /**
@@ -1238,7 +1349,7 @@ declare class Stock {
  */
 declare function stockRequest(count: number | undefined): string;
 
-declare namespace Store {
+export declare namespace Store {
     export {
         Store_2 as Store
     }
@@ -1287,11 +1398,9 @@ declare function switchRoom(roomId: string): void;
 declare class System {
     /** 消息列表 */
     userMessageList: string[];
-    /** 消息类型 */
-    readonly messageClass = "system";
 }
 
-declare namespace tools {
+export declare namespace tools {
     export {
         sleep,
         compressHTML,
@@ -1316,8 +1425,6 @@ declare namespace tools {
 declare class Unkonw {
     /** 未知消息的原型 */
     message: string;
-    /** 消息类型 */
-    readonly messageClass = "unkonw";
 }
 
 /**
@@ -1340,8 +1447,6 @@ declare class Withdrawn {
     messageUid: string;
     /** 数据唯一标识，上面两个组合在一起 */
     dataUid: string;
-    /** 消息类型 */
-    readonly messageClass = "withdrawn";
 }
 
 /**
