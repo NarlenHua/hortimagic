@@ -62,7 +62,6 @@ export class HmButton extends LitElement {
   @property({ type: Boolean })
   loading = false;
 
-
   static styles = css`
       :host {
         display: inline-block;
@@ -155,7 +154,6 @@ export class HmButton extends LitElement {
       e.stopPropagation();
       return;
     }
-
     this.dispatchEvent(new CustomEvent('hm-button-click'));
   }
 }

@@ -11,8 +11,12 @@ import { initScriptApp } from "./script-app";
 import pkg from '../../package.json' with { type: 'json' };
 import { initDialogApp } from "./dialog-app";
 import { notice } from "../easy-tools";
+import { initConfigApp } from "./config-app";
+import { initHortimagicConfig } from "../config";
 async function init() {
     try {
+        // 初始化配置项
+        initHortimagicConfig();
         // 初始化所有容器
         initNotificationHolder(); //先注入通知容器
         initDialogHolder();
@@ -38,15 +42,16 @@ async function init() {
         menu.isMenuItem = false;
 
         /** 二级菜单 */
+        let configMenu = initConfigApp();
         let scriptMenu = initScriptApp();
-
 
         /** 菜单点击事件,开关对应的活动窗口 */
         menu.addEventListener('hm-menu-click', function () {
             // menu.flag 会自己改变
+            configMenu.flag = menu.flag;
             scriptMenu.flag = menu.flag;
         });
-        menuHolder.append(menu, scriptMenu);
+        menuHolder.append(menu, configMenu, scriptMenu,);
         notice.success(pkg.name, `${pkg.version} 已加载`);
     } catch (error) {
         console.error(error);

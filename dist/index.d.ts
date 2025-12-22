@@ -27,8 +27,7 @@ declare function afterSend(message: string): string;
 declare namespace apps {
     export {
         main_app,
-        dialog_app,
-        script_app
+        dialog_app
     }
 }
 export { apps }
@@ -968,8 +967,6 @@ declare function initMovePanelHolder(): void;
 /** 初始化通知容器 */
 declare function initNotificationHolder(): void;
 
-declare function initScriptApp(): HmMenu;
-
 declare function initSocket(): Promise<void>;
 
 /**
@@ -1173,12 +1170,6 @@ declare class Script {
     /** 是否已经注入,手动修改 */
     ingected: boolean;
     constructor(name: string, url: string, enable?: boolean, ingected?: boolean);
-}
-
-export declare namespace script_app {
-    export {
-        initScriptApp
-    }
 }
 
 declare namespace script_tools {

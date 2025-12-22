@@ -34,9 +34,9 @@ export class HmMovePanel extends LitElement {
   /** 标题 */
   @property({ type: String }) titleContent = '面板';
   @property({ type: String, attribute: 'left-button-text' })
-  leftButtonText = '按钮1';
+  leftButtonText = '';
   @property({ type: String, attribute: 'right-button-text' })
-  rightButtonText = '按钮2';
+  rightButtonText = '';
   /** 显示状态,不建议直接修改，请使用showMovePanel()和hideMovePanel()方法，否则无法触发对应事件 */
   @property({ type: Boolean, attribute: 'is-display' })
   isDisplay = false;

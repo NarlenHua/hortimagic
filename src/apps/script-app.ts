@@ -1,5 +1,5 @@
 import { movePanelHolder } from '../holders/move-panel';
-import { LitElement, css, html } from 'lit';
+import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import *as script_tool from '../core/script-tools';
 import { notice } from '../easy-tools';
@@ -25,13 +25,6 @@ class HmScriptApp extends LitElement {
    */
   @property({ type: Array })
   scriptList: script_tool.Script[] = script_tool.scriptList;
-  static styles = css`
-:host {
-  display:block;
-  width: 100%;
-}
-`;
-
   render() {
     return html`
 <hm-dialog
@@ -148,12 +141,11 @@ class HmScriptApp extends LitElement {
     >
   </div>
 </hm-accordion>
-
     `;
   }
 }
 
-function initScriptApp() {
+export function initScriptApp() {
   customElements.define('hm-script-app', HmScriptApp);
   let panel = document.createElement('hm-move-panel');
   panel.titleContent = '脚本管理';
@@ -173,7 +165,4 @@ function initScriptApp() {
     panel.putTopToggel();
   });
   return menuItem;
-}
-export {
-  initScriptApp
 }

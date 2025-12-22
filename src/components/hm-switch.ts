@@ -41,15 +41,15 @@ export class HmSwitch extends LitElement {
   @property({ type: String }) color = '#1890ff';
 
   /** 自定义开启状态内容 */
-  @property({ type: String }) openContent = '';
+  @property({ type: String, attribute: 'open-content' }) openContent = '';
 
   /** 自定义关闭状态内容 */
-  @property({ type: String }) closeContent = '';
+  @property({ type: String, attribute: 'close-content' }) closeContent = '';
   /** 自定义开启状态图标 */
-  @property({ type: String }) openIcon = '';
+  @property({ type: String, attribute: 'open-icon' }) openIcon = '';
 
   /** 自定义关闭状态图标 */
-  @property({ type: String }) closeIcon = '';
+  @property({ type: String, attribute: 'close-icon' }) closeIcon = '';
 
   change() {
     if (this.disabled || this.loading) return;

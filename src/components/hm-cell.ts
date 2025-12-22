@@ -48,7 +48,7 @@ import { customElement, property } from 'lit/decorators.js';
 @customElement('hm-cell')
 export class HmCell extends LitElement {
   /** 标题，使用slot后失效 */
-  @property()
+  @property({ attribute: 'title-name' })
   titleName = "单元格";
   /** 标题下方描述，使用slot后失效 */
   @property()
@@ -126,7 +126,7 @@ export class HmCell extends LitElement {
     }
 
     .description {
-      font-size: var(--hm-cell-description-font-size, 14px);
+      font-size: var(--hm-cell-description-font-size, 12px);
       color: var(--hm-cell-description-color, #666666);
       line-height: 1.4;
     }
