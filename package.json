@@ -1,7 +1,7 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.0.4dev1",
+  "version": "1.0.4dev2",
   "changelog": "增加了存储库",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",

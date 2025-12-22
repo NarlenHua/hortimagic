@@ -3,12 +3,16 @@ import { customElement, property } from 'lit/decorators.js';
 
 @customElement('hm-menu')
 export class HmMenu extends LitElement {
+  /** 图标 */
   @property({ type: String })
   icon = 'magic-wand';
+  /** 内容 */
   @property({ type: String })
-  content = 'HortiMagic';
+  content = 'HortiMagicMenu';
+  /** 标记 */
   @property({ type: Boolean })
   flag = false;
+  /** 是否是菜单项（二级菜单） */
   @property({ type: Boolean })
   isMenuItem = false;
 

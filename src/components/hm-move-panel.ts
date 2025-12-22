@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, property, queryAsync } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 /** 创建的窗口列表 */
 export let movePanelItemList: HmMovePanel[] = [];
@@ -37,7 +37,7 @@ export class HmMovePanel extends LitElement {
   leftButtonText = '按钮1';
   @property({ type: String, attribute: 'right-button-text' })
   rightButtonText = '按钮2';
-  /** 显示状态,不建议直接修改，请使用show()和hide()方法，否则无法触发对应事件 */
+  /** 显示状态,不建议直接修改，请使用showMovePanel()和hideMovePanel()方法，否则无法触发对应事件 */
   @property({ type: Boolean, attribute: 'is-display' })
   isDisplay = false;
   @property({ type: Number })
@@ -58,11 +58,6 @@ export class HmMovePanel extends LitElement {
   handleRightClick() {
     this.hideMovePanel();
   }
-  /**
-   * 组件内部的body元素
-   */
-  @queryAsync('.body')
-  body!: Promise<HTMLDivElement>;
 
   static styles = css`
 .panel {

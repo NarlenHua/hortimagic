@@ -2,6 +2,7 @@ import * as core from './core';
 import * as components from './components';
 import * as apps from './apps';
 import *as holders from './holders';
+import *as easy_tools from './easy-tools';
 import pkg from '../package.json' with { type: 'json' };
 
 /** package配置信息 */
@@ -38,4 +39,5 @@ export {
     components,
     apps,
     holders,
+    easy_tools
 }

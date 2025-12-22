@@ -1,8 +1,8 @@
 import { movePanelHolder } from '../holders/move-panel';
-import { LitElement, css, html, render } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import *as script_tool from '../core/script-tools';
-import { notice } from './app-tools';
+import { notice } from '../easy-tools';
 
 
 class HmScriptApp extends LitElement {
@@ -153,17 +153,17 @@ class HmScriptApp extends LitElement {
   }
 }
 
-async function initScriptApp() {
+function initScriptApp() {
   customElements.define('hm-script-app', HmScriptApp);
   let panel = document.createElement('hm-move-panel');
   panel.titleContent = '脚本管理';
   panel.icon = 'js';
   // panel.showMovePanel();
   movePanelHolder.appendChild(panel);
-  let template = html`
+  let template = `
   <hm-script-app></hm-script-app>
   `;
-  render(template, await panel.body);
+  panel.innerHTML = template;
   let menuItem = document.createElement('hm-menu');
   menuItem.content = "脚本管理";
   menuItem.isMenuItem = true;

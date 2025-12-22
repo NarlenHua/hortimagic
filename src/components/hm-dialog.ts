@@ -116,8 +116,8 @@ export class HmDialog extends LitElement {
     <slot></slot>
     <div class="footer">
         <slot name="footer">
-            <hm-button @click="${() => { this.cancel(); console.debug("取消") }}">取消</hm-button>
-            <hm-button @click="${() => { this.confirm(); console.debug("确定") }}">确定</hm-button>
+            <hm-button @hm-button-click="${() => { this.cancel(); console.debug("取消") }}">取消</hm-button>
+            <hm-button @hm-button-click="${() => { this.confirm(); console.debug("确定") }}">确定</hm-button>
         </slot>
     </div>
 </div>

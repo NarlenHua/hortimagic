@@ -2,14 +2,14 @@
  * 基于组件等组成的工具
  */
 
-import { notificationHolder } from "../holders/notification";
-import { dialogApp } from "./dialog-app";
+import { notificationHolder } from "./holders/notification";
+import { dialogApp } from "./apps/dialog-app";
 
 /**
  * 消失通知函数
  */
-let notice = {
-    success(title: string, content: string, displayTime: number = 2000) {
+export const notice = {
+    success(title: string, content: string, displayTime: number = 3000) {
         let notice = document.createElement('hm-notification');
         notice.title = title;
         notice.content = content;
@@ -18,7 +18,7 @@ let notice = {
         notice.color = 'rgb(255,255,255)';
         notificationHolder.append(notice);
     },
-    warning(title: string, content: string, displayTime: number = 2000) {
+    warning(title: string, content: string, displayTime: number = 3000) {
         let notice = document.createElement('hm-notification');
         notice.title = title;
         notice.content = content;
@@ -27,7 +27,7 @@ let notice = {
         notice.color = 'rgb(255,255,255)';
         notificationHolder.append(notice);
     },
-    error(title: string, content: string, displayTime: number = 2000) {
+    error(title: string, content: string, displayTime: number = 3000) {
         let notice = document.createElement('hm-notification');
         notice.title = title;
         notice.content = content;
@@ -36,7 +36,7 @@ let notice = {
         notice.color = 'rgb(255,255,255)';
         notificationHolder.append(notice);
     },
-    normal(title: string, content: string, displayTime: number = 2000) {
+    normal(title: string, content: string, displayTime: number = 3000) {
         let notice = document.createElement('hm-notification');
         notice.title = title;
         notice.content = content;
@@ -53,10 +53,10 @@ let notice = {
  * @param cancelCallback 选择取消时的回调函数
  * @param closeCallback 关闭弹窗时的回调函数
  * @example ```javascript
- * hortimagic.apps.app_tools.confirm('hhhhhhhhhhhhhh',()=>{console.log('qqqqqqqqqqq')},()=>{console.log('cccccccccccc')})
+ * hortimagic.easy_tools.confirm('hhhhhhhhhhhhhh',()=>{console.log('qqqqqqqqqqq')},()=>{console.log('cccccccccccc')})
  * ``` 
  */
-function confirm(message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function) {
+export function confirm(message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function) {
     dialogApp.message = message;
     if (confirmCallback)
         dialogApp.confirmCallback = confirmCallback;
@@ -72,9 +72,4 @@ function confirm(message: string, confirmCallback?: Function, cancelCallback?: F
         dialogApp.closeCallback = null;
     dialogApp.dialogOpen = true;
     console.debug('弹窗已打开', dialogApp)
-}
-
-export {
-    notice,
-    confirm
 }

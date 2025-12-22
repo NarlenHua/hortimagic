@@ -19,8 +19,8 @@ export default defineConfig({
       entry: "./src/main.ts",
       name: `${pkg.name}`,
       // formats: ['es', 'cjs', 'umd', 'iife'],
-      formats: ["es", "iife"],
-      // formats: ["iife"],
+      // formats: ["es", "iife"],
+      formats: ["iife"],
       fileName: (format, entryName) => {
         return `${pkg.name}.${format}.js`;
       },
@@ -34,8 +34,8 @@ export default defineConfig({
 
       compress: {
         // 删除命令台输出
-        // drop_console: true,
-        // drop_debugger: true,
+        drop_console: true,
+        drop_debugger: true,
       },
     }
   },

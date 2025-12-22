@@ -24,20 +24,11 @@ declare function afterOnmessage(message: string): Promise<string>;
 
 declare function afterSend(message: string): string;
 
-export declare namespace app_tools {
-    export {
-        notice,
-        confirm_2 as confirm
-    }
-}
-
 declare namespace apps {
     export {
         main_app,
-        example_app,
         dialog_app,
-        script_app,
-        app_tools
+        script_app
     }
 }
 export { apps }
@@ -90,7 +81,7 @@ declare function compressHTML(html: string): string;
  * @param cancelCallback 选择取消时的回调函数
  * @param closeCallback 关闭弹窗时的回调函数
  * @example ```javascript
- * hortimagic.apps.app_tools.confirm('hhhhhhhhhhhhhh',()=>{console.log('qqqqqqqqqqq')},()=>{console.log('cccccccccccc')})
+ * hortimagic.easy_tools.confirm('hhhhhhhhhhhhhh',()=>{console.log('qqqqqqqqqqq')},()=>{console.log('cccccccccccc')})
  * ```
  */
 declare function confirm_2(message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function): void;
@@ -156,15 +147,27 @@ export declare namespace dialog {
 
 export declare namespace dialog_app {
     export {
-        dialogApp,
-        initDialogApp
+        initDialogApp,
+        HmDialogApp,
+        dialogApp
     }
 }
 
-declare let dialogApp: HmDialogApp;
+/**
+ * 默认的对话框模块
+ */
+declare const dialogApp: HmDialogApp;
 
 /** 移动面板容器 */
 declare let dialogHolder: HTMLDivElement;
+
+declare namespace easy_tools {
+    export {
+        confirm_2 as confirm,
+        notice
+    }
+}
+export { easy_tools }
 
 /** 原来界面的元素 */
 declare let elements: {
@@ -225,12 +228,6 @@ declare namespace event_emitter {
     }
 }
 
-export declare namespace example_app {
-    export {
-        initExampleApp
-    }
-}
-
 /**
  * 创造一个新的私聊气泡，搭配静默发送私聊消息才能和“正常一样使用。
  * @param {string} targetUid 目标UID
@@ -252,6 +249,7 @@ declare function getAllOnlineUserInfo(): {
     personalizedSignature: any;
 }[] | null;
 
+/** 获取svg代码 */
 declare function getIcon(name: string): string;
 
 /**
@@ -365,6 +363,7 @@ export declare namespace hm_icon {
     export {
         registerIcon,
         getIcon,
+        iconMap,
         HmIcon
     }
 }
@@ -408,8 +407,10 @@ export declare namespace hm_switch {
 }
 
 /**
+ * 折叠面板
  * @example
- *   <hm-accordion>
+ * <hm-accordion title-content="标题内容"></hm-accordion>
+ * <hm-accordion>
  <span slot="header">我的折叠面板</span>
  <div>内容项 1</div>
  <div>内容项 2</div>
@@ -417,7 +418,10 @@ export declare namespace hm_switch {
  */
 declare class HmAccordion extends LitElement {
     maxHeight: string;
+    /** 折叠项 */
     items: any[];
+    /** 标题内容 */
+    titleContent: string;
     /** 是否展开 */
     expanded: boolean;
     static styles: CSSResult;
@@ -567,6 +571,10 @@ declare class HmDialog extends LitElement {
     render(): TemplateResult<1>;
 }
 
+/**
+ * 对话框模块
+ * @slot - 默认slot
+ */
 declare class HmDialogApp extends LitElement {
     dialogOpen: boolean;
     message: string;
@@ -579,7 +587,15 @@ declare class HmDialogApp extends LitElement {
     render(): TemplateResult<1>;
 }
 
+/** 图标组件
+ * @example
+ * <hm-icon icon="magic-wand"></hm-icon>
+ * <hm-icon icon="close"></hm-icon>
+ * <hm-icon icon="open"></hm-icon>
+ * <hm-icon icon="arrow-up"></hm-icon>
+ */
 declare class HmIcon extends LitElement {
+    /** 图标名称 */
     icon: string;
     size: string;
     /** 触发点击事件 */
@@ -620,9 +636,13 @@ declare class HmInput extends LitElement {
 }
 
 declare class HmMenu extends LitElement {
+    /** 图标 */
     icon: string;
+    /** 内容 */
     content: string;
+    /** 标记 */
     flag: boolean;
+    /** 是否是菜单项（二级菜单） */
     isMenuItem: boolean;
     static styles: CSSResult;
     /** 触发点击事件 */
@@ -649,7 +669,7 @@ declare class HmMovePanel extends LitElement {
     titleContent: string;
     leftButtonText: string;
     rightButtonText: string;
-    /** 显示状态,不建议直接修改，请使用show()和hide()方法，否则无法触发对应事件 */
+    /** 显示状态,不建议直接修改，请使用showMovePanel()和hideMovePanel()方法，否则无法触发对应事件 */
     isDisplay: boolean;
     zIndex: number;
     /** 左上角图标 */
@@ -658,10 +678,6 @@ declare class HmMovePanel extends LitElement {
     top: number;
     handleLeftClick(): void;
     handleRightClick(): void;
-    /**
-     * 组件内部的body元素
-     */
-    body: Promise<HTMLDivElement>;
     static styles: CSSResult;
     constructor();
     /** 关闭移动窗口 */
@@ -885,6 +901,15 @@ declare function htmlSpecialCharsDecode(e: string): string;
  */
 declare function htmlSpecialCharsEscape(e: string): string;
 
+/** 存储图标的map类型数据
+ * key: 图标名称
+ * value: 图标svg代码
+ * 遍历图标名称的方式如下：
+ * @example
+ * for (const [iconName, iconSvg] of iconMap) {}
+ */
+declare const iconMap: Map<string, string>;
+
 declare namespace iirose_socket {
     export {
         sockets,
@@ -930,8 +955,6 @@ declare function initDialogApp(): Promise<void>;
 /** 初始化移动面板容器 */
 declare function initDialogHolder(): void;
 
-declare function initExampleApp(): Promise<HmMenu>;
-
 /**
  * 注入钩子函数
  */
@@ -945,7 +968,7 @@ declare function initMovePanelHolder(): void;
 /** 初始化通知容器 */
 declare function initNotificationHolder(): void;
 
-declare function initScriptApp(): Promise<HmMenu>;
+declare function initScriptApp(): HmMenu;
 
 declare function initSocket(): Promise<void>;
 
@@ -1030,7 +1053,7 @@ declare function musicCard(typeId: string, title: string, singerName: string, co
 /**
  * 消失通知函数
  */
-declare let notice: {
+declare const notice: {
     success(title: string, content: string, displayTime?: number): void;
     warning(title: string, content: string, displayTime?: number): void;
     error(title: string, content: string, displayTime?: number): void;
@@ -1124,6 +1147,7 @@ declare function readScriptList(): void;
  */
 declare function refreshAll(): void;
 
+/** 提供静态方法用于外部注册图标 */
 declare function registerIcon(name: string, svgContent: string): void;
 
 /** 从列表中移除一个脚本

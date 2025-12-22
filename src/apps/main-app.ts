@@ -6,12 +6,11 @@ import { initMovePanelHolder } from "../holders/move-panel";
 import { initNotificationHolder } from "../holders/notification";
 import { initDialogHolder } from "../holders/dialog";
 
-import { initExampleApp } from "./example-app";
 import { initScriptApp } from "./script-app";
 
 import pkg from '../../package.json' with { type: 'json' };
 import { initDialogApp } from "./dialog-app";
-import { notice } from "./app-tools";
+import { notice } from "../easy-tools";
 async function init() {
     try {
         // 初始化所有容器
@@ -37,21 +36,17 @@ async function init() {
         let menu = document.createElement('hm-menu');
         menu.content = "HortiMagic";
         menu.isMenuItem = false;
-        menuHolder.appendChild(menu);
 
-        // /** 二级菜单 */
-        let exampleMenu = await initExampleApp();
-        let scriptMenu = await initScriptApp();
+        /** 二级菜单 */
+        let scriptMenu = initScriptApp();
 
 
         /** 菜单点击事件,开关对应的活动窗口 */
         menu.addEventListener('hm-menu-click', function () {
             // menu.flag 会自己改变
-            exampleMenu.flag = menu.flag;
             scriptMenu.flag = menu.flag;
         });
-        menuHolder.append(menu, exampleMenu, scriptMenu);
-        // menuHolder.append(menu, exampleMenu);
+        menuHolder.append(menu, scriptMenu);
         notice.success(pkg.name, `${pkg.version} 已加载`);
     } catch (error) {
         console.error(error);
