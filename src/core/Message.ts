@@ -114,3 +114,16 @@ export class Unkonw {
     /** 消息类型 */
     // readonly messageClass = 'unkonw';
 }
+
+/**
+ * 所有消息的类
+ */
+export type MessageClass =
+    Public |
+    Private |
+    Hidden |
+    Danmu |
+    Withdrawn |
+    System |
+    Stock |
+    Unkonw;

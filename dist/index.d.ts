@@ -5,7 +5,6 @@
 import { CSSResult } from 'lit';
 import { LitElement } from 'lit';
 import { TemplateResult } from 'lit-html';
-import { TinyEmitter } from 'tiny-emitter';
 
 /**
  * 向列表加入一个脚本，具有唯一性,名字或链接一样的话就覆盖
@@ -95,7 +94,8 @@ declare namespace core {
         decoder,
         elements_hooks,
         script_tools,
-        Store
+        storeDecorators,
+        Store_2 as Store
     }
 }
 export { core }
@@ -214,119 +214,12 @@ export declare namespace encoder {
     }
 }
 
-/**
- * 事件触发器类，用于管理事件的订阅和发布
- *
- * @example
- * ```typescript
- * const emitter = new EventEmitter();
- *
- * // 订阅事件
- * emitter.on('data', (message) => {
- *   console.log('Received:', message);
- * });
- *
- * // 发布事件
- * emitter.emit('data', 'Hello World');
- *
- * // 订阅一次性事件
- * emitter.once('startup', () => {
- *   console.log('Startup event triggered');
- * });
- *
- * // 取消订阅特定监听器
- * const listener = (data) => console.log(data);
- * emitter.on('update', listener);
- * emitter.off('update', listener);
- *
- * // 取消订阅整个事件
- * emitter.off('update');
- * ```
- */
 declare class EventEmitter {
     private events;
-    /**
-     * 添加事件监听器
-     * @param event 事件名称
-     * @param listener 监听器函数
-     * @returns 返回当前实例，支持链式调用
-     *
-     * @example
-     * ```typescript
-     * const emitter = new EventEmitter();
-     *
-     * // 添加监听器
-     * emitter.on('click', (data) => {
-     *   console.log('Button clicked with data:', data);
-     * });
-     *
-     * // 链式调用
-     * emitter
-     *   .on('event1', () => console.log('Event 1'))
-     *   .on('event2', () => console.log('Event 2'));
-     * ```
-     */
-    on(event: string, listener: Listener): this;
-    /**
-     * 添加一次性事件监听器，触发后自动移除
-     * @param event 事件名称
-     * @param listener 监听器函数
-     * @returns 返回当前实例，支持链式调用
-     *
-     * @example
-     * ```typescript
-     * const emitter = new EventEmitter();
-     *
-     * // 添加一次性监听器
-     * emitter.once('initialized', () => {
-     *   console.log('Initialized - this will only run once');
-     * });
-     *
-     * emitter.emit('initialized'); // 输出: Initialized - this will only run once
-     * emitter.emit('initialized'); // 无输出
-     * ```
-     */
-    once(event: string, listener: Listener): this;
-    /**
-     * 移除事件监听器
-     * @param event 事件名称
-     * @param listener 可选，指定要移除的监听器函数，如果不提供则移除该事件的所有监听器
-     * @returns 返回当前实例，支持链式调用
-     *
-     * @example
-     * ```typescript
-     * const emitter = new EventEmitter();
-     *
-     * const handler = (data) => console.log(data);
-     * emitter.on('data', handler);
-     *
-     * // 移除特定监听器
-     * emitter.off('data', handler);
-     *
-     * // 移除事件的所有监听器
-     * emitter.off('data');
-     * ```
-     */
-    off(event: string, listener?: Listener): this;
-    /**
-     * 触发事件
-     * @param event 事件名称
-     * @param args 传递给监听器的参数
-     * @returns 如果有监听器则返回true，否则返回false
-     *
-     * @example
-     * ```typescript
-     * const emitter = new EventEmitter();
-     *
-     * emitter.on('greet', (name, age) => {
-     *   console.log(`Hello ${name}, you are ${age} years old`);
-     * });
-     *
-     * // 触发事件并传递参数
-     * emitter.emit('greet', 'Alice', 30);
-     * ```
-     */
-    emit(event: string, ...args: any[]): boolean;
+    on(eventName: string, listener: Listener): void;
+    off(eventName: string, listener?: Listener): void;
+    once(eventName: string, listener: Listener): void;
+    emit(eventName: string, ...args: any[]): boolean;
 }
 
 export declare namespace EventEmitter_2 {
@@ -1092,7 +985,7 @@ declare function injectScriptList(list: Script[]): void;
  * 判断消息类型并返回对应的类型字符串
  * @param message
  */
-declare function judegMessageClass(messageObj: Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw): "hidden" | "public" | "private" | "danmu" | "withdrawn" | "system" | "stock" | "unknown";
+declare function judegMessageClass(messageObj: MessageClass): "hidden" | "public" | "private" | "danmu" | "withdrawn" | "system" | "stock" | "unknown";
 
 /**
  * 编码点赞消息
@@ -1128,14 +1021,20 @@ export declare namespace Message {
         Withdrawn,
         System,
         Stock,
-        Unkonw
+        Unkonw,
+        MessageClass
     }
 }
+
+/**
+ * 所有消息的类
+ */
+declare type MessageClass = Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw;
 
 declare const messageEmitter: EventEmitter;
 
 /** 解析好后的消息列表 */
-declare let messageObjList: (Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw)[];
+declare let messageObjList: MessageClass[];
 
 export declare namespace move_panel {
     export {
@@ -1349,45 +1248,62 @@ declare class Stock {
  */
 declare function stockRequest(count: number | undefined): string;
 
-export declare namespace Store {
+declare class Store extends EventEmitter {
+    private items;
+    add(key: string, initialValue: any): StoreItem<any>;
+    get<T = any>(key: string): StoreItem<T> | undefined;
+    remove(key: string): boolean;
+    getValue<T = any>(key: string): T | undefined;
+    setValue<T = any>(key: string, value: T): void;
+    has(key: string): boolean;
+    /**
+     * 将 Store 中所有数据保存到 localStorage
+     * @param storageKey localStorage 的键名，例如 'app-store'
+     */
+    persistToLocalStorage(storageKey: string): void;
+    /**
+     * 从 localStorage 加载数据并恢复到 Store
+     * @param storageKey localStorage 的键名
+     */
+    loadFromLocalStorage(storageKey: string): void;
+}
+
+export declare namespace Store_2 {
     export {
-        Store_2 as Store
+        StoreItem,
+        Store
     }
 }
 
-/**
- * 仓库类
- * @description 仓库类，用于存储数据，并监听数据变化
- *
- */
-declare class Store_2 {
-    /**
-     * 事件触发器
-     * @example ```js
-     * // 使用案例
-     * emitter.on("eventName", (data) => {})
-     * emitter.emit("eventName", data)
-     * emitter.off("eventName", (data) => {})
-     * emitter.once("eventName", (data) => {})
-     * // 原型
-     * on(event: string, callback: Function, ctx?: any): this;
-     * once(event: string, callback: Function, ctx?: any): this;
-     * emit(event: string, ...args: any[]): this;
-     * off(event: string, callback?: Function): this;
-     * ```
-     */
-    emitter: TinyEmitter;
-    private storeMap;
-    clear(): void;
-    set(key: string, value: any): void;
-    get(key: string): any;
-    has(key: string): boolean;
-    delete(key: string): boolean;
-    size(): number;
-    keys(): MapIterator<any>;
-    values(): MapIterator<any>;
-    entries(): MapIterator<[any, any]>;
+declare function storeBind(store: Store, key: StoreKey): (target: any, propertyKey: string) => void;
+
+export declare namespace storeDecorators {
+    export {
+        storeBind,
+        storeSync,
+        storeOn,
+        storeOnce,
+        storeRemoveOn
+    }
 }
+
+declare class StoreItem<T> extends EventEmitter {
+    private _value;
+    constructor(initialValue: T);
+    get value(): T;
+    set value(newValue: T);
+    triggerChange(): void;
+}
+
+declare type StoreKey = string;
+
+declare function storeOn(store: Store, key: StoreKey): (target: any, _propertyKey: string, descriptor: PropertyDescriptor) => void;
+
+declare function storeOnce(store: Store, key: StoreKey): (target: any, _propertyKey: string, descriptor: PropertyDescriptor) => void;
+
+declare function storeRemoveOn(): <T extends new (...args: any[]) => any>(constructor: T) => T;
+
+declare function storeSync(store: Store, key: StoreKey): (target: any, _propertyKey: string) => void;
 
 /**
  * 切换房间

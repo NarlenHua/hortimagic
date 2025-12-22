@@ -1,31 +1,13 @@
-import { Public, Private, Hidden, Danmu, Withdrawn, Stock, System, Unkonw } from "./Message";
+import { type MessageClass, Public, Private, Hidden, Danmu, Withdrawn, Stock, System, Unkonw } from "./Message";
 
 /** 解析好后的消息列表 */
-export let messageObjList: (
-    Public |
-    Private |
-    Hidden |
-    Danmu |
-    Withdrawn |
-    System |
-    Stock |
-    Unkonw
-)[] = [];
+export let messageObjList: MessageClass[] = [];
 
 /**
  * 判断消息类型并返回对应的类型字符串
  * @param message 
  */
-export function judegMessageClass(messageObj:
-    Public |
-    Private |
-    Hidden |
-    Danmu |
-    Withdrawn |
-    System |
-    Stock |
-    Unkonw
-) {
+export function judegMessageClass(messageObj: MessageClass) {
     //判断消息类型并返回对应的类型字符串
     if (messageObj instanceof Public) {
         return 'public';

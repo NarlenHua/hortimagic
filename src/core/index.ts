@@ -6,5 +6,6 @@ export * as encoder from "./encoder";
 export * as decoder from "./decoder";
 export * as elements_hooks from "./elements-hooks";
 export * as script_tools from "./script-tools";
+export * as storeDecorators from "./storeDecorators";
 export * as Store from "./Store";
 
