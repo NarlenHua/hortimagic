@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { logger } from '../core/logger';
 
 /**
  * 滑动开关组件
@@ -25,7 +26,7 @@ import { customElement, property } from 'lit/decorators.js';
  * <hm-switch openIcon="check" closeIcon="close"></hm-switch>
  * 
  * <!-- 监听状态变化 -->
- * <hm-switch @hm-switch-change="${(e) => console.log('开关状态:', e.detail.checked)}"></hm-switch>
+ * <hm-switch @hm-switch-change="${(e) => logger.log('hm-switch','开关状态:', e.detail.checked)}"></hm-switch>
  * ```
  */
 @customElement('hm-switch')
@@ -54,7 +55,7 @@ export class HmSwitch extends LitElement {
   change() {
     if (this.disabled || this.loading) return;
     this.checked = !this.checked;
-    // console.debug('changed!!');
+    logger.log('hm-switch','changed!!');
     // 触发自定义事件供外部监听
     this.dispatchEvent(new CustomEvent('hm-switch-change', {
       detail: { checked: this.checked },

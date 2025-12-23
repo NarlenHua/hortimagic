@@ -4,6 +4,7 @@ import type { HmIcon } from "./hm-icon";
 import type { HmMenu } from "./hm-menu";
 import type { HmMovePanel } from "./hm-move-panel";
 import type { HmCell } from "./hm-cell";
+import type { HmSelect } from "./hm-select";
 import type { HmSwipeCell } from "./hm-swipe-cell";
 import type { HmSwitch } from "./hm-switch";
 import type { HmAccordion } from "./hm-accordion";
@@ -20,6 +21,7 @@ declare global {
         'hm-menu': HmMenu
         "hm-move-panel": HmMovePanel;
         "hm-notification": HmNotification;
+        "hm-select": HmSelect,
         "hm-swipe-cell": HmSwipeCell;
         'hm-switch': HmSwitch;
         "hm-icon": HmIcon;

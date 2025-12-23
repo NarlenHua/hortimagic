@@ -1,3 +1,5 @@
+import { logger } from "./logger";
+
 /** 原来界面的元素 */
 let elements = {
   /** 移动窗口父元素,移动窗口容器 */
@@ -104,7 +106,7 @@ let Hooks = {
     try {
       let temp = (elements.moveinput as HTMLTextAreaElement).oninput;
       (elements.moveinput as HTMLTextAreaElement).oninput = function () {
-        // console.log('监测到改变', (elements.moveinput as HTMLTextAreaElement).value);
+        // logger.log('监测到改变', (elements.moveinput as HTMLTextAreaElement).value);
         if (Hooks.elementHooks.moveinput.oninputBefore() == true) {
           // @ts-ignore
           temp?.call(elements.moveinput);
@@ -112,12 +114,12 @@ let Hooks = {
         }
       };
     } catch (error) {
-      console.error("替换错误", error);
+      logger.error("替换错误", error);
     }
     try {
       let temp = (elements.moveinput as HTMLTextAreaElement).oninput;
       (elements.moveinput as HTMLTextAreaElement).onblur = function () {
-        // console.log('失去焦点');
+        // logger.log('失去焦点');
         if (Hooks.elementHooks.moveinput.onblurBefore() == true) {
           // @ts-ignore
           temp?.call(elements.moveinput);
@@ -125,12 +127,12 @@ let Hooks = {
         }
       };
     } catch (error) {
-      console.error("替换错误", error);
+      logger.error("替换错误", error);
     }
     try {
       let temp = (elements.moveinput as HTMLTextAreaElement).oninput;
       (elements.moveinput as HTMLTextAreaElement).onfocus = function () {
-        // console.log('获得焦点');
+        // logger.log('获得焦点');
         if (Hooks.elementHooks.moveinput.onfocusBefore() == true) {
           // @ts-ignore
           temp?.call(elements.moveinput);
@@ -138,21 +140,21 @@ let Hooks = {
         }
       };
     } catch (error) {
-      console.error("替换错误", error);
+      logger.error("替换错误", error);
     }
   },
   replaceButtonProcesser: () => {
     try {
       let temp = buttonProcesser;
       buttonProcesser = (e, s, t, r) => {
-        // console.log('按键处理', e, s, t, r);
+        // logger.log('按键处理', e, s, t, r);
         if (Hooks.functionHooks.processer.onBefore(e, s, t, r) == true) {
           temp(e, s, t, r);
           Hooks.functionHooks.processer.onAfter(e, s, t, r);
         }
       };
     } catch (error) {
-      console.error("替换错误", error);
+      logger.error("替换错误", error);
     }
   },
 };
@@ -160,7 +162,7 @@ let Hooks = {
  * 注入钩子函数
  */
 function initHooks() {
-  console.log("增加钩子函数");
+  logger.log("增加钩子函数");
   Hooks.replaceMoveinput();
   Hooks.replaceButtonProcesser();
 }

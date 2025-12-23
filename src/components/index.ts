@@ -4,6 +4,7 @@ export * as hm_menu from './hm-menu';
 export * as hm_notification from './hm-notification';
 export * as hm_button from './hm-button';
 export * as hm_cell from './hm-cell';
+export * as hm_select from './hm-select';
 export * as hm_swipe_cell from './hm-swipe-cell';
 export * as hm_switch from './hm-switch';
 export * as hm_accordion from './hm-accordion';

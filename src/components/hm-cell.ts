@@ -14,36 +14,7 @@ import { customElement, property } from 'lit/decorators.js';
  * @cssprop --hm-cell-background - 背景颜色
  * 
  * @example
- * ```html
- * <!-- 基础用法 -->
- * <hm-cell 
- *   titleName="单元格标题" 
- *   descripthion="这是描述信息" 
- *   content="内容区域">
- * </hm-cell>
- * 
- * <!-- 使用插槽自定义内容 -->
- * <hm-cell>
- *   <div slot="title">自定义标题</div>
- *   <div slot="description">自定义描述</div>
- *   <div slot="content">自定义内容</div>
- * </hm-cell>
- * 
- * <!-- 带点击事件 -->
- * <hm-cell 
- *   titleName="可点击标题" 
- *   content="点击查看详情"
- *   .titleClickCallback="${() => console.log('标题被点击')}"
- *   .contentClickCallback="${() => console.log('内容被点击')}">
- * </hm-cell>
- * 
- * <!-- 自定义样式 -->
- * <hm-cell 
- *   titleName="自定义样式" 
- *   content="特殊样式"
- *   style="--hm-cell-background: #f0f8ff; --hm-cell-title-color: #1890ff;">
- * </hm-cell>
- * ```
+ * <hm-cell title-name="标题" descripthion="描述信息" content="内容"></hm-cell>
  */
 @customElement('hm-cell')
 export class HmCell extends LitElement {
@@ -82,9 +53,7 @@ export class HmCell extends LitElement {
     part="right-section"
     @click="${this.contentClickCallback}"
   >
-    <div class="content" part="content">
-      <slot name="content">${this.content}</slot>
-    </div>
+    <div class="content" part="content"><slot>${this.content}</slot></div>
   </div>
 </div>
 

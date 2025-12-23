@@ -1,5 +1,6 @@
 import { decodeMessage, judegMessageClass, messageObjList } from "./decoder";
 import { EventEmitter } from "./EventEmitter";
+import { logger } from "./logger";
 import { sleep } from "./tools";
 
 export const messageEmitter = new EventEmitter();
@@ -13,7 +14,7 @@ function afterSend(message: string) {
     return message;
 }
 async function send(message: string) {
-    console.log('发送', { message });
+    logger.log('socket', '发送', { message });
     let temp = await sockets.beforeSend(message);
     try {
         if (temp != null) {
@@ -21,21 +22,21 @@ async function send(message: string) {
             sockets.afterSend(temp);
         }
     } catch (error) {
-        console.error('捕获到错误', error);
+        logger.error('捕获到错误', error);
     }
 }
 // 接收消息
 async function beforeOnmessage(message: string): Promise<string | null> {
-    // console.log('解码消息', { message });
+    // logger.log('socket','解码消息', { message });
     decodeMessage(message);
     return message;
 }
 
 function originalOnmessage(message: string) { return message; }
 async function afterOnmessage(message: string) {
-    // console.log('准备触发', message, messageObjList);
+    // logger.log('socket','准备触发', message, messageObjList);
     for (let messageObj of messageObjList) {
-        console.log(`触发${judegMessageClass(messageObj)}消息`, {
+        logger.log('socket', `触发${judegMessageClass(messageObj)}消息`, {
             message,
             messageObj
         });
@@ -44,7 +45,7 @@ async function afterOnmessage(message: string) {
     return message;
 }
 async function onmessage(message: string) {
-    // console.log('接收', { message });
+    // logger.log('socket','接收', { message });
     let temp = await sockets.beforeOnmessage(message);
     try {
         if (temp != null) {
@@ -53,20 +54,20 @@ async function onmessage(message: string) {
             sockets.afterOnmessage(temp);
         }
     } catch (error) {
-        console.error('捕获到错误', error);
+        logger.error('捕获到错误', error);
     }
 }
 
 
 // 初始化fSocket
 async function initSocket() {
-    console.debug('代理网络');
+    logger.log('socket', '代理网络');
     for (let index = 0; index < 30; index++) {
         try {
-            console.debug('等待网络连接', index);
+            logger.log('socket', '等待网络连接', index);
             // @ts-ignore
             if (window["socket"].__onmessage == undefined && window["socket"]._onmessage != undefined && window["socket"].send != undefined) {
-                console.debug('网络连接成功');
+                logger.log('socket', '网络连接成功');
                 break;
             }
             else {
@@ -75,13 +76,13 @@ async function initSocket() {
                 continue;
             }
         } catch (error) {
-            console.error(error);
+            logger.error('socket', error);
         }
     }
     // @ts-ignore
     if (window["socket"].__onmessage == undefined && window["socket"]._onmessage != undefined && window["socket"].send != undefined) {
     } else {
-        console.error('连接失败')
+        logger.error('连接失败')
         return;
     }
     // 等待一下

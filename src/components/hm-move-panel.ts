@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { logger } from '../core/logger';
 
 /** 创建的窗口列表 */
 export let movePanelItemList: HmMovePanel[] = [];
@@ -51,13 +52,6 @@ export class HmMovePanel extends LitElement {
   /* 定位顶部 */
   @property({ type: Number })
   top = (window.innerHeight - (this.height + 80)) / 2;
-
-  handleLeftClick() {
-    this.hideMovePanel();
-  }
-  handleRightClick() {
-    this.hideMovePanel();
-  }
 
   static styles = css`
 .panel {
@@ -148,7 +142,7 @@ export class HmMovePanel extends LitElement {
   /** 关闭移动窗口 */
   hideMovePanel() {
     this.isDisplay = false;
-    console.debug('关闭事件');
+    logger.log('MovePanel', '关闭事件');
     this.dispatchEvent(new CustomEvent('close', {
       detail: { isDisplay: this.isDisplay, message: '关闭事件' },
       bubbles: true,
@@ -158,7 +152,7 @@ export class HmMovePanel extends LitElement {
   /** 显示移动窗口 */
   showMovePanel() {
     this.isDisplay = true;
-    console.debug('显示事件');
+    logger.log('MovePanel', '显示事件');
     this.dispatchEvent(new CustomEvent('show', {
       detail: { isDisplay: this.isDisplay },
       bubbles: true,
@@ -176,7 +170,7 @@ export class HmMovePanel extends LitElement {
   // 添加拖动功能
   dragging = false
   mouseDragging(e: MouseEvent) {
-    // console.debug('标题按下');
+    logger.log('MovePanel', '标题按下');
     // 窗口原本位置
     let templeft = this.left;
     // 窗口原本位置
@@ -186,8 +180,8 @@ export class HmMovePanel extends LitElement {
     let offsetX = e.clientX - templeft;
     let offsetY = e.clientY - temptop;
 
-    // console.debug('鼠标位置', e.clientX, e.clientY);
-    // console.debug('窗口位置', templeft, temptop);
+    logger.log('MovePanel', '鼠标位置', e.clientX, e.clientY);
+    logger.log('MovePanel', '窗口位置', templeft, temptop);
     (this.dragging == false) && (this.dragging = true);
     document.onmousemove = (e) => {
       if (this.dragging) {
@@ -196,14 +190,14 @@ export class HmMovePanel extends LitElement {
       }
     }
     document.onmouseup = () => {
-      // console.debug('标题抬起');
+      logger.log('MovePanel', '标题抬起');
       this.dragging && (this.dragging = false);
       document.onmousemove = null
     }
   }
   // 适配移动端
   touchDragging(e: TouchEvent) {
-    // console.debug('触摸标题按下');
+    logger.log('MovePanel', '触摸标题按下');
     // 窗口原本位置
     let templeft = this.left;
     // 窗口原本位置
@@ -213,8 +207,8 @@ export class HmMovePanel extends LitElement {
     let offsetX = e.touches[0].clientX - templeft;
     let offsetY = e.touches[0].clientY - temptop;
 
-    // console.debug('触摸鼠标位置', e.touches[0].clientX, e.touches[0].clientY);
-    // console.debug('触摸窗口位置', templeft, temptop);
+    logger.log('MovePanel', '触摸鼠标位置', e.touches[0].clientX, e.touches[0].clientY);
+    logger.log('MovePanel', '触摸窗口位置', templeft, temptop);
     (this.dragging == false) && (this.dragging = true);
     document.ontouchmove = (e) => {
       if (this.dragging) {
@@ -223,14 +217,14 @@ export class HmMovePanel extends LitElement {
       }
     }
     document.ontouchend = () => {
-      // console.debug('标题抬起');
+      logger.log('MovePanel', '标题抬起');
       this.dragging && (this.dragging = false);
       document.onmousemove = null
     }
   }
   // 置顶窗口
   putTop() {
-    // console.debug('置顶窗口');
+    logger.log('MovePanel', '置顶窗口');
     let res = false;
     if (movePanelItemList.includes(this)) {
       // 先把比它大的都减小一层
@@ -241,9 +235,8 @@ export class HmMovePanel extends LitElement {
       // 再把自己设置成最高的
       this.zIndex = movePanelItemMaxZindex;
       res = true;
-      // console.debug('置顶窗口成功');
     } else {
-      // console.warn('置顶失败，窗口不在列表中');
+      logger.warn('MovePanel', '置顶失败，窗口不在列表中');
       res = false;
     }
     return res;
@@ -313,7 +306,7 @@ export class HmMovePanel extends LitElement {
       width="100%"
       background="${this.buttonBackground}"
       color="${this.buttonColor}"
-      @click="${this._handleLeftButtonClick}"
+      @click="${this.handleLeftButtonClick}"
     >
       ${this.leftButtonText}
       </hm-button>
@@ -323,7 +316,7 @@ export class HmMovePanel extends LitElement {
       width="100%"
       background="${this.buttonColor}"
       color="${this.buttonBackground}"
-      @click="${this._handleRightButtonClick}"
+      @click="${this.handleRightButtonClick}"
     >
       ${this.rightButtonText}
     </hm-button>
@@ -337,7 +330,7 @@ export class HmMovePanel extends LitElement {
     this.hideMovePanel();
   }
 
-  _handleLeftButtonClick() {
+  handleLeftButtonClick() {
     this.dispatchEvent(new CustomEvent('left-button-click', {
       detail: { message: '左侧按钮被点击' },
       bubbles: true,
@@ -345,7 +338,7 @@ export class HmMovePanel extends LitElement {
     }));
   }
 
-  _handleRightButtonClick() {
+  handleRightButtonClick() {
     this.dispatchEvent(new CustomEvent('right-button-click', {
       detail: { message: '右侧按钮被点击' },
       bubbles: true,

@@ -63,49 +63,44 @@ class HmScriptApp extends LitElement {
   <span slot="header">脚本列表</span>
   ${this.scriptList.map((script) => {
         return html`
-<hm-swipe-cell>
-  <div slot="left-actions">
-    <hm-button
-      @hm-button-click="${() => {
+  <hm-swipe-cell>
+    <div slot="left-actions">
+      <hm-button
+        @hm-button-click="${() => {
             script_tool.removeScriptFromList(script);
             script_tool.saveScriptList();
             this.scriptList = script_tool.scriptList;
           }
           }"
-      >删除</hm-button
-    >
-  </div>
-  <hm-cell
-    slot="content"
-    titleName="${script.name}"
-    descripthion="${script.url}"
-  >
-    <hm-switch
-      slot="content"
-      ?checked="${script.enable}"
-      @hm-switch-change="${(e: CustomEvent) => {
+        >删除</hm-button
+      >
+    </div>
+    <hm-cell title-name="${script.name}" descripthion="${script.url}">
+      <hm-switch
+        ?checked="${script.enable}"
+        @hm-switch-change="${(e: CustomEvent) => {
             script.enable = e.detail.checked;
             script_tool.addScriptToList(script);
             script_tool.saveScriptList();
             this.scriptList = script_tool.scriptList;
           }
           }"
-    ></hm-switch>
-  </hm-cell>
+      ></hm-switch>
+    </hm-cell>
 
-  <div slot="right-actions">
-    <hm-button
-      @hm-button-click="${() => {
+    <div slot="right-actions">
+      <hm-button
+        @hm-button-click="${() => {
             this.scriptName = script.name;
             this.scriptUrl = script.url;
             this.dialogOpen = true;
           }
           }"
-      >修改</hm-button
-    >
-    <hm-button
-      ?enable="${!script.ingected}"
-      @hm-button-click="${() => {
+        >修改</hm-button
+      >
+      <hm-button
+        ?enable="${!script.ingected}"
+        @hm-button-click="${() => {
             script.ingected = script_tool.injectScript(script);
             /** 更新一下
              * 把运行结果覆盖到list
@@ -114,13 +109,12 @@ class HmScriptApp extends LitElement {
             this.scriptList = script_tool.scriptList;
           }
           }"
-      >运行</hm-button
-    >
-  </div>
-</hm-swipe-cell>
+        >运行</hm-button
+      >
+    </div>
+  </hm-swipe-cell>
 
-`
-      })}
+  ` })}
   <div slot="footer">
     <hm-button
       @click="${() => { script_tool.readScriptList(); this.scriptList = script_tool.scriptList; }}"
@@ -141,7 +135,7 @@ class HmScriptApp extends LitElement {
     >
   </div>
 </hm-accordion>
-    `;
+`;
   }
 }
 

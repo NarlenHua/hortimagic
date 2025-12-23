@@ -23,10 +23,14 @@ declare function afterOnmessage(message: string): Promise<string>;
 
 declare function afterSend(message: string): string;
 
+declare const allowNotice: boolean;
+
 declare namespace apps {
     export {
         main_app,
-        dialog_app
+        dialog_app,
+        log_app,
+        config_app
     }
 }
 export { apps }
@@ -49,6 +53,7 @@ declare namespace components {
         hm_notification,
         hm_button,
         hm_cell,
+        hm_select,
         hm_swipe_cell,
         hm_switch,
         hm_accordion,
@@ -72,6 +77,40 @@ declare function compressCSS(css: string): string;
  */
 declare function compressHTML(html: string): string;
 
+export declare namespace config {
+    export {
+        readHortimagicConfigStore,
+        saveHortimagicConfigStore,
+        HortimagicConfigStore,
+        hortimagicConfig,
+        allowNotice,
+        logLevel,
+        sharedDataStore,
+        sharedData,
+        loggerList
+    }
+}
+
+export declare namespace config_2 {
+    export {
+        readHortimagicConfigStore,
+        saveHortimagicConfigStore,
+        HortimagicConfigStore,
+        hortimagicConfig,
+        allowNotice,
+        logLevel,
+        sharedDataStore,
+        sharedData,
+        loggerList
+    }
+}
+
+export declare namespace config_app {
+    export {
+        initConfigApp
+    }
+}
+
 /**
  * 确认弹窗函数
  * @param message 消息提示
@@ -86,16 +125,19 @@ declare function confirm_2(message: string, confirmCallback?: Function, cancelCa
 
 declare namespace core {
     export {
+        config,
+        logger,
         tools,
         Message,
         iirose_socket,
         EventEmitter_2 as EventEmitter,
+        config_2 as globalStore,
         encoder,
         decoder,
         elements_hooks,
         script_tools,
         storeDecorators,
-        Store_2 as Store
+        Store_StoreItem
     }
 }
 export { core }
@@ -392,6 +434,12 @@ export declare namespace hm_notification {
     }
 }
 
+export declare namespace hm_select {
+    export {
+        HmSelect
+    }
+}
+
 export declare namespace hm_swipe_cell {
     export {
         HmSwipeCell
@@ -492,36 +540,7 @@ declare class HmButton extends LitElement {
  * @cssprop --hm-cell-background - 背景颜色
  *
  * @example
- * ```html
- * <!-- 基础用法 -->
- * <hm-cell
- *   titleName="单元格标题"
- *   descripthion="这是描述信息"
- *   content="内容区域">
- * </hm-cell>
- *
- * <!-- 使用插槽自定义内容 -->
- * <hm-cell>
- *   <div slot="title">自定义标题</div>
- *   <div slot="description">自定义描述</div>
- *   <div slot="content">自定义内容</div>
- * </hm-cell>
- *
- * <!-- 带点击事件 -->
- * <hm-cell
- *   titleName="可点击标题"
- *   content="点击查看详情"
- *   .titleClickCallback="${() => console.log('标题被点击')}"
- *   .contentClickCallback="${() => console.log('内容被点击')}">
- * </hm-cell>
- *
- * <!-- 自定义样式 -->
- * <hm-cell
- *   titleName="自定义样式"
- *   content="特殊样式"
- *   style="--hm-cell-background: #f0f8ff; --hm-cell-title-color: #1890ff;">
- * </hm-cell>
- * ```
+ * <hm-cell title-name="标题" descripthion="描述信息" content="内容"></hm-cell>
  */
 declare class HmCell extends LitElement {
     /** 标题，使用slot后失效 */
@@ -674,8 +693,6 @@ declare class HmMovePanel extends LitElement {
     icon: string;
     left: number;
     top: number;
-    handleLeftClick(): void;
-    handleRightClick(): void;
     static styles: CSSResult;
     constructor();
     /** 关闭移动窗口 */
@@ -697,8 +714,8 @@ declare class HmMovePanel extends LitElement {
     putTopToggel(): void;
     render(): TemplateResult<1>;
     _handleClose(): void;
-    _handleLeftButtonClick(): void;
-    _handleRightButtonClick(): void;
+    handleLeftButtonClick(): void;
+    handleRightButtonClick(): void;
 }
 
 /** 通知消息组件
@@ -743,6 +760,80 @@ declare class HmNotification extends LitElement {
     firstUpdated(): void;
     private startLeaveAnimation;
     render(): TemplateResult<1>;
+}
+
+/**
+ * HmSelect 是一个可自定义的下拉选择组件，基于 LitElement 构建
+ *
+ * @example
+ * 基本用法:
+ * ```html
+ * <hm-select .labelList="${[['选项1', 'value1'], ['选项2', 'value2']]}" @change="${(e) => logger.log('hm-select',e.detail)}"></hm-select>
+ * ```
+ *
+ * @example
+ * 禁用状态:
+ * ```html
+ * <hm-select .labelList="${[['选项1', 'value1'], ['选项2', 'value2']]}" disabled></hm-select>
+ * ```
+ *
+ * @example
+ * 带默认选中项:
+ * ```html
+ * <hm-select .labelList="${[['选项1', 'value1'], ['选项2', 'value2']]}" .index="${1}"></hm-select>
+ * ```
+ *
+ * @example
+ * 使用数字值:
+ * ```html
+ * <hm-select .labelList="${[['一', 1], ['二', 2], ['三', 3]]}" .index="${0}"></hm-select>
+ * ```
+ *
+ * @slot - 默认插槽，用于放置额外内容
+ * @fires change - 当选择项改变时触发，携带 { value, label, index } 信息
+ */
+declare class HmSelect extends LitElement {
+    /**
+     * 当前选中项的索引，默认为 0
+     * @type {number}
+     */
+    index: number;
+    /**
+     * 当前选中项的值
+     * @type {any}
+     */
+    value: any;
+    /**
+     * 选择项列表，每个项为 [label, value] 的数组格式
+     * @type {Array<Array<string | any>>}
+     */
+    labelList: (string | any)[][];
+    /**
+     * 是否禁用选择器
+     * @type {boolean}
+     */
+    disabled: boolean;
+    private selectRef;
+    static styles: CSSResult;
+    constructor();
+    connectedCallback(): void;
+    render(): TemplateResult<1>;
+    /**
+     * 处理选择项改变事件
+     * @param {Event} e - change 事件
+     * @private
+     */
+    private _handleChange;
+    /**
+     * 获取当前选中的值
+     * @returns {any} 当前选中的值，返回labelList中对应项的实际值类型
+     */
+    getValue(): any;
+    /**
+     * 设置选中值
+     * @param {any} value - 要设置的值，可以是字符串或数字等类型
+     */
+    setValue(value: any): void;
 }
 
 /**
@@ -828,7 +919,7 @@ declare class HmSwipeCell extends LitElement {
  * <hm-switch openIcon="check" closeIcon="close"></hm-switch>
  *
  * <!-- 监听状态变化 -->
- * <hm-switch @hm-switch-change="${(e) => console.log('开关状态:', e.detail.checked)}"></hm-switch>
+ * <hm-switch @hm-switch-change="${(e) => logger.log('hm-switch','开关状态:', e.detail.checked)}"></hm-switch>
  * ```
  */
 declare class HmSwitch extends LitElement {
@@ -884,6 +975,21 @@ declare let Hooks: {
     replaceMoveinput: () => void;
     replaceButtonProcesser: () => void;
 };
+
+declare class HortimagicConfig {
+    allowNotice: boolean;
+    logLevel: number;
+}
+
+/**
+ * 配置项数据，可以持久化储存数据
+ */
+declare const hortimagicConfig: HortimagicConfig;
+
+/**
+ * 配置项仓库
+ */
+declare const HortimagicConfigStore: Store;
 
 /**
  * html特殊符号反转义
@@ -948,6 +1054,8 @@ declare function ingectlocalScript(): void;
 
 declare function init(): Promise<void>;
 
+declare function initConfigApp(): HmMenu;
+
 /** 初始化对话框模块 */
 declare function initDialogApp(): Promise<void>;
 
@@ -958,6 +1066,8 @@ declare function initDialogHolder(): void;
  * 注入钩子函数
  */
 declare function initHooks(): void;
+
+declare function initLogApp(): HmMenu;
 
 declare function initMenuHolder(): void;
 
@@ -996,6 +1106,78 @@ declare function judegMessageClass(messageObj: MessageClass): "hidden" | "public
 declare function like(targetUid: string, content?: string): string;
 
 declare type Listener = (...args: any[]) => void;
+
+export declare namespace log_app {
+    export {
+        initLogApp
+    }
+}
+
+export declare namespace logger {
+    export {
+        LogLevel,
+        logger_2 as logger
+    }
+}
+
+/**
+ * 日志记录器对象
+ * 根据配置中的日志级别来决定是否输出日志
+ * 只有当配置的日志级别与当前输出的日志级别匹配时才会输出日志
+ */
+declare const logger_2: {
+    /**
+     * 记录普通日志
+     * 只有在配置的日志级小于等于DEBUG时才会输出
+     * @param args 要输出的参数
+     */
+    log(tag: string, ...args: any[]): void;
+    /**
+     * 输出调试日志
+     * 仅在配置的日志级别小于等于DEBUG时才会输出
+     * @param args 要输出的参数
+     */
+    debug(tag: string, ...args: any[]): void;
+    /**
+     * 输出信息日志
+     * 仅在配置的日志级别小于等于INFO时才会输出
+     * @param args 要输出的参数
+     */
+    info(tag: string, ...args: any[]): void;
+    /**
+     * 输出警告日志
+     * 仅在配置的日志级别小于等于WARN时才会输出
+     * @param args 要输出的参数
+     */
+    warn(tag: string, ...args: any[]): void;
+    /**
+     * 输出错误日志
+     * 仅在配置的日志级别小于等于ERROR时才会输出
+     * @param args 要输出的参数
+     */
+    error(tag: string, ...args: any[]): void;
+};
+
+declare const loggerList: string[][];
+
+/**
+ * 日志级别枚举
+ * 定义了不同级别的日志，用于控制日志输出
+ */
+declare const LogLevel: {
+    /** 普通日志级别 */
+    LOG: number;
+    /** 调试日志级别 */
+    DEBUG: number;
+    /** 信息日志级别 */
+    INFO: number;
+    /** 警告日志级别 */
+    WARN: number;
+    /** 错误日志级别 */
+    ERROR: number;
+};
+
+declare const logLevel: number;
 
 export declare namespace main_app {
     export {
@@ -1147,6 +1329,11 @@ declare class Public {
 declare function publicChat(message: string, color: string): string;
 
 /**
+ * 读取或初始化配置项
+ */
+declare function readHortimagicConfigStore(): void;
+
+/**
  * 读取本地存储的脚本列表
  */
 declare function readScriptList(): void;
@@ -1163,6 +1350,11 @@ declare function registerIcon(name: string, svgContent: string): void;
  * @param script 要移除的脚本对象
  */
 declare function removeScriptFromList(script: Script): void;
+
+/**
+ * 保存配置项仓库
+ */
+declare function saveHortimagicConfigStore(): void;
 
 /**
  * 保存脚本列表到本地存储
@@ -1202,6 +1394,17 @@ export declare namespace script_tools {
 declare let scriptList: Script[];
 
 declare function send(message: string): Promise<void>;
+
+declare class SharedData {
+    loggerList: string[][];
+}
+
+declare const sharedData: SharedData;
+
+/**
+ * 共享数据仓库，不进行数据持久化
+ */
+declare const sharedDataStore: Store;
 
 /**
  * 异步延时函数
@@ -1248,33 +1451,169 @@ declare class Stock {
  */
 declare function stockRequest(count: number | undefined): string;
 
+/**
+ * Store 类提供了一个基于键值对的数据存储系统
+ * 它继承自 EventEmitter，允许监听存储变化
+ *
+ * @example
+ * // 创建 Store 实例
+ * const store = new Store();
+ *
+ * // 添加数据项
+ * const countItem = store.add('count', 0);
+ *
+ * // 监听特定项的变化
+ * countItem.on('change', (newValue) => {
+ *   logger.log('Count changed to:', newValue);
+ * });
+ *
+ * // 设置值
+ * store.setValue('count', 5);
+ *
+ * // 获取值
+ * const count = store.getValue('count'); // 返回 5
+ *
+ * @example
+ * // 使用持久化功能
+ * const store = new Store();
+ * store.add('username', 'john');
+ *
+ * // 保存到 localStorage
+ * store.persistToLocalStorage('my-app-data');
+ *
+ * // 从 localStorage 加载
+ * const newStore = new Store();
+ * newStore.loadFromLocalStorage('my-app-data');
+ */
 declare class Store extends EventEmitter {
     private items;
+    /**
+     * 添加一个新的 StoreItem
+     * @param key 键名
+     * @param initialValue 初始值
+     * @returns 返回新创建或已存在的 StoreItem
+     *
+     * @example
+     * const store = new Store();
+     * const item = store.add('name', 'John');
+     * logger.log(item.value); // 'John'
+     */
     add(key: string, initialValue: any): StoreItem<any>;
+    /**
+     * 获取指定键的 StoreItem
+     * @param key 键名
+     * @returns 返回对应的 StoreItem 或 undefined
+     *
+     * @example
+     * const store = new Store();
+     * store.add('count', 0);
+     * const item = store.get('count');
+     * logger.log(item?.value); // 0
+     */
     get<T = any>(key: string): StoreItem<T> | undefined;
+    /**
+     * 移除指定键的 StoreItem
+     * @param key 键名
+     * @returns 如果存在并成功移除则返回 true，否则返回 false
+     *
+     * @example
+     * const store = new Store();
+     * store.add('temp', 'data');
+     * const removed = store.remove('temp'); // true
+     * const notRemoved = store.remove('nonexistent'); // false
+     */
     remove(key: string): boolean;
+    /**
+     * 获取指定键的值
+     * @param key 键名
+     * @returns 返回对应的值或 undefined
+     *
+     * @example
+     * const store = new Store();
+     * store.add('name', 'John');
+     * const name = store.getValue('name'); // 'John'
+     * const missing = store.getValue('missing'); // undefined
+     */
     getValue<T = any>(key: string): T | undefined;
+    /**
+     * 设置指定键的值
+     * @param key 键名
+     * @param value 值
+     *
+     * @example
+     * const store = new Store();
+     * store.setValue('count', 10); // 如果不存在则添加
+     * store.setValue('count', 20); // 如果存在则更新
+     * logger.log(store.getValue('count')); // 20
+     */
     setValue<T = any>(key: string, value: T): void;
+    /**
+     * 检查是否存在指定键的 StoreItem
+     * @param key 键名
+     * @returns 如果存在返回 true，否则返回 false
+     *
+     * @example
+     * const store = new Store();
+     * store.add('name', 'John');
+     * logger.log(store.has('name')); // true
+     * logger.log(store.has('age')); // false
+     */
     has(key: string): boolean;
     /**
      * 将 Store 中所有数据保存到 localStorage
      * @param storageKey localStorage 的键名，例如 'app-store'
+     *
+     * @example
+     * const store = new Store();
+     * store.add('username', 'john');
+     * store.add('theme', 'dark');
+     * store.persistToLocalStorage('my-app-storage');
      */
     persistToLocalStorage(storageKey: string): void;
     /**
      * 从 localStorage 加载数据并恢复到 Store
      * @param storageKey localStorage 的键名
+     *
+     * @example
+     * const store = new Store();
+     * store.loadFromLocalStorage('my-app-storage');
+     *
+     * // 现在 store 包含之前保存的数据
+     * const username = store.getValue('username');
      */
     loadFromLocalStorage(storageKey: string): void;
 }
 
-export declare namespace Store_2 {
+export declare namespace Store_StoreItem {
     export {
         StoreItem,
         Store
     }
 }
 
+/**
+ * 双向绑定装饰器 - 将类属性与 Store 中的值进行双向绑定
+ * 当 Store 中的值变化时，类属性也会更新；当类属性变化时，Store 中的值也会更新
+ *
+ * @example
+ * ```typescript
+ * // 创建一个 Store 实例
+ * const myStore = new Store();
+ *
+ * // 在类中使用装饰器
+ * class MyClass {
+ *   @storeBind(myStore, 'myKey')
+ *   myProperty: string;
+ * }
+ *
+ * const instance = new MyClass();
+ * instance.myProperty = 'hello'; // 这会更新 Store 中 'myKey' 的值
+ * logger.log(myStore.get('myKey').value); // 输出: 'hello'
+ *
+ * myStore.get('myKey').value = 'world'; // 这会更新类属性
+ * logger.log(instance.myProperty); // 输出: 'world'
+ * ```
+ */
 declare function storeBind(store: Store, key: StoreKey): (target: any, propertyKey: string) => void;
 
 export declare namespace storeDecorators {
@@ -1287,22 +1626,146 @@ export declare namespace storeDecorators {
     }
 }
 
+/**
+ * StoreItem 类表示 Store 中的一个数据项
+ * 它继承自 EventEmitter，允许监听值的变化
+ *
+ * @example
+ * // 创建一个 StoreItem 实例
+ * const item = new StoreItem<number>(42);
+ *
+ * // 监听值的变化
+ * item.on('change', (newValue) => {
+ *   logger.log('Value changed to:', newValue);
+ * });
+ *
+ * // 修改值
+ * item.value = 100; // 会触发 change 事件
+ */
 declare class StoreItem<T> extends EventEmitter {
     private _value;
+    /**
+     * 构造函数
+     * @param initialValue 初始值
+     */
     constructor(initialValue: T);
+    /**
+     * 获取当前值
+     */
     get value(): T;
+    /**
+     * 设置新值，如果新值与当前值不同，则触发 change 事件
+     * @param newValue 新值
+     */
     set value(newValue: T);
+    /**
+     * 手动触发 change 事件，即使值没有改变
+     */
     triggerChange(): void;
 }
 
 declare type StoreKey = string;
 
+/**
+ * 持续监听装饰器 - 监听 Store 中值的变化并执行方法
+ * 当 Store 中的值变化时，被装饰的方法会被调用
+ *
+ * @example
+ * ```typescript
+ * // 创建一个 Store 实例
+ * const myStore = new Store();
+ * myStore.add('myKey', 'initial value');
+ *
+ * // 在类中使用装饰器
+ * class MyClass {
+ *   @storeOn(myStore, 'myKey')
+ *   onMyKeyChange(newValue: any) {
+ *     logger.log('Value changed to:', newValue);
+ *   }
+ * }
+ *
+ * const instance = new MyClass();
+ * myStore.get('myKey').value = 'new value'; // 这会触发 onMyKeyChange 方法
+ * // 输出: 'Value changed to: new value'
+ * ```
+ */
 declare function storeOn(store: Store, key: StoreKey): (target: any, _propertyKey: string, descriptor: PropertyDescriptor) => void;
 
+/**
+ * 仅监听一次装饰器 - 监听 Store 中值的下一次变化并执行方法
+ * 当 Store 中的值下一次变化时，被装饰的方法会被调用，然后监听器自动移除
+ *
+ * @example
+ * ```typescript
+ * // 创建一个 Store 实例
+ * const myStore = new Store();
+ * myStore.add('myKey', 'initial value');
+ *
+ * // 在类中使用装饰器
+ * class MyClass {
+ *   @storeOnce(myStore, 'myKey')
+ *   onMyKeyChange(newValue: any) {
+ *     logger.log('Value changed to:', newValue);
+ *   }
+ * }
+ *
+ * const instance = new MyClass();
+ * myStore.get('myKey').value = 'first change'; // 这会触发 onMyKeyChange 方法
+ * // 输出: 'Value changed to: first change'
+ *
+ * myStore.get('myKey').value = 'second change'; // 这不会触发方法，因为监听器已自动移除
+ * ```
+ */
 declare function storeOnce(store: Store, key: StoreKey): (target: any, _propertyKey: string, descriptor: PropertyDescriptor) => void;
 
+/**
+ * 自动清理装饰器 - 为类自动注入 destroy 方法
+ * 当调用实例的 destroy 方法时，会自动清理所有 Store 监听器
+ *
+ * @example
+ * ```typescript
+ * // 在类上使用装饰器
+ * @storeRemoveOn()
+ * class MyClass {
+ *   @storeOn(myStore, 'myKey')
+ *   onMyKeyChange(newValue: any) {
+ *     logger.log('Value changed to:', newValue);
+ *   }
+ * }
+ *
+ * const instance = new MyClass();
+ * // ... 使用实例 ...
+ * instance.destroy(); // 这会清理所有 Store 监听器
+ * ```
+ */
 declare function storeRemoveOn(): <T extends new (...args: any[]) => any>(constructor: T) => T;
 
+/**
+ * 单向同步装饰器 - 将 Store 中的值单向同步到类属性
+ * 当 Store 中的值变化时，类属性会更新，但类属性变化不会影响 Store
+ *
+ * @example
+ * ```typescript
+ * // 创建一个 Store 实例
+ * const myStore = new Store();
+ * myStore.add('myKey', 'initial value');
+ *
+ * // 在类中使用装饰器
+ * class MyClass {
+ *   @storeSync(myStore, 'myKey')
+ *   myProperty: string;
+ * }
+ *
+ * const instance = new MyClass();
+ * logger.log(instance.myProperty); // 输出: 'initial value'
+ *
+ * myStore.get('myKey').value = 'new value';
+ * logger.log(instance.myProperty); // 输出: 'new value'
+ *
+ * instance.myProperty = 'local value'; // 这不会影响 Store
+ * logger.log(myStore.get('myKey').value); // 仍然是: 'new value'
+ * ```
+ */
 declare function storeSync(store: Store, key: StoreKey): (target: any, _propertyKey: string) => void;
 
 /**
