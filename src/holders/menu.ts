@@ -1,5 +1,7 @@
+/** 菜单容器 */
 export let menuHolder: HTMLDivElement = document.createElement('div');
 
+/** 初始化菜单容器 */
 export function initMenuHolder() {
     menuHolder.id = 'hmMenuHolder';
     let img = document.querySelector('#functionHolderImg');

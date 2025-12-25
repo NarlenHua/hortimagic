@@ -2,7 +2,7 @@
  * 异步延时函数
  * @param  ms
  */
-async function sleep(ms: number) {
+export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 /**
@@ -10,7 +10,7 @@ async function sleep(ms: number) {
  * @param html 要压缩的html字符串
  * @returns 去除空白字符的字符串
  */
-function compressHTML(html: string): string {
+export function compressHTML(html: string): string {
   // 去除HTML中的多余空白字符
   html = html.replace(/>\s+</g, "><"); // 去除标签之间的多余空白
   html = html.replace(/\s{2,}/g, " "); // 去除多余的空格
@@ -23,7 +23,7 @@ function compressHTML(html: string): string {
  * @param css 要压缩的css字符串
  * @returns 去除空白字符的字符串
  */
-function compressCSS(css: string): string {
+export function compressCSS(css: string): string {
   // 去除CSS中的多余空白字符
   css = css.replace(/\s{2,}/g, " "); // 去除多余的空格
   css = css.replace(/\/\*[\s\S]*?\*\//g, ""); // 去除CSS注释
@@ -36,7 +36,7 @@ function compressCSS(css: string): string {
  * 向页面添加一个样式元素
  * @param css css字符串
  */
-function addStyle(css: string) {
+export function addStyle(css: string) {
   let s = document.createElement("style");
   s.innerText = css;
   document.body.append(s);
@@ -46,7 +46,7 @@ function addStyle(css: string) {
  * @param {string} e
  * @returns {string}
  */
-function htmlSpecialCharsEscape(e: string): string {
+export function htmlSpecialCharsEscape(e: string): string {
   e = e.replace(`&`, "&amp;");
   e = e.replace(`<`, "&lt;");
   e = e.replace(`>`, "&gt;");
@@ -60,7 +60,7 @@ function htmlSpecialCharsEscape(e: string): string {
  * @param {string} e
  * @returns {string}
  */
-function htmlSpecialCharsDecode(e: string): string {
+export function htmlSpecialCharsDecode(e: string): string {
   e = e.replace("&lt;", `<`);
   e = e.replace("&gt;", `>`);
   e = e.replace("&quot;", `"`);
@@ -74,7 +74,7 @@ function htmlSpecialCharsDecode(e: string): string {
  * 获取当前用户的名字
  * @returns 返回当前用户的名字，没找到返回null
  */
-function getUserName(): string | null {
+export function getUserName(): string | null {
   // @ts-ignore
   if (window["myself"]) return window["myself"];
   else return null;
@@ -83,7 +83,7 @@ function getUserName(): string | null {
  * 获取当前用户的UID
  * @returns 返回当前用户的UID，没找到返回null
  */
-function getUserUid(): string | null {
+export function getUserUid(): string | null {
   // @ts-ignore
   if (window["uid"]) return window["uid"];
   else return null;
@@ -92,7 +92,7 @@ function getUserUid(): string | null {
  * 获取当前房间ID
  * @returns 返回当前用户的UID，没找到返回null
  */
-function getRoomId(): string | null {
+export function getRoomId(): string | null {
   // @ts-ignore
   if (window["roomn"]) return window["roomn"];
   else return null;
@@ -102,7 +102,7 @@ function getRoomId(): string | null {
  * @param roomId 房间的id
  * @returns 返回返回消息
  */
-function getRoomInfoById(roomId: string): {
+export function getRoomInfoById(roomId: string): {
   name: string;
   roomPath: Array<string>;
   color: string;
@@ -143,7 +143,7 @@ function getRoomInfoById(roomId: string): {
  * @param {string} uid
  * @returns 用户消息
  */
-function getOnlineUserInfoById(uid: string): {
+export function getOnlineUserInfoById(uid: string): {
   name: string;
   uid: string;
   color: string;
@@ -169,15 +169,15 @@ function getOnlineUserInfoById(uid: string): {
  * 获取所有在线用户的信息
  * @returns 用户消息列表
  */
-function getAllOnlineUserInfo():
+export function getAllOnlineUserInfo():
   | {
-      name: any;
-      uid: any;
-      color: any;
-      avatar: any;
-      roomId: any;
-      personalizedSignature: any;
-    }[]
+    name: any;
+    uid: any;
+    color: any;
+    avatar: any;
+    roomId: any;
+    personalizedSignature: any;
+  }[]
   | null {
   // @ts-ignore
   let userInfoMapObj = window.Objs.mapHolder.Assets.userJson;
@@ -200,7 +200,7 @@ function getAllOnlineUserInfo():
  * 切换房间
  * @param {string} roomId 房间ID
  */
-function changeRoom(roomId: string) {
+export function changeRoom(roomId: string) {
   roomId = String(roomId);
   if (roomId)
     // @ts-ignore
@@ -223,7 +223,7 @@ function getUserProfilePictureUrl(): string | null {
  * 获取用户蔷薇输入颜色
  * @returns 获取不到返回null
  */
-function getUserInputColor(): string | null {
+export function getUserInputColor(): string | null {
   // @ts-ignore
   if (window.inputcolorhex) return window.inputcolorhex;
   return null;
@@ -235,7 +235,7 @@ function getUserInputColor(): string | null {
  * @param {string} content 正文
  * @param {string} messageId 消息气泡的ID
  */
-function generatePrivateMessageBubble(
+export function generatePrivateMessageBubble(
   targetUid: string,
   content: string,
   messageId: string
@@ -270,7 +270,7 @@ function generatePrivateMessageBubble(
  * 切换房间
  * @param {string} roomId
  */
-function switchRoom(roomId: string) {
+export function switchRoom(roomId: string) {
   // @ts-ignore
   if (window.Objs.mapHolder?.function?.roomchanger)
     // @ts-ignore
@@ -292,23 +292,27 @@ function switchRoom(roomId: string) {
 //     iiroseElements.inputSendBtn.onclick(null);
 //     inputBox.value = old;
 // }
-export {
-  sleep,
-  compressHTML,
-  compressCSS,
-  addStyle,
-  htmlSpecialCharsEscape,
-  htmlSpecialCharsDecode,
-  getUserName,
-  getUserUid,
-  getRoomId,
-  getRoomInfoById,
-  getOnlineUserInfoById,
-  getAllOnlineUserInfo,
-  changeRoom,
-  getUserProfilePictureUrl,
-  getUserInputColor,
-  generatePrivateMessageBubble,
-  switchRoom,
-  // sendCurrentPageMessage
-};
+
+/**
+ * 工具集
+ */
+// export {
+//   sleep,
+//   compressHTML,
+//   compressCSS,
+//   addStyle,
+//   htmlSpecialCharsEscape,
+//   htmlSpecialCharsDecode,
+//   getUserName,
+//   getUserUid,
+//   getRoomId,
+//   getRoomInfoById,
+//   getOnlineUserInfoById,
+//   getAllOnlineUserInfo,
+//   changeRoom,
+//   getUserProfilePictureUrl,
+//   getUserInputColor,
+//   generatePrivateMessageBubble,
+//   switchRoom,
+//   // sendCurrentPageMessage
+// };

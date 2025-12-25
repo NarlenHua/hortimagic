@@ -1,5 +1,5 @@
-import { hortimagicConfig, loggerList } from "./globalStore";
-
+import { BareEmitter } from "./Emitter-Store";
+import { logLevel, allowLogging } from "./store";
 /**
  * 日志级别枚举
  * 定义了不同级别的日志，用于控制日志输出
@@ -16,9 +16,13 @@ export const LogLevel = {
     /** 错误日志级别 */
     ERROR: 4,
 };
-
 /**
- * 日志记录器对象
+ * 日志事件发射器
+ * 每次日志输出时都会触发'log'事件
+ */
+export const logEmitter = new BareEmitter();
+/**
+ * 日志记录器
  * 根据配置中的日志级别来决定是否输出日志
  * 只有当配置的日志级别与当前输出的日志级别匹配时才会输出日志
  */
@@ -29,9 +33,8 @@ export const logger = {
      * @param args 要输出的参数
      */
     log(tag: string, ...args: any[]): void {
-        if (hortimagicConfig.logLevel <= LogLevel.LOG) {
-            if (loggerList.length >= 49) { loggerList.shift(); }
-            loggerList.push([new Date().toLocaleString().slice(10), tag, ...args]);
+        if (logLevel.value <= LogLevel.LOG && allowLogging) {
+            logEmitter.emit('log', tag, ...args);
             console.log(tag, ...args);
         }
     },
@@ -41,9 +44,8 @@ export const logger = {
      * @param args 要输出的参数
      */
     debug(tag: string, ...args: any[]): void {
-        if (hortimagicConfig.logLevel <= LogLevel.DEBUG) {
-            if (loggerList.length >= 49) { loggerList.shift(); }
-            loggerList.push([new Date().toLocaleString().slice(10), tag, ...args]);
+        if (logLevel.value <= LogLevel.DEBUG && allowLogging) {
+            logEmitter.emit('log', tag, ...args);
             console.debug(tag, ...args);
         }
     },
@@ -53,9 +55,8 @@ export const logger = {
      * @param args 要输出的参数
      */
     info(tag: string, ...args: any[]): void {
-        if (hortimagicConfig.logLevel <= LogLevel.INFO) {
-            if (loggerList.length >= 49) { loggerList.shift(); }
-            loggerList.push([new Date().toLocaleString().slice(10), tag, ...args]);
+        if (logLevel.value <= LogLevel.INFO && allowLogging) {
+            logEmitter.emit('log', tag, ...args);
             console.info(tag, ...args);
         }
     },
@@ -65,9 +66,8 @@ export const logger = {
      * @param args 要输出的参数
      */
     warn(tag: string, ...args: any[]): void {
-        if (hortimagicConfig.logLevel <= LogLevel.WARN) {
-            if (loggerList.length >= 49) { loggerList.shift(); }
-            loggerList.push([new Date().toLocaleString().slice(10), tag, ...args]);
+        if (logLevel.value <= LogLevel.WARN && allowLogging) {
+            logEmitter.emit('log', tag, ...args);
             console.warn(tag, ...args);
         }
     },
@@ -77,9 +77,8 @@ export const logger = {
      * @param args 要输出的参数
      */
     error(tag: string, ...args: any[]): void {
-        if (hortimagicConfig.logLevel <= LogLevel.ERROR) {
-            if (loggerList.length >= 49) { loggerList.shift(); }
-            loggerList.push([new Date().toLocaleString().slice(10), tag, ...args]);
+        if (logLevel.value <= LogLevel.ERROR && allowLogging) {
+            logEmitter.emit('log', tag, ...args);
             console.error(tag, ...args);
         }
     },

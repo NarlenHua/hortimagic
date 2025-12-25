@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { logger } from '../core/logger';
+import { logger } from '../core/log-tools';
 
 /**
  * @example

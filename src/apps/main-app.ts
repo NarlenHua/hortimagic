@@ -1,5 +1,5 @@
 import { refreshAll, initHooks } from "../core/elements-hooks";
-import { initSocket } from "../core/iirose-socket";
+import { initSocket } from "../core/socket-tools";
 import { ingectlocalScript } from "../core/script-tools";
 import { initMenuHolder, menuHolder } from "../holders/menu";
 import { initMovePanelHolder } from "../holders/move-panel";
@@ -12,7 +12,7 @@ import pkg from '../../package.json' with { type: 'json' };
 import { initDialogApp } from "./dialog-app";
 import { notice } from "../easy-tools";
 import { initConfigApp } from "./config-app";
-import { readHortimagicConfigStore } from "../core/globalStore";
+import { readHortimagicConfigStore } from "../core/global-Store";
 import { initLogApp } from "./log-app";
 async function init() {
     try {

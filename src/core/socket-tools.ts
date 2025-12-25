@@ -1,10 +1,9 @@
 import { decodeMessage, judegMessageClass, messageObjList } from "./decoder";
-import { EventEmitter } from "./EventEmitter";
-import { logger } from "./logger";
+import { BareEmitter } from "./Emitter-Store";
+import { logger } from "./log-tools";
 import { sleep } from "./tools";
 
-export const messageEmitter = new EventEmitter();
-
+export const messageEmitter = new BareEmitter();
 // 发送消息
 async function beforeSend(message: string): Promise<string | null> {
     return message;
@@ -14,15 +13,15 @@ function afterSend(message: string) {
     return message;
 }
 async function send(message: string) {
-    logger.log('socket', '发送', { message });
-    let temp = await sockets.beforeSend(message);
+    logger.log('socket', 'send', { message });
+    let temp = await socketTools.beforeSend(message);
     try {
         if (temp != null) {
-            sockets.originalSend(temp);
-            sockets.afterSend(temp);
+            socketTools.originalSend(temp);
+            socketTools.afterSend(temp);
         }
     } catch (error) {
-        logger.error('捕获到错误', error);
+        logger.error('socket', error);
     }
 }
 // 接收消息
@@ -46,12 +45,12 @@ async function afterOnmessage(message: string) {
 }
 async function onmessage(message: string) {
     // logger.log('socket','接收', { message });
-    let temp = await sockets.beforeOnmessage(message);
+    let temp = await socketTools.beforeOnmessage(message);
     try {
         if (temp != null) {
-            sockets.originalOnmessage(temp);
+            socketTools.originalOnmessage(temp);
             // 不等待异步函数实现“多线程”的目的
-            sockets.afterOnmessage(temp);
+            socketTools.afterOnmessage(temp);
         }
     } catch (error) {
         logger.error('捕获到错误', error);
@@ -60,7 +59,7 @@ async function onmessage(message: string) {
 
 
 // 初始化fSocket
-async function initSocket() {
+export async function initSocket() {
     logger.log('socket', '代理网络');
     for (let index = 0; index < 30; index++) {
         try {
@@ -89,18 +88,18 @@ async function initSocket() {
     // await sleep(500);
     // 发送
     // @ts-ignore
-    sockets.originalSend = window["socket"].send;
+    socketTools.originalSend = window["socket"].send;
     // 覆写原来的发送函数
     // @ts-ignore
-    window["socket"].send = sockets.send;
+    window["socket"].send = socketTools.send;
     // 接收
     // @ts-ignore
-    sockets.originalOnmessage = window["socket"]._onmessage;
+    socketTools.originalOnmessage = window["socket"]._onmessage;
     // 覆写接收函数
     // @ts-ignore
-    window["socket"]._onmessage = sockets.onmessage;
+    window["socket"]._onmessage = socketTools.onmessage;
 }
-const sockets = {
+export const socketTools = {
     beforeSend,
     originalSend,
     afterSend,
@@ -111,8 +110,5 @@ const sockets = {
     onmessage,
     initSocket
 }
-export {
-    sockets,
-    initSocket
-}
+
 

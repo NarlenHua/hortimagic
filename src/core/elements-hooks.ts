@@ -1,7 +1,7 @@
-import { logger } from "./logger";
+import { logger } from "./log-tools";
 
 /** 原来界面的元素 */
-let elements = {
+export let elements = {
   /** 移动窗口父元素,移动窗口容器 */
   movePanelHolder: document.querySelector("#movePanelHolder"),
   /** 侧边菜单按钮 */
@@ -37,7 +37,7 @@ let elements = {
 /**
  * 更新一些element
  */
-function refreshAll() {
+export function refreshAll() {
   elements.movePanelHolder = document.querySelector("#movePanelHolder");
   elements.functionHolder = document.querySelector("#functionHolder");
   elements.functionButtonGroupList = [
@@ -66,7 +66,7 @@ function refreshAll() {
   );
 }
 /** 钩子函数 */
-let Hooks = {
+export let Hooks = {
   elementHooks: {
     moveinput: {
       oninputBefore: () => {
@@ -161,9 +161,8 @@ let Hooks = {
 /**
  * 注入钩子函数
  */
-function initHooks() {
+export function initHooks() {
   logger.log("增加钩子函数");
   Hooks.replaceMoveinput();
   Hooks.replaceButtonProcesser();
 }
-export { elements, refreshAll, Hooks, initHooks };

@@ -164,6 +164,10 @@ function unkonw(message: string) {
     return messageObj;
 }
 
+/**
+ * 解析消息字符串并将对应的消息对象添加到消息列表中
+ * @param message 原消息字符串
+ */
 export function decodeMessage(message: string) {
     messageObjList = [];
     if (/^"[^"].*/gs.test(message)) {

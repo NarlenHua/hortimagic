@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property, query } from 'lit/decorators.js'
-import { logger } from '../core/logger';
+import { logger } from '../core/log-tools';
 
 /** 
  * 滑动单元格组件

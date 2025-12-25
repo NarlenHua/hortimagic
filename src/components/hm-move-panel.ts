@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { logger } from '../core/logger';
+import { logger } from '../core/log-tools';
 
 /** 创建的窗口列表 */
 export let movePanelItemList: HmMovePanel[] = [];

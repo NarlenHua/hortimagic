@@ -1,5 +1,8 @@
-
-export class Public {
+/**
+ * 公共消息类
+ * 用于表示公共频道中的消息
+ */
+class Public {
     /** 时间戳 */
     timeStamp: string = '';
     /** 头像链接 */
@@ -21,7 +24,12 @@ export class Public {
     /** 消息类别 */
     // readonly messageClass = 'public';
 }
-export class Private {
+
+/**
+ * 私聊消息类
+ * 用于表示私聊消息
+ */
+class Private {
     /** 时间戳 */
     timeStamp: string = '';
     /** 头像链接 */
@@ -41,7 +49,12 @@ export class Private {
     /** 消息类型 */
     // readonly messageClass = 'private';
 }
-export class Hidden {
+
+/**
+ * 隐藏消息类
+ * 用于表示隐藏类型的消息
+ */
+class Hidden {
     /** 消息的标题，名字？主题 */
     messageName: string = '';
     /** 发送过来的唯一标识 */
@@ -51,25 +64,35 @@ export class Hidden {
     /** 消息类型 */
     // readonly messageClass = 'hidden';
 }
-export class Danmu {
+
+/**
+ * 弹幕消息类
+ * 用于表示弹幕类型的消息
+ */
+class Danmu {
     /** 用户名 */
     username: string = '';
-    /**  */
+    /** 头像链接 */
     avatar: string = '';
     /** 消息 */
     message: string = '';
-    /**  */
+    /** 消息颜色 */
     color: string = '';
-    /**  */
+    /** 性别 */
     gender: string = '';
-    /**  */
+    /** 时间戳 */
     timeStamp: string = '';
     /** 唯一id */
     uid: string = '';
     /** 消息类型 */
     // readonly messageClass = 'danmu';
 }
-export class Withdrawn {
+
+/**
+ * 撤回消息类
+ * 用于表示撤回操作的消息
+ */
+class Withdrawn {
     /** 可选的，撤回私聊对象窗口的UID */
     privateUID: string = '';
     /** 需要要撤回的气泡用户uid */
@@ -81,13 +104,23 @@ export class Withdrawn {
     /** 消息类型 */
     // readonly messageClass = 'withdrawn';
 }
-export class System {
+
+/**
+ * 系统消息类
+ * 用于表示系统通知类消息
+ */
+class System {
     /** 消息列表 */
     userMessageList: string[] = [];
     /** 消息类型 */
     // readonly messageClass = 'system';
 }
-export class Stock {
+
+/**
+ * 股票消息类
+ * 用于表示股票相关数据消息
+ */
+class Stock {
     /** 
      * '*' 表示股价过低无法买股票
      * '>' 表示卖出的股票超出数量
@@ -108,7 +141,12 @@ export class Stock {
     /** 消息类型 */
     // readonly messageClass = 'stock';
 }
-export class Unkonw {
+
+/**
+ * 未知消息类
+ * 用于表示无法识别的消息类型
+ */
+class Unkonw {
     /** 未知消息的原型 */
     message: string = '';
     /** 消息类型 */
@@ -116,7 +154,8 @@ export class Unkonw {
 }
 
 /**
- * 所有消息的类
+ * 所有消息类型的联合类型
+ * 用于类型检查和类型安全
  */
 export type MessageClass =
     Public |
@@ -127,3 +166,14 @@ export type MessageClass =
     System |
     Stock |
     Unkonw;
+
+export {
+    Public,
+    Private,
+    Hidden,
+    Danmu,
+    Withdrawn,
+    System,
+    Stock,
+    Unkonw
+};

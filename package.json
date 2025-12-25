@@ -1,8 +1,8 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.0.4dev4",
-  "changelog": "增加了存储库",
+  "version": "1.0.4dev6",
+  "changelog": "有bug",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",
   "keywords": [
@@ -22,6 +22,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "bare-emitter": "^1.0.2",
+    "bare-store": "^1.0.0",
     "lit": "^3.3.1",
     "terser": "^5.44.0",
     "vite-plugin-dts": "^4.5.4"
