@@ -1,8 +1,8 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.1.3",
-  "changelog": "优化了滑动单元格的拖动逻辑，优化了单元格默认的显示内容",
+  "version": "1.1.4",
+  "changelog": "修复了因滑动单元格阻止冒泡在移动端无法点击的问题",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",
   "keywords": [

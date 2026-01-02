@@ -208,16 +208,12 @@ export class HmSwipeCell extends LitElement {
     }
 
     onDragStart = (e: MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation(); // 阻止事件冒泡
         this.startDrag(e.clientX);
         this.sliderElement.style.cursor = 'grabbing';
         this.sliderElement.style.transition = 'none';
     }
 
     onTouchStart = (e: TouchEvent) => {
-        e.preventDefault();
-        e.stopPropagation(); // 阻止事件冒泡
         this.startDrag(e.touches[0].clientX);
         this.sliderElement.style.transition = 'none';
     }
@@ -235,14 +231,14 @@ export class HmSwipeCell extends LitElement {
     onDragMove = (e: MouseEvent) => {
         if (!this._isDragging) return;
         e.preventDefault();
-        e.stopPropagation(); // 阻止事件冒泡
+        e.stopPropagation(); // 仍然在移动过程中阻止事件冒泡，防止触发全局的滑动事件
         this.handleMove(e.clientX);
     }
 
     onTouchMove = (e: TouchEvent) => {
         if (!this._isDragging) return;
         e.preventDefault();
-        e.stopPropagation(); // 阻止事件冒泡
+        e.stopPropagation(); // 仍然在移动过程中阻止事件冒泡，防止触发全局的滑动事件
         this.handleMove(e.touches[0].clientX);
     }
 
