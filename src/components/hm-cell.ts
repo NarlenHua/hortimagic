@@ -20,13 +20,13 @@ import { customElement, property } from 'lit/decorators.js';
 export class HmCell extends LitElement {
   /** 标题，使用slot后失效 */
   @property({ attribute: 'title-name' })
-  titleName = "单元格";
+  titleName = "标题";
   /** 标题下方描述，使用slot后失效 */
   @property()
-  description = "描述信息";
+  description = "";
   /** 右侧正文，使用slot后失效 */
   @property()
-  content = "内容";
+  content = "";
   /** 标题点击回调函数 */
   @property()
   titleClickCallback = () => { }
