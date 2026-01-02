@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property, query } from 'lit/decorators.js'
-import { logger } from '../core/log-tools';
+// import { logger } from '../core/log-tools';
 
 /** 
  * 滑动单元格组件
@@ -37,7 +37,7 @@ export class HmSwipeCell extends LitElement {
      */
     @property()
     rightButtonCallback = function () {
-        logger.log('cell', '点击了一下');
+        // logger.log('cell', '点击了一下');
     };
 
     @query('.slider') sliderElement!: HTMLElement;
