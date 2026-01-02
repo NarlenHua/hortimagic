@@ -712,7 +712,6 @@ style="width:${this.size}; height:${this.size};"
 <div
   class="switch ${this.disabled?"disabled":""} ${this.loading?"loading":""} ${this.checked?"checked":""}"
   @click="${this.change}"
-  @touchstart="${this.change}"
   style="--switch-color: ${this.color}"
 >
   <div class="switch-inner">

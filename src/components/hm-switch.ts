@@ -65,11 +65,11 @@ export class HmSwitch extends LitElement {
   }
 
   render() {
+    // @touchstart="${this.change}"
     return html`
 <div
   class="switch ${this.disabled ? 'disabled' : ''} ${this.loading ? 'loading' : ''} ${this.checked ? 'checked' : ''}"
   @click="${this.change}"
-  @touchstart="${this.change}"
   style="--switch-color: ${this.color}"
 >
   <div class="switch-inner">
