@@ -564,13 +564,13 @@ declare class HmButton extends LitElement {
  * @cssprop --hm-cell-background - 背景颜色
  *
  * @example
- * <hm-cell title-name="标题" descripthion="描述信息" content="内容"></hm-cell>
+ * <hm-cell title-name="标题" description="描述信息" content="内容"></hm-cell>
  */
 declare class HmCell extends LitElement {
     /** 标题，使用slot后失效 */
     titleName: string;
     /** 标题下方描述，使用slot后失效 */
-    descripthion: string;
+    description: string;
     /** 右侧正文，使用slot后失效 */
     content: string;
     /** 标题点击回调函数 */

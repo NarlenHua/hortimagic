@@ -14,7 +14,7 @@ import { customElement, property } from 'lit/decorators.js';
  * @cssprop --hm-cell-background - 背景颜色
  * 
  * @example
- * <hm-cell title-name="标题" descripthion="描述信息" content="内容"></hm-cell>
+ * <hm-cell title-name="标题" description="描述信息" content="内容"></hm-cell>
  */
 @customElement('hm-cell')
 export class HmCell extends LitElement {
@@ -23,7 +23,7 @@ export class HmCell extends LitElement {
   titleName = "单元格";
   /** 标题下方描述，使用slot后失效 */
   @property()
-  descripthion = "描述信息";
+  description = "描述信息";
   /** 右侧正文，使用slot后失效 */
   @property()
   content = "内容";
@@ -45,7 +45,7 @@ export class HmCell extends LitElement {
       <slot name="title">${this.titleName}</slot>
     </div>
     <div class="description" part="description">
-      <slot name="description">${this.descripthion}</slot>
+      <slot name="description">${this.description}</slot>
     </div>
   </div>
   <div
