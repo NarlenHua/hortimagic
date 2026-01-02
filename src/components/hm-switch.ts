@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { logger } from '../core/log-tools';
+// import { logger } from '../core/log-tools';
 
 /**
  * 滑动开关组件
@@ -55,7 +55,7 @@ export class HmSwitch extends LitElement {
   change() {
     if (this.disabled || this.loading) return;
     this.checked = !this.checked;
-    logger.log('hm-switch', 'changed!!');
+    // logger.log('hm-switch', 'changed!!');
     // 触发自定义事件供外部监听
     this.dispatchEvent(new CustomEvent('hm-switch-change', {
       detail: { checked: this.checked },

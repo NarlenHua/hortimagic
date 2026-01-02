@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { logger } from '../core/log-tools';
+// import { logger } from '../core/log-tools';
 
 /**
  * @example
@@ -87,7 +87,7 @@ export class HmDialog extends LitElement {
 
     /** 确认，触发 dialog-close dialog-confirm事件*/
     confirm() {
-        logger.log('dialog', "对话框确认事件");
+        // logger.log('dialog', "对话框确认事件");
         this.close();
         this.dispatchEvent(new CustomEvent('hm-dialog-confirm'));
     }
@@ -117,8 +117,8 @@ export class HmDialog extends LitElement {
     <slot></slot>
     <div class="footer">
         <slot name="footer">
-            <hm-button @hm-button-click="${() => { this.cancel(); logger.log('dialog', "取消") }}">取消</hm-button>
-            <hm-button @hm-button-click="${() => { this.confirm(); logger.log('dialog', "确定") }}">确定</hm-button>
+            <hm-button @hm-button-click="${() => { this.cancel(); }}">取消</hm-button>
+            <hm-button @hm-button-click="${() => { this.confirm(); }}">确定</hm-button>
         </slot>
     </div>
 </div>

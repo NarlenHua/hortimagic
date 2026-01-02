@@ -1,4 +1,5 @@
 import { logger } from "./log-tools";
+const Tag = "elements-hooks";
 
 /** 原来界面的元素 */
 export let elements = {
@@ -114,12 +115,12 @@ export let Hooks = {
         }
       };
     } catch (error) {
-      logger.error("替换错误", error);
+      logger.error(Tag, error);
     }
     try {
       let temp = (elements.moveinput as HTMLTextAreaElement).oninput;
       (elements.moveinput as HTMLTextAreaElement).onblur = function () {
-        // logger.log('失去焦点');
+        // logger.log('element-hooks', '失去焦点');
         if (Hooks.elementHooks.moveinput.onblurBefore() == true) {
           // @ts-ignore
           temp?.call(elements.moveinput);
@@ -127,7 +128,7 @@ export let Hooks = {
         }
       };
     } catch (error) {
-      logger.error("替换错误", error);
+      logger.error(Tag, error);
     }
     try {
       let temp = (elements.moveinput as HTMLTextAreaElement).oninput;
@@ -140,7 +141,7 @@ export let Hooks = {
         }
       };
     } catch (error) {
-      logger.error("替换错误", error);
+      logger.error(Tag, error);
     }
   },
   replaceButtonProcesser: () => {
@@ -154,7 +155,7 @@ export let Hooks = {
         }
       };
     } catch (error) {
-      logger.error("替换错误", error);
+      logger.error(Tag, error);
     }
   },
 };
@@ -162,7 +163,6 @@ export let Hooks = {
  * 注入钩子函数
  */
 export function initHooks() {
-  logger.log("增加钩子函数");
   Hooks.replaceMoveinput();
   Hooks.replaceButtonProcesser();
 }

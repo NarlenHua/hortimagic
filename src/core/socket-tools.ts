@@ -1,9 +1,11 @@
 import { decodeMessage, judegMessageClass, messageObjList } from "./decoder";
-import { BareEmitter } from "./Emitter-Store";
+import { Emitter } from "./Emitter";
 import { logger } from "./log-tools";
+import { HortimagicStore } from "./store";
 import { sleep } from "./tools";
 
-export const messageEmitter = new BareEmitter();
+const Tag = 'socket-tools';
+export const messageEmitter = new Emitter();
 // 发送消息
 async function beforeSend(message: string): Promise<string | null> {
     return message;
@@ -13,7 +15,7 @@ function afterSend(message: string) {
     return message;
 }
 async function send(message: string) {
-    logger.log('socket', 'send', { message });
+    if (HortimagicStore.messageLogFlag.send) logger.debug(Tag, '发送', { message });
     let temp = await socketTools.beforeSend(message);
     try {
         if (temp != null) {
@@ -21,30 +23,32 @@ async function send(message: string) {
             socketTools.afterSend(temp);
         }
     } catch (error) {
-        logger.error('socket', error);
+        logger.error(Tag, error);
     }
 }
 // 接收消息
 async function beforeOnmessage(message: string): Promise<string | null> {
-    // logger.log('socket','解码消息', { message });
+    if (HortimagicStore.messageLogFlag.decode) logger.debug(Tag, '解码', { message });
     decodeMessage(message);
     return message;
 }
 
 function originalOnmessage(message: string) { return message; }
 async function afterOnmessage(message: string) {
-    // logger.log('socket','准备触发', message, messageObjList);
+    // logger.debug(Tag,'准备触发', message, messageObjList);
     for (let messageObj of messageObjList) {
-        logger.log('socket', `触发${judegMessageClass(messageObj)}消息`, {
-            message,
-            messageObj
-        });
+        if (HortimagicStore.messageLogFlag.emit) {
+            logger.debug(Tag, `触发${judegMessageClass(messageObj)}消息`, {
+                message,
+                messageObj
+            });
+        }
         messageEmitter.emit(judegMessageClass(messageObj), messageObj)
     };
     return message;
 }
 async function onmessage(message: string) {
-    // logger.log('socket','接收', { message });
+    if (HortimagicStore.messageLogFlag.receive) { logger.debug(Tag, '接收', { message }); }
     let temp = await socketTools.beforeOnmessage(message);
     try {
         if (temp != null) {
@@ -60,13 +64,13 @@ async function onmessage(message: string) {
 
 // 初始化fSocket
 export async function initSocket() {
-    logger.log('socket', '代理网络');
+    logger.debug(Tag, '代理网络');
     for (let index = 0; index < 30; index++) {
         try {
-            logger.log('socket', '等待网络连接', index);
+            logger.debug(Tag, '等待网络连接', index);
             // @ts-ignore
             if (window["socket"].__onmessage == undefined && window["socket"]._onmessage != undefined && window["socket"].send != undefined) {
-                logger.log('socket', '网络连接成功');
+                logger.debug(Tag, '网络连接成功');
                 break;
             }
             else {
@@ -75,7 +79,7 @@ export async function initSocket() {
                 continue;
             }
         } catch (error) {
-            logger.error('socket', error);
+            logger.error(Tag, error);
         }
     }
     // @ts-ignore

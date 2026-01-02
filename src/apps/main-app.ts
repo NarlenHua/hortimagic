@@ -1,6 +1,6 @@
 import { refreshAll, initHooks } from "../core/elements-hooks";
 import { initSocket } from "../core/socket-tools";
-import { ingectlocalScript } from "../core/script-tools";
+import { ingecteScriptList } from "../core/script-tools";
 import { initMenuHolder, menuHolder } from "../holders/menu";
 import { initMovePanelHolder } from "../holders/move-panel";
 import { initNotificationHolder } from "../holders/notification";
@@ -11,13 +11,14 @@ import { initScriptApp } from "./script-app";
 import pkg from '../../package.json' with { type: 'json' };
 import { initDialogApp } from "./dialog-app";
 import { notice } from "../easy-tools";
+
+import { initStore } from "../core/store";
 import { initConfigApp } from "./config-app";
-import { readHortimagicConfigStore } from "../core/global-Store";
 import { initLogApp } from "./log-app";
 async function init() {
     try {
         // 初始化配置项
-        readHortimagicConfigStore();
+        initStore();
         // 初始化所有容器
         initNotificationHolder(); //先注入通知容器
         initDialogHolder();
@@ -35,7 +36,7 @@ async function init() {
         initHooks();
         // 注入脚本
         notice.normal(pkg.name, '注入脚本')
-        ingectlocalScript();
+        ingecteScriptList();
         notice.normal(pkg.name, '生成菜单')
         /** 一级菜单 */
         let menu = document.createElement('hm-menu');
@@ -55,6 +56,7 @@ async function init() {
             scriptMenu.flag = menu.flag;
         });
         menuHolder.append(menu, configMenu, logMenu, scriptMenu,);
+        // menuHolder.append(menu, configMenu, scriptMenu,);
         notice.success(pkg.name, `${pkg.version} 已加载`);
     } catch (error) {
         console.error(error);

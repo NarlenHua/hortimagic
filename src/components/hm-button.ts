@@ -68,6 +68,7 @@ export class HmButton extends LitElement {
       }
       
       .button {
+        width: 100%;
         display: inline-flex;
         align-items: center;
         justify-content: center;

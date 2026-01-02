@@ -4,11 +4,13 @@
 /// <reference path="../src/components/type.d.ts"/>
 import { CSSResult } from 'lit';
 import { LitElement } from 'lit';
+import { proxy } from 'valtio/vanilla';
+import { snapshot } from 'valtio/vanilla';
+import { subscribe } from 'valtio/vanilla';
 import { TemplateResult } from 'lit-html';
 
-/**
- * 向列表加入一个脚本，具有唯一性,名字或链接一样的话就覆盖
- * @param script 要添加的脚本对象
+/** 添加脚本到列表
+ * @param script 脚本对象
  * @returns 是否添加成功
  */
 declare function addScriptToList(script: Script): boolean;
@@ -23,14 +25,10 @@ declare function afterOnmessage(message: string): Promise<string>;
 
 declare function afterSend(message: string): string;
 
-declare const allowNotice: boolean;
-
 declare namespace apps {
     export {
         main_app,
-        dialog_app,
-        log_app,
-        config_app
+        dialog_app
     }
 }
 export { apps }
@@ -44,6 +42,8 @@ declare function beforeSend(message: string): Promise<string | null>;
  * @param {string} roomId 房间ID
  */
 declare function changeRoom(roomId: string): void;
+
+declare function clearScriptList(): void;
 
 declare namespace components {
     export {
@@ -77,40 +77,6 @@ declare function compressCSS(css: string): string;
  */
 declare function compressHTML(html: string): string;
 
-export declare namespace config {
-    export {
-        readHortimagicConfigStore,
-        saveHortimagicConfigStore,
-        HortimagicConfigStore,
-        hortimagicConfig,
-        allowNotice,
-        logLevel,
-        sharedDataStore,
-        sharedData,
-        loggerList
-    }
-}
-
-export declare namespace config_2 {
-    export {
-        readHortimagicConfigStore,
-        saveHortimagicConfigStore,
-        HortimagicConfigStore,
-        hortimagicConfig,
-        allowNotice,
-        logLevel,
-        sharedDataStore,
-        sharedData,
-        loggerList
-    }
-}
-
-export declare namespace config_app {
-    export {
-        initConfigApp
-    }
-}
-
 /**
  * 确认弹窗函数
  * @param message 消息提示
@@ -122,38 +88,40 @@ export declare namespace config_app {
  * ```
  */
 declare function confirm_2(message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function): void;
+export { confirm_2 as confirm }
 
 declare namespace core {
     export {
-        config,
-        logger,
         tools,
         Message,
-        iirose_socket,
-        EventEmitter_2 as EventEmitter,
-        config_2 as globalStore,
+        socket_tools,
         encoder,
         decoder,
         elements_hooks,
-        script_tools,
-        storeDecorators,
-        Store_StoreItem
+        Emitter,
+        log_tools,
+        store,
+        script_tools
     }
 }
 export { core }
 
+/**
+ * 弹幕消息类
+ * 用于表示弹幕类型的消息
+ */
 declare class Danmu {
     /** 用户名 */
     username: string;
-    /**  */
+    /** 头像链接 */
     avatar: string;
     /** 消息 */
     message: string;
-    /**  */
+    /** 消息颜色 */
     color: string;
-    /**  */
+    /** 性别 */
     gender: string;
-    /**  */
+    /** 时间戳 */
     timeStamp: string;
     /** 唯一id */
     uid: string;
@@ -168,6 +136,10 @@ declare class Danmu {
  */
 declare function danmu(message: string, color: string, v?: string): string;
 
+/**
+ * 解析消息字符串并将对应的消息对象添加到消息列表中
+ * @param message 原消息字符串
+ */
 declare function decodeMessage(message: string): void;
 
 export declare namespace decoder {
@@ -198,7 +170,7 @@ export declare namespace dialog_app {
  */
 declare const dialogApp: HmDialogApp;
 
-/** 移动面板容器 */
+/** 弹窗容器 */
 declare let dialogHolder: HTMLDivElement;
 
 declare namespace easy_tools {
@@ -235,11 +207,75 @@ declare let elements: {
 
 export declare namespace elements_hooks {
     export {
-        elements,
         refreshAll,
-        Hooks,
-        initHooks
+        initHooks,
+        elements,
+        Hooks
     }
+}
+
+/**
+ * Emitter 类提供事件驱动的编程模式，允许对象间通过事件进行通信
+ * 支持事件监听、取消监听、一次性监听和事件触发功能
+ */
+declare class Emitter {
+    /**
+     * 存储事件名称和对应监听器数组的映射
+     * @private
+     */
+    private events;
+    /**
+     * 为指定事件添加监听器
+     * @param eventName 事件名称
+     * @param listener 事件触发时要调用的回调函数
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * emitter.on('test', (data) => console.log('接收到数据:', data));
+     * emitter.emit('test', { message: 'Hello' }); // 输出: 接收到数据: { message: 'Hello' }
+     * ```
+     */
+    on(eventName: string, listener: Listener): void;
+    /**
+     * 移除指定事件的监听器
+     * @param eventName 事件名称
+     * @param listener 要移除的监听器函数，如果未提供则移除该事件的所有监听器
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * const listener = (data) => console.log(data);
+     * emitter.on('test', listener);
+     * emitter.off('test', listener); // 移除特定监听器
+     * emitter.off('test'); // 移除所有 'test' 事件的监听器
+     * ```
+     */
+    off(eventName: string, listener?: Listener): void;
+    /**
+     * 为指定事件添加一次性监听器，监听器在第一次触发后将被移除
+     * @param eventName 事件名称
+     * @param listener 事件触发时要调用的回调函数，只执行一次
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * emitter.once('start', () => console.log('仅执行一次'));
+     * emitter.emit('start'); // 输出: 仅执行一次
+     * emitter.emit('start'); // 没有输出，因为监听器已被移除
+     * ```
+     */
+    once(eventName: string, listener: Listener): void;
+    /**
+     * 触发指定事件，并传递参数给监听器
+     * @param eventName 事件名称
+     * @param args 传递给监听器的参数
+     * @returns 如果至少有一个监听器被调用则返回 true，否则返回 false
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * emitter.on('greet', (name, age) => console.log(`你好 ${name}, 你 ${age} 岁了`));
+     * emitter.emit('greet', '小明', 25); // 输出: 你好 小明, 你 25 岁了
+     * ```
+     */
+    emit(eventName: string, ...args: any[]): boolean;
 }
 
 export declare namespace encoder {
@@ -256,19 +292,9 @@ export declare namespace encoder {
     }
 }
 
-declare class EventEmitter {
-    private events;
-    on(eventName: string, listener: Listener): void;
-    off(eventName: string, listener?: Listener): void;
-    once(eventName: string, listener: Listener): void;
-    emit(eventName: string, ...args: any[]): boolean;
-}
+declare function findScriptByName(name: string): number;
 
-export declare namespace EventEmitter_2 {
-    export {
-        EventEmitter
-    }
-}
+declare function findScriptByUrl(url: string): number;
 
 /**
  * 创造一个新的私聊气泡，搭配静默发送私聊消息才能和“正常一样使用。
@@ -346,17 +372,15 @@ declare function getUserInputColor(): string | null;
 declare function getUserName(): string | null;
 
 /**
- * 获取用户蔷薇头像url
- * @returns {string}
- */
-declare function getUserProfilePictureUrl(): string | null;
-
-/**
  * 获取当前用户的UID
  * @returns 返回当前用户的UID，没找到返回null
  */
 declare function getUserUid(): string | null;
 
+/**
+ * 隐藏消息类
+ * 用于表示隐藏类型的消息
+ */
 declare class Hidden {
     /** 消息的标题，名字？主题 */
     messageName: string;
@@ -691,6 +715,10 @@ declare class HmMovePanel extends LitElement {
     zIndex: number;
     /** 左上角图标 */
     icon: string;
+    /** 左下角图标 */
+    leftIcon: string;
+    /** 右下角图标 */
+    rightIcon: string;
     left: number;
     top: number;
     static styles: CSSResult;
@@ -976,20 +1004,32 @@ declare let Hooks: {
     replaceButtonProcesser: () => void;
 };
 
-declare class HortimagicConfig {
-    allowNotice: boolean;
-    logLevel: number;
-}
-
 /**
- * 配置项数据，可以持久化储存数据
+ * hortiMagicStore存储库
  */
-declare const hortimagicConfig: HortimagicConfig;
-
-/**
- * 配置项仓库
- */
-declare const HortimagicConfigStore: Store;
+declare const HortimagicStore: {
+    /** 是否自动保存 */
+    autoSave: boolean;
+    /** 日志是否开启 */
+    logFlag: {
+        log: boolean;
+        info: boolean;
+        debug: boolean;
+        warn: boolean;
+        error: boolean;
+    };
+    /** 消息日志是否开启 */
+    messageLogFlag: {
+        send: boolean;
+        decode: boolean;
+        emit: boolean;
+        receive: boolean;
+    };
+    /** 日志列表最大长度 */
+    logListLength: number;
+    /** 脚本列表 */
+    scriptList: Script[];
+};
 
 /**
  * html特殊符号反转义
@@ -1013,14 +1053,6 @@ declare function htmlSpecialCharsEscape(e: string): string;
  * for (const [iconName, iconSvg] of iconMap) {}
  */
 declare const iconMap: Map<string, string>;
-
-export declare namespace iirose_socket {
-    export {
-        messageEmitter,
-        sockets,
-        initSocket
-    }
-}
 
 /** package配置信息 */
 export declare const information: {
@@ -1047,19 +1079,21 @@ export declare const information: {
     ingected: boolean;
 };
 
-/**
- * 读取本地脚本列表并注入
+declare const ingectedUrlList: string[];
+
+/** 注入脚本,不论它是否使能
+ * @param script 脚本对象
  */
-declare function ingectlocalScript(): void;
+declare function ingecteScript(script: Script): boolean;
+
+declare function ingecteScriptList(): void;
 
 declare function init(): Promise<void>;
-
-declare function initConfigApp(): HmMenu;
 
 /** 初始化对话框模块 */
 declare function initDialogApp(): Promise<void>;
 
-/** 初始化移动面板容器 */
+/** 初始化弹窗容器 */
 declare function initDialogHolder(): void;
 
 /**
@@ -1067,8 +1101,7 @@ declare function initDialogHolder(): void;
  */
 declare function initHooks(): void;
 
-declare function initLogApp(): HmMenu;
-
+/** 初始化菜单容器 */
 declare function initMenuHolder(): void;
 
 /** 初始化移动面板容器 */
@@ -1079,17 +1112,7 @@ declare function initNotificationHolder(): void;
 
 declare function initSocket(): Promise<void>;
 
-/**
- * 注入一个JS脚本
- * @param script 要注入的脚本对象
- */
-declare function injectScript(script: Script): boolean;
-
-/**
- * 注入一组JS脚本
- * @param list 脚本列表
- */
-declare function injectScriptList(list: Script[]): void;
+declare function initStore(): void;
 
 /**
  * 判断消息类型并返回对应的类型字符串
@@ -1105,27 +1128,35 @@ declare function judegMessageClass(messageObj: MessageClass): "hidden" | "public
  */
 declare function like(targetUid: string, content?: string): string;
 
+/**
+ * 事件监听器类型定义，表示一个可以接收任意参数的函数
+ */
 declare type Listener = (...args: any[]) => void;
 
-export declare namespace log_app {
-    export {
-        initLogApp
-    }
-}
+/**
+ * 加载store
+ */
+declare function loadStore(): void;
 
-export declare namespace logger {
+export declare namespace log_tools {
     export {
-        LogLevel,
-        logger_2 as logger
+        logEmitter,
+        logger
     }
 }
 
 /**
- * 日志记录器对象
+ * 日志事件发射器
+ * 每次日志输出时都会触发'log'事件
+ */
+declare const logEmitter: Emitter;
+
+/**
+ * 日志记录器
  * 根据配置中的日志级别来决定是否输出日志
  * 只有当配置的日志级别与当前输出的日志级别匹配时才会输出日志
  */
-declare const logger_2: {
+export declare const logger: {
     /**
      * 记录普通日志
      * 只有在配置的日志级小于等于DEBUG时才会输出
@@ -1158,27 +1189,6 @@ declare const logger_2: {
     error(tag: string, ...args: any[]): void;
 };
 
-declare const loggerList: string[][];
-
-/**
- * 日志级别枚举
- * 定义了不同级别的日志，用于控制日志输出
- */
-declare const LogLevel: {
-    /** 普通日志级别 */
-    LOG: number;
-    /** 调试日志级别 */
-    DEBUG: number;
-    /** 信息日志级别 */
-    INFO: number;
-    /** 警告日志级别 */
-    WARN: number;
-    /** 错误日志级别 */
-    ERROR: number;
-};
-
-declare const logLevel: number;
-
 export declare namespace main_app {
     export {
         init
@@ -1192,10 +1202,12 @@ export declare namespace menu {
     }
 }
 
+/** 菜单容器 */
 declare let menuHolder: HTMLDivElement;
 
 export declare namespace Message {
     export {
+        MessageClass,
         Public,
         Private,
         Hidden,
@@ -1203,17 +1215,17 @@ export declare namespace Message {
         Withdrawn,
         System,
         Stock,
-        Unkonw,
-        MessageClass
+        Unkonw
     }
 }
 
 /**
- * 所有消息的类
+ * 所有消息类型的联合类型
+ * 用于类型检查和类型安全
  */
 declare type MessageClass = Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw;
 
-declare const messageEmitter: EventEmitter;
+declare const messageEmitter: Emitter;
 
 /** 解析好后的消息列表 */
 declare let messageObjList: MessageClass[];
@@ -1247,11 +1259,57 @@ declare function musicCard(typeId: string, title: string, singerName: string, co
 
 /**
  * 消失通知函数
+ * @example
+ * ```javascript
+ * // 显示成功通知
+ * hortimagic.easy_tools.notice.success('操作成功', '您的操作已成功完成');
+ *
+ * // 显示警告通知
+ * hortimagic.easy_tools.notice.warning('警告', '请注意检查输入信息', 5000);
+ *
+ * // 显示错误通知
+ * hortimagic.easy_tools.notice.error('错误', '操作失败，请重试');
+ *
+ * // 显示普通通知
+ * hortimagic.easy_tools.notice.normal('提示', '这是一条普通提示信息');
+ * ```
  */
-declare const notice: {
+export declare const notice: {
+    /**
+     * 显示成功通知
+     * 创建并显示一个成功状态的通知组件
+     * @param title - 通知的标题文本
+     * @param content - 通知的内容文本
+     * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+     * @returns 无返回值
+     */
     success(title: string, content: string, displayTime?: number): void;
+    /**
+     * 显示警告通知
+     * 创建并显示一个警告状态的通知组件
+     * @param title - 通知的标题文本
+     * @param content - 通知的内容文本
+     * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+     * @returns 无返回值
+     */
     warning(title: string, content: string, displayTime?: number): void;
+    /**
+     * 显示错误通知
+     * 创建并显示一个错误状态的通知组件
+     * @param title - 通知的标题文本
+     * @param content - 通知的内容文本
+     * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+     * @returns 无返回值
+     */
     error(title: string, content: string, displayTime?: number): void;
+    /**
+     * 显示普通通知
+     * 创建并显示一个普通状态的通知组件
+     * @param title - 通知的标题文本
+     * @param content - 通知的内容文本
+     * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+     * @returns 无返回值
+     */
     normal(title: string, content: string, displayTime?: number): void;
 };
 
@@ -1271,6 +1329,10 @@ declare function originalOnmessage(message: string): string;
 
 declare function originalSend(message: string): string;
 
+/**
+ * 私聊消息类
+ * 用于表示私聊消息
+ */
 declare class Private {
     /** 时间戳 */
     timeStamp: string;
@@ -1299,6 +1361,10 @@ declare class Private {
  */
 declare function privateChat(uid: string, message: string, color: string): string;
 
+/**
+ * 公共消息类
+ * 用于表示公共频道中的消息
+ */
 declare class Public {
     /** 时间戳 */
     timeStamp: string;
@@ -1329,14 +1395,51 @@ declare class Public {
 declare function publicChat(message: string, color: string): string;
 
 /**
- * 读取或初始化配置项
+ * 导出valtio响应式状态管理库常用方法
+ * @example
+ * // 创建响应式状态
+ * const state = reactive.proxy({ count: 0 })
+ *
+ * // 订阅状态变化
+ * reactive.subscribe(state, () => {
+ *   console.log('state has changed to', state)
+ * })
+ *
+ * // 获取状态快照
+ * const snap = reactive.snapshot(state)
+ *
+ * // 在组件中使用（注意：snapshot返回的是只读快照，不能直接修改）
+ * // 需要通过原始proxy对象进行修改
+ * const updateState = () => {
+ *   state.count++ // 直接修改原始proxy对象
+ * }
+ *
+ * // 无React环境使用示例：
+ * // 1. 创建状态
+ * const counterStore = proxy({ count: 0 });
+ *
+ * // 2. 修改状态
+ * counterStore.count++;
+ *
+ * // 3. 获取快照（用于显示）
+ * const snap = snapshot(counterStore);
+ * console.log(snap.count); // 输出当前值
+ *
+ * // 4. 订阅变化
+ * subscribe(counterStore, () => {
+ *   console.log('counter changed');
+ * });
  */
-declare function readHortimagicConfigStore(): void;
-
-/**
- * 读取本地存储的脚本列表
- */
-declare function readScriptList(): void;
+declare const reactive: {
+    proxy: typeof proxy;
+    subscribe: typeof subscribe;
+    /**
+     * 获取快照
+     * @param {object} store
+     * @returns {object} 一个静态的快照
+     */
+    snapshot: typeof snapshot;
+};
 
 /**
  * 更新一些element
@@ -1346,24 +1449,14 @@ declare function refreshAll(): void;
 /** 提供静态方法用于外部注册图标 */
 declare function registerIcon(name: string, svgContent: string): void;
 
-/** 从列表中移除一个脚本
- * @param script 要移除的脚本对象
- */
-declare function removeScriptFromList(script: Script): void;
+declare function removeScriptFromList(script: Script): boolean;
 
 /**
- * 保存配置项仓库
+ * 保存store
  */
-declare function saveHortimagicConfigStore(): void;
+declare function saveStore(): void;
 
-/**
- * 保存脚本列表到本地存储
- */
-declare function saveScriptList(): void;
-
-/**
- * 脚本类
- */
+/** 脚本类 */
 declare class Script {
     /** 名字 */
     name: string;
@@ -1371,40 +1464,25 @@ declare class Script {
     url: string;
     /** 是否启用,默认启用 */
     enable: boolean;
-    /** 是否已经注入,手动修改 */
-    ingected: boolean;
-    constructor(name: string, url: string, enable?: boolean, ingected?: boolean);
+    constructor(name: string, url: string, enable?: boolean);
 }
 
 export declare namespace script_tools {
     export {
-        Script,
-        scriptList,
         addScriptToList,
+        updateScriptInList,
         removeScriptFromList,
-        injectScript,
-        injectScriptList,
-        readScriptList,
-        saveScriptList,
-        ingectlocalScript
+        findScriptByUrl,
+        findScriptByName,
+        clearScriptList,
+        ingecteScript,
+        ingecteScriptList,
+        ingectedUrlList,
+        Script
     }
 }
 
-/** 脚本列表 */
-declare let scriptList: Script[];
-
 declare function send(message: string): Promise<void>;
-
-declare class SharedData {
-    loggerList: string[][];
-}
-
-declare const sharedData: SharedData;
-
-/**
- * 共享数据仓库，不进行数据持久化
- */
-declare const sharedDataStore: Store;
 
 /**
  * 异步延时函数
@@ -1412,7 +1490,15 @@ declare const sharedDataStore: Store;
  */
 declare function sleep(ms: number): Promise<unknown>;
 
-declare const sockets: {
+export declare namespace socket_tools {
+    export {
+        initSocket,
+        messageEmitter,
+        socketTools
+    }
+}
+
+declare const socketTools: {
     beforeSend: typeof beforeSend;
     originalSend: typeof originalSend;
     afterSend: typeof afterSend;
@@ -1424,6 +1510,10 @@ declare const sockets: {
     initSocket: typeof initSocket;
 };
 
+/**
+ * 股票消息类
+ * 用于表示股票相关数据消息
+ */
 declare class Stock {
     /**
      * '*' 表示股价过低无法买股票
@@ -1451,322 +1541,15 @@ declare class Stock {
  */
 declare function stockRequest(count: number | undefined): string;
 
-/**
- * Store 类提供了一个基于键值对的数据存储系统
- * 它继承自 EventEmitter，允许监听存储变化
- *
- * @example
- * // 创建 Store 实例
- * const store = new Store();
- *
- * // 添加数据项
- * const countItem = store.add('count', 0);
- *
- * // 监听特定项的变化
- * countItem.on('change', (newValue) => {
- *   logger.log('Count changed to:', newValue);
- * });
- *
- * // 设置值
- * store.setValue('count', 5);
- *
- * // 获取值
- * const count = store.getValue('count'); // 返回 5
- *
- * @example
- * // 使用持久化功能
- * const store = new Store();
- * store.add('username', 'john');
- *
- * // 保存到 localStorage
- * store.persistToLocalStorage('my-app-data');
- *
- * // 从 localStorage 加载
- * const newStore = new Store();
- * newStore.loadFromLocalStorage('my-app-data');
- */
-declare class Store extends EventEmitter {
-    private items;
-    /**
-     * 添加一个新的 StoreItem
-     * @param key 键名
-     * @param initialValue 初始值
-     * @returns 返回新创建或已存在的 StoreItem
-     *
-     * @example
-     * const store = new Store();
-     * const item = store.add('name', 'John');
-     * logger.log(item.value); // 'John'
-     */
-    add(key: string, initialValue: any): StoreItem<any>;
-    /**
-     * 获取指定键的 StoreItem
-     * @param key 键名
-     * @returns 返回对应的 StoreItem 或 undefined
-     *
-     * @example
-     * const store = new Store();
-     * store.add('count', 0);
-     * const item = store.get('count');
-     * logger.log(item?.value); // 0
-     */
-    get<T = any>(key: string): StoreItem<T> | undefined;
-    /**
-     * 移除指定键的 StoreItem
-     * @param key 键名
-     * @returns 如果存在并成功移除则返回 true，否则返回 false
-     *
-     * @example
-     * const store = new Store();
-     * store.add('temp', 'data');
-     * const removed = store.remove('temp'); // true
-     * const notRemoved = store.remove('nonexistent'); // false
-     */
-    remove(key: string): boolean;
-    /**
-     * 获取指定键的值
-     * @param key 键名
-     * @returns 返回对应的值或 undefined
-     *
-     * @example
-     * const store = new Store();
-     * store.add('name', 'John');
-     * const name = store.getValue('name'); // 'John'
-     * const missing = store.getValue('missing'); // undefined
-     */
-    getValue<T = any>(key: string): T | undefined;
-    /**
-     * 设置指定键的值
-     * @param key 键名
-     * @param value 值
-     *
-     * @example
-     * const store = new Store();
-     * store.setValue('count', 10); // 如果不存在则添加
-     * store.setValue('count', 20); // 如果存在则更新
-     * logger.log(store.getValue('count')); // 20
-     */
-    setValue<T = any>(key: string, value: T): void;
-    /**
-     * 检查是否存在指定键的 StoreItem
-     * @param key 键名
-     * @returns 如果存在返回 true，否则返回 false
-     *
-     * @example
-     * const store = new Store();
-     * store.add('name', 'John');
-     * logger.log(store.has('name')); // true
-     * logger.log(store.has('age')); // false
-     */
-    has(key: string): boolean;
-    /**
-     * 将 Store 中所有数据保存到 localStorage
-     * @param storageKey localStorage 的键名，例如 'app-store'
-     *
-     * @example
-     * const store = new Store();
-     * store.add('username', 'john');
-     * store.add('theme', 'dark');
-     * store.persistToLocalStorage('my-app-storage');
-     */
-    persistToLocalStorage(storageKey: string): void;
-    /**
-     * 从 localStorage 加载数据并恢复到 Store
-     * @param storageKey localStorage 的键名
-     *
-     * @example
-     * const store = new Store();
-     * store.loadFromLocalStorage('my-app-storage');
-     *
-     * // 现在 store 包含之前保存的数据
-     * const username = store.getValue('username');
-     */
-    loadFromLocalStorage(storageKey: string): void;
-}
-
-export declare namespace Store_StoreItem {
+export declare namespace store {
     export {
-        StoreItem,
-        Store
+        saveStore,
+        loadStore,
+        initStore,
+        reactive,
+        HortimagicStore
     }
 }
-
-/**
- * 双向绑定装饰器 - 将类属性与 Store 中的值进行双向绑定
- * 当 Store 中的值变化时，类属性也会更新；当类属性变化时，Store 中的值也会更新
- *
- * @example
- * ```typescript
- * // 创建一个 Store 实例
- * const myStore = new Store();
- *
- * // 在类中使用装饰器
- * class MyClass {
- *   @storeBind(myStore, 'myKey')
- *   myProperty: string;
- * }
- *
- * const instance = new MyClass();
- * instance.myProperty = 'hello'; // 这会更新 Store 中 'myKey' 的值
- * logger.log(myStore.get('myKey').value); // 输出: 'hello'
- *
- * myStore.get('myKey').value = 'world'; // 这会更新类属性
- * logger.log(instance.myProperty); // 输出: 'world'
- * ```
- */
-declare function storeBind(store: Store, key: StoreKey): (target: any, propertyKey: string) => void;
-
-export declare namespace storeDecorators {
-    export {
-        storeBind,
-        storeSync,
-        storeOn,
-        storeOnce,
-        storeRemoveOn
-    }
-}
-
-/**
- * StoreItem 类表示 Store 中的一个数据项
- * 它继承自 EventEmitter，允许监听值的变化
- *
- * @example
- * // 创建一个 StoreItem 实例
- * const item = new StoreItem<number>(42);
- *
- * // 监听值的变化
- * item.on('change', (newValue) => {
- *   logger.log('Value changed to:', newValue);
- * });
- *
- * // 修改值
- * item.value = 100; // 会触发 change 事件
- */
-declare class StoreItem<T> extends EventEmitter {
-    private _value;
-    /**
-     * 构造函数
-     * @param initialValue 初始值
-     */
-    constructor(initialValue: T);
-    /**
-     * 获取当前值
-     */
-    get value(): T;
-    /**
-     * 设置新值，如果新值与当前值不同，则触发 change 事件
-     * @param newValue 新值
-     */
-    set value(newValue: T);
-    /**
-     * 手动触发 change 事件，即使值没有改变
-     */
-    triggerChange(): void;
-}
-
-declare type StoreKey = string;
-
-/**
- * 持续监听装饰器 - 监听 Store 中值的变化并执行方法
- * 当 Store 中的值变化时，被装饰的方法会被调用
- *
- * @example
- * ```typescript
- * // 创建一个 Store 实例
- * const myStore = new Store();
- * myStore.add('myKey', 'initial value');
- *
- * // 在类中使用装饰器
- * class MyClass {
- *   @storeOn(myStore, 'myKey')
- *   onMyKeyChange(newValue: any) {
- *     logger.log('Value changed to:', newValue);
- *   }
- * }
- *
- * const instance = new MyClass();
- * myStore.get('myKey').value = 'new value'; // 这会触发 onMyKeyChange 方法
- * // 输出: 'Value changed to: new value'
- * ```
- */
-declare function storeOn(store: Store, key: StoreKey): (target: any, _propertyKey: string, descriptor: PropertyDescriptor) => void;
-
-/**
- * 仅监听一次装饰器 - 监听 Store 中值的下一次变化并执行方法
- * 当 Store 中的值下一次变化时，被装饰的方法会被调用，然后监听器自动移除
- *
- * @example
- * ```typescript
- * // 创建一个 Store 实例
- * const myStore = new Store();
- * myStore.add('myKey', 'initial value');
- *
- * // 在类中使用装饰器
- * class MyClass {
- *   @storeOnce(myStore, 'myKey')
- *   onMyKeyChange(newValue: any) {
- *     logger.log('Value changed to:', newValue);
- *   }
- * }
- *
- * const instance = new MyClass();
- * myStore.get('myKey').value = 'first change'; // 这会触发 onMyKeyChange 方法
- * // 输出: 'Value changed to: first change'
- *
- * myStore.get('myKey').value = 'second change'; // 这不会触发方法，因为监听器已自动移除
- * ```
- */
-declare function storeOnce(store: Store, key: StoreKey): (target: any, _propertyKey: string, descriptor: PropertyDescriptor) => void;
-
-/**
- * 自动清理装饰器 - 为类自动注入 destroy 方法
- * 当调用实例的 destroy 方法时，会自动清理所有 Store 监听器
- *
- * @example
- * ```typescript
- * // 在类上使用装饰器
- * @storeRemoveOn()
- * class MyClass {
- *   @storeOn(myStore, 'myKey')
- *   onMyKeyChange(newValue: any) {
- *     logger.log('Value changed to:', newValue);
- *   }
- * }
- *
- * const instance = new MyClass();
- * // ... 使用实例 ...
- * instance.destroy(); // 这会清理所有 Store 监听器
- * ```
- */
-declare function storeRemoveOn(): <T extends new (...args: any[]) => any>(constructor: T) => T;
-
-/**
- * 单向同步装饰器 - 将 Store 中的值单向同步到类属性
- * 当 Store 中的值变化时，类属性会更新，但类属性变化不会影响 Store
- *
- * @example
- * ```typescript
- * // 创建一个 Store 实例
- * const myStore = new Store();
- * myStore.add('myKey', 'initial value');
- *
- * // 在类中使用装饰器
- * class MyClass {
- *   @storeSync(myStore, 'myKey')
- *   myProperty: string;
- * }
- *
- * const instance = new MyClass();
- * logger.log(instance.myProperty); // 输出: 'initial value'
- *
- * myStore.get('myKey').value = 'new value';
- * logger.log(instance.myProperty); // 输出: 'new value'
- *
- * instance.myProperty = 'local value'; // 这不会影响 Store
- * logger.log(myStore.get('myKey').value); // 仍然是: 'new value'
- * ```
- */
-declare function storeSync(store: Store, key: StoreKey): (target: any, _propertyKey: string) => void;
 
 /**
  * 切换房间
@@ -1774,6 +1557,10 @@ declare function storeSync(store: Store, key: StoreKey): (target: any, _property
  */
 declare function switchRoom(roomId: string): void;
 
+/**
+ * 系统消息类
+ * 用于表示系统通知类消息
+ */
 declare class System {
     /** 消息列表 */
     userMessageList: string[];
@@ -1794,17 +1581,22 @@ export declare namespace tools {
         getOnlineUserInfoById,
         getAllOnlineUserInfo,
         changeRoom,
-        getUserProfilePictureUrl,
         getUserInputColor,
         generatePrivateMessageBubble,
         switchRoom
     }
 }
 
+/**
+ * 未知消息类
+ * 用于表示无法识别的消息类型
+ */
 declare class Unkonw {
     /** 未知消息的原型 */
     message: string;
 }
+
+declare function updateScriptInList(script: Script): boolean;
 
 /**
  * 生成一个视频卡片消息
@@ -1817,6 +1609,10 @@ declare class Unkonw {
  */
 declare function videoCard(typeId: string, title: string, singerName: string, coverUrl: string, color: string, resolutionRatio: string, time: string): string;
 
+/**
+ * 撤回消息类
+ * 用于表示撤回操作的消息
+ */
 declare class Withdrawn {
     /** 可选的，撤回私聊对象窗口的UID */
     privateUID: string;

@@ -2,6 +2,7 @@ import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { logger } from '../core/log-tools';
 
+let Tag = 'MovePanel';
 /** 创建的窗口列表 */
 export let movePanelItemList: HmMovePanel[] = [];
 /** 窗口基础的层级，每新建一个加一,从99999开始加 */
@@ -46,6 +47,12 @@ export class HmMovePanel extends LitElement {
   /** 左上角图标 */
   @property({ type: String })
   icon = 'magic-wand'
+  /** 左下角图标 */
+  @property({ type: String, attribute: 'left-icon' })
+  leftIcon = 'magic-wand'
+  /** 右下角图标 */
+  @property({ type: String, attribute: 'right-icon' })
+  rightIcon = 'magic-wand'
   /* 定位左边 */
   @property({ type: Number })
   left = (window.innerWidth - this.width) / 2;
@@ -142,7 +149,7 @@ export class HmMovePanel extends LitElement {
   /** 关闭移动窗口 */
   hideMovePanel() {
     this.isDisplay = false;
-    logger.log('MovePanel', '关闭事件');
+    // logger.log(Tag, '关闭事件');
     this.dispatchEvent(new CustomEvent('close', {
       detail: { isDisplay: this.isDisplay, message: '关闭事件' },
       bubbles: true,
@@ -152,7 +159,7 @@ export class HmMovePanel extends LitElement {
   /** 显示移动窗口 */
   showMovePanel() {
     this.isDisplay = true;
-    logger.log('MovePanel', '显示事件');
+    // logger.log(Tag, '显示事件');
     this.dispatchEvent(new CustomEvent('show', {
       detail: { isDisplay: this.isDisplay },
       bubbles: true,
@@ -170,7 +177,7 @@ export class HmMovePanel extends LitElement {
   // 添加拖动功能
   dragging = false
   mouseDragging(e: MouseEvent) {
-    logger.log('MovePanel', '标题按下');
+    // logger.log(Tag, '标题按下');
     // 窗口原本位置
     let templeft = this.left;
     // 窗口原本位置
@@ -180,8 +187,8 @@ export class HmMovePanel extends LitElement {
     let offsetX = e.clientX - templeft;
     let offsetY = e.clientY - temptop;
 
-    logger.log('MovePanel', '鼠标位置', e.clientX, e.clientY);
-    logger.log('MovePanel', '窗口位置', templeft, temptop);
+    // logger.log(Tag, '鼠标位置', e.clientX, e.clientY);
+    // logger.log(Tag, '窗口位置', templeft, temptop);
     (this.dragging == false) && (this.dragging = true);
     document.onmousemove = (e) => {
       if (this.dragging) {
@@ -190,14 +197,14 @@ export class HmMovePanel extends LitElement {
       }
     }
     document.onmouseup = () => {
-      logger.log('MovePanel', '标题抬起');
+      // logger.log(Tag, '标题抬起');
       this.dragging && (this.dragging = false);
       document.onmousemove = null
     }
   }
   // 适配移动端
   touchDragging(e: TouchEvent) {
-    logger.log('MovePanel', '触摸标题按下');
+    // logger.log(Tag, '触摸标题按下');
     // 窗口原本位置
     let templeft = this.left;
     // 窗口原本位置
@@ -207,8 +214,8 @@ export class HmMovePanel extends LitElement {
     let offsetX = e.touches[0].clientX - templeft;
     let offsetY = e.touches[0].clientY - temptop;
 
-    logger.log('MovePanel', '触摸鼠标位置', e.touches[0].clientX, e.touches[0].clientY);
-    logger.log('MovePanel', '触摸窗口位置', templeft, temptop);
+    // logger.log(Tag, '触摸鼠标位置', e.touches[0].clientX, e.touches[0].clientY);
+    // logger.log(Tag, '触摸窗口位置', templeft, temptop);
     (this.dragging == false) && (this.dragging = true);
     document.ontouchmove = (e) => {
       if (this.dragging) {
@@ -217,14 +224,14 @@ export class HmMovePanel extends LitElement {
       }
     }
     document.ontouchend = () => {
-      logger.log('MovePanel', '标题抬起');
+      // logger.log(Tag, '标题抬起');
       this.dragging && (this.dragging = false);
       document.onmousemove = null
     }
   }
   // 置顶窗口
   putTop() {
-    logger.log('MovePanel', '置顶窗口');
+    // logger.log(Tag, '置顶窗口');
     let res = false;
     if (movePanelItemList.includes(this)) {
       // 先把比它大的都减小一层
@@ -236,7 +243,7 @@ export class HmMovePanel extends LitElement {
       this.zIndex = movePanelItemMaxZindex;
       res = true;
     } else {
-      logger.warn('MovePanel', '置顶失败，窗口不在列表中');
+      logger.warn(Tag, '置顶失败，窗口不在列表中');
       res = false;
     }
     return res;
@@ -302,7 +309,7 @@ export class HmMovePanel extends LitElement {
   <div class="footer" style="background-color: ${this.footerBackgroundColor};width:${this.width}px;">
     <hm-button
       class="footer-button footer-button-left"  
-      icon="magic-wand"
+      icon="${this.leftIcon}
       width="100%"
       background="${this.buttonBackground}"
       color="${this.buttonColor}"
@@ -312,7 +319,7 @@ export class HmMovePanel extends LitElement {
       </hm-button>
     <hm-button
       class="footer-button footer-button-right"
-      icon="magic-wand"
+      icon="${this.rightIcon}"
       width="100%"
       background="${this.buttonColor}"
       color="${this.buttonBackground}"

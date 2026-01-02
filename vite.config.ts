@@ -15,6 +15,15 @@ export default defineConfig({
   plugins: [dts({ rollupTypes: true, insertTypesEntry: true })],
   build: {
     target: ["edge130", "firefox130", "chrome130", "safari18.0"],
+    rollupOptions: {
+      // external: ['react', 'react-dom'],
+      // output: {
+      //   globals: {
+      //     react: 'React',
+      //     'react-dom': 'ReactDOM',
+      //   }
+      // }
+    },
     lib: {
       entry: "./src/main.ts",
       name: `${pkg.name}`,

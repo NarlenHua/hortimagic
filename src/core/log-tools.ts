@@ -1,26 +1,10 @@
-import { BareEmitter } from "./Emitter-Store";
-import { logLevel, allowLogging } from "./store";
-/**
- * 日志级别枚举
- * 定义了不同级别的日志，用于控制日志输出
- */
-export const LogLevel = {
-    /** 普通日志级别 */
-    LOG: 0,
-    /** 调试日志级别 */
-    DEBUG: 1,
-    /** 信息日志级别 */
-    INFO: 2,
-    /** 警告日志级别 */
-    WARN: 3,
-    /** 错误日志级别 */
-    ERROR: 4,
-};
+import { Emitter } from "./Emitter";
+import { HortimagicStore } from "./store";
 /**
  * 日志事件发射器
  * 每次日志输出时都会触发'log'事件
  */
-export const logEmitter = new BareEmitter();
+export const logEmitter = new Emitter();
 /**
  * 日志记录器
  * 根据配置中的日志级别来决定是否输出日志
@@ -33,7 +17,7 @@ export const logger = {
      * @param args 要输出的参数
      */
     log(tag: string, ...args: any[]): void {
-        if (logLevel.value <= LogLevel.LOG && allowLogging) {
+        if (HortimagicStore.logFlag.log) {
             logEmitter.emit('log', tag, ...args);
             console.log(tag, ...args);
         }
@@ -44,7 +28,7 @@ export const logger = {
      * @param args 要输出的参数
      */
     debug(tag: string, ...args: any[]): void {
-        if (logLevel.value <= LogLevel.DEBUG && allowLogging) {
+        if (HortimagicStore.logFlag.debug) {
             logEmitter.emit('log', tag, ...args);
             console.debug(tag, ...args);
         }
@@ -55,7 +39,7 @@ export const logger = {
      * @param args 要输出的参数
      */
     info(tag: string, ...args: any[]): void {
-        if (logLevel.value <= LogLevel.INFO && allowLogging) {
+        if (HortimagicStore.logFlag.info) {
             logEmitter.emit('log', tag, ...args);
             console.info(tag, ...args);
         }
@@ -66,7 +50,7 @@ export const logger = {
      * @param args 要输出的参数
      */
     warn(tag: string, ...args: any[]): void {
-        if (logLevel.value <= LogLevel.WARN && allowLogging) {
+        if (HortimagicStore.logFlag.warn) {
             logEmitter.emit('log', tag, ...args);
             console.warn(tag, ...args);
         }
@@ -77,7 +61,7 @@ export const logger = {
      * @param args 要输出的参数
      */
     error(tag: string, ...args: any[]): void {
-        if (logLevel.value <= LogLevel.ERROR && allowLogging) {
+        if (HortimagicStore.logFlag.error) {
             logEmitter.emit('log', tag, ...args);
             console.error(tag, ...args);
         }

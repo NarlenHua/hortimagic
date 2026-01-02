@@ -1,86 +1,132 @@
-// import { movePanelHolder } from '../holders/move-panel';
-// import { LitElement, css, html } from 'lit';
+import { movePanelHolder } from '../holders/move-panel';
+import { LitElement, css, html } from 'lit';
 // import { property } from 'lit/decorators.js';
-// import { storeBind } from '../core/storeDecorators';
-// import { hortimagicConfig, HortimagicConfigStore, readHortimagicConfigStore, saveHortimagicConfigStore } from '../core/globalStore';
-// import { logger } from '../core/logger';
+import { HortimagicStore, saveStore, loadStore, reactive } from '../core/store';
+import { logger } from '../core/log-tools';
 
-// // import *as script_tool from '../core/script-tools';
-// // import { notice } from '../easy-tools';
+class HmConfigApp extends LitElement {
+    // 返回一个只读的、响应式的快照
+    storeSnap = reactive.snapshot(HortimagicStore);
 
+    static styles = css`
+        .config-item {
+            margin: 10px 0;
+        }
+    `;
 
-// class HmConfigApp extends LitElement {
-//     @property({ type: Boolean })
-//     @storeBind(HortimagicConfigStore, 'allowNotice')
-//     allowHortimagicNotice = true;
-//     @property({ type: Number })
-//     @storeBind(HortimagicConfigStore, 'logLevel')
-//     logLevel = hortimagicConfig.logLevel;
+    render() {
+        return html`
+            <div class="config-item">
+                <hm-cell title-name="自动保存设置" description="修改设置或脚本列表后，将自动保存设置。"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.autoSave}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.autoSave = e.detail.checked;
+                saveStore();
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            
+            <div class="config-item">
+                <hm-cell title-name="允许LOG输出" description="是否允许LOG级别的日志输出"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.logFlag.log}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.logFlag.log = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            
+            <div class="config-item">
+                <hm-cell title-name="允许INFO输出" description="是否允许INFO级别的日志输出"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.logFlag.info}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.logFlag.info = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            
+            <div class="config-item">
+                <hm-cell title-name="允许DEBUG输出" description="是否允许DEBUG级别的日志输出"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.logFlag.debug}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.logFlag.debug = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            
+            <div class="config-item">
+                <hm-cell title-name="允许WARN输出" description="是否允许WARN级别的日志输出"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.logFlag.warn}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.logFlag.warn = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            
+            <div class="config-item">
+                <hm-cell title-name="允许ERROR输出" description="是否允许ERROR级别的日志输出"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.logFlag.error}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.logFlag.error = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            
+            <div class="config-item">
+                    <hm-input
+                        label="日志列表长度"
+                        type="number"
+                        .value="${this.storeSnap.logListLength}"
+                        @hm-input-change="${(e: CustomEvent) => {
+                const value = parseInt(e.detail.value) || 100;
+                HortimagicStore.logListLength = value;
+                logger.debug('log list length changed:', value);
+            }}"
+                    ></hm-input>
+            </div>
+`;
+    }
+}
 
-//     static styles = css`
-// `;
+export function initConfigApp() {
+    customElements.define('hm-config-app', HmConfigApp);
+    let panel = document.createElement('hm-move-panel');
+    panel.titleContent = '设置';
+    panel.icon = 'config';
+    panel.leftButtonText = "读取"
+    panel.leftIcon = 'load';
+    panel.addEventListener('left-button-click', function () {
+        loadStore();
+    });
+    panel.rightButtonText = "保存"
+    panel.rightIcon = 'save';
+    panel.addEventListener('right-button-click', function () {
+        saveStore();
+    });
+    // panel.showMovePanel();
+    movePanelHolder.appendChild(panel);
+    let template = `
+        <hm-config-app></hm-config-app>
+    `;
+    panel.innerHTML = template;
+    let menuItem = document.createElement('hm-menu');
+    menuItem.content = "设置";
+    menuItem.isMenuItem = true;
+    menuItem.icon = 'config';
 
-//     render() {
-//         return html`
-//  <hm-cell title-name="启用通知" descripthion="使用Hortimagic通知功能"> 
-//  <hm-switch 
-//     ?checked="${this.allowHortimagicNotice}"
-//     open-icon="led-on"
-//     close-icon="led-off"
-//     @hm-switch-change="${(e: CustomEvent) => {
-//                 logger.debug('switch state:', e.detail.checked)
-//             }}"
-//   ></hm-switch>
-// </hm-cell>
-// <hm-cell title-name="日志等级" descripthion="日志等级">
-//   <hm-select
-//     .labelList="${[
-//                 ['log', 0],
-//                 ['debug', 1],
-//                 ['info', 2],
-//                 ['warn', 3],
-//                 ['error', 4],
-//             ]}"
-//     .index="${hortimagicConfig.logLevel / 1}"
-//     @change="${(e: CustomEvent) => {
-//                 logger.debug(e.detail);
-//                 this.logLevel = e.detail.value;
-//             }}"
-//   >
-//   </hm-select>
-// </hm-cell>
-
-// <p>${this.logLevel}</p>
-// `;
-//     }
-// }
-
-// export function initConfigApp() {
-//     customElements.define('hm-config-app', HmConfigApp);
-//     let panel = document.createElement('hm-move-panel');
-//     panel.titleContent = '设置';
-//     panel.icon = 'config';
-//     panel.leftButtonText = "读取"
-//     panel.addEventListener('left-button-click', function () {
-//         readHortimagicConfigStore();
-//     });
-//     panel.rightButtonText = "保存"
-//     panel.addEventListener('right-button-click', function () {
-//         saveHortimagicConfigStore();
-//     });
-//     panel.showMovePanel();
-//     movePanelHolder.appendChild(panel);
-//     let template = `
-//   <hm-config-app></hm-config-app>
-//   `;
-//     panel.innerHTML = template;
-//     let menuItem = document.createElement('hm-menu');
-//     menuItem.content = "设置";
-//     menuItem.isMenuItem = true;
-//     menuItem.icon = 'config';
-
-//     menuItem.addEventListener('hm-menu-click', function () {
-//         panel.putTopToggel();
-//     });
-//     return menuItem;
-// }
+    menuItem.addEventListener('hm-menu-click', function () {
+        panel.putTopToggel();
+    });
+    return menuItem;
+}

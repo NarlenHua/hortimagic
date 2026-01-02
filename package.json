@@ -1,8 +1,8 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.0.4dev6",
-  "changelog": "有bug",
+  "version": "1.0.5",
+  "changelog": "重新构建了插件，实现了响应式状态管理",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",
   "keywords": [
@@ -22,10 +22,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bare-emitter": "^1.0.2",
-    "bare-store": "^1.0.0",
     "lit": "^3.3.1",
     "terser": "^5.44.0",
+    "valtio": "^2.2.0",
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
