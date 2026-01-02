@@ -1,7 +1,7 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.0.6",
+  "version": "1.1.0",
   "changelog": "修复了单元格组件拼写错误的bug",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",
