@@ -109,7 +109,9 @@ export function loadStore() {
                 HortimagicStore.logFlag = parsedRes.logLevel;
             }
         }
-
+        if (parsedRes.messageLogFlag) {
+            HortimagicStore.messageLogFlag = parsedRes.messageLogFlag;
+        }
         if (parsedRes.scriptList) {
             HortimagicStore.scriptList = parsedRes.scriptList;
         }

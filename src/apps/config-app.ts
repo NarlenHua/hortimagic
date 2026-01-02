@@ -82,6 +82,46 @@ class HmConfigApp extends LitElement {
                     ></hm-switch>
                 </hm-cell>
             </div>
+            <div class="config-item">
+                <hm-cell title-name="发送日志" description="打印要发送的消息"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.messageLogFlag.send}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.messageLogFlag.send = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            <div class="config-item">
+                <hm-cell title-name="接收日志" description="打印接收到的消息"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.messageLogFlag.receive}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.messageLogFlag.receive = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            <div class="config-item">
+                <hm-cell title-name="解码日志" description="打印解码后的消息"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.messageLogFlag.decode}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.messageLogFlag.decode = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
+            <div class="config-item">
+                <hm-cell title-name="触发日志" description="打印要触发的消息"> 
+                    <hm-switch 
+                        ?checked="${this.storeSnap.messageLogFlag.emit}"
+                        @hm-switch-change="${(e: CustomEvent) => {
+                HortimagicStore.messageLogFlag.emit = e.detail.checked;
+            }}"
+                    ></hm-switch>
+                </hm-cell>
+            </div>
             
             <div class="config-item">
                     <hm-input

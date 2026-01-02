@@ -1,8 +1,8 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.1.1",
-  "changelog": "将源代码包含完整了",
+  "version": "1.1.2",
+  "changelog": "增加了对消息解码器日志的设置",
   "author": "Narlen",
   "description": "园艺魔法，花园插件",
   "keywords": [
