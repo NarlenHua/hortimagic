@@ -653,10 +653,22 @@ declare class HmIcon extends LitElement {
  * <hm-input label="密码" icon="password" placeholder="请输入密码"></hm-input>
  *
  * @example <caption>禁用状态</caption>
- * <hm-input label="禁用输入框" value="已禁用" enable="false"></hm-input>
+ * <hm-input label="禁用输入框" value="已禁用" disabled="true"></hm-input>
  *
  * @example <caption>只读状态</caption>
  * <hm-input label="只读输入框" value="只读内容" readonly="true"></hm-input>
+ *
+ * @example <caption>双向数据绑定</caption>
+ * <!-- 在父组件中监听hm-input-change事件 -->
+ * <hm-input label="用户名" value="${this.username}" @hm-input-change="${(e) => this.username = e.detail.value}"></hm-input>
+ *
+ * <!-- 或者在JavaScript中监听事件 -->
+ * const inputElement = document.querySelector('hm-input');
+ * inputElement.addEventListener('hm-input-change', (e) => {
+ *   console.log('输入值改变:', e.detail.value);
+ *   // 更新你的数据模型
+ *   myDataModel.value = e.detail.value;
+ * });
  */
 declare class HmInput extends LitElement {
     type: string;
@@ -666,8 +678,8 @@ declare class HmInput extends LitElement {
     label: string;
     /** 占位符文本 */
     placeholder: string;
-    /** 是否启用 */
-    enable: boolean;
+    /** 是否禁用 */
+    disabled: boolean;
     readonly: boolean;
     value: string;
     static styles: CSSResult;
@@ -791,77 +803,82 @@ declare class HmNotification extends LitElement {
 }
 
 /**
- * HmSelect 是一个可自定义的下拉选择组件，基于 LitElement 构建
+ * HmSelect 自定义下拉选择组件
  *
- * @example
- * 基本用法:
+ * 使用示例：
  * ```html
- * <hm-select .labelList="${[['选项1', 'value1'], ['选项2', 'value2']]}" @change="${(e) => logger.log('hm-select',e.detail)}"></hm-select>
+ * <!-- 基础用法 -->
+ * <hm-select
+ *   index="1"
+ *   label-list='[{"name": "选项1", "value": 1}, {"name": "选项2", "value": 2}]'>
+ * </hm-select>
+ *
+ * <!-- 监听选择变化事件 -->
+ * <hm-select
+ *   id="mySelect"
+ *   index="0"
+ *   label-list='[{"name": "苹果", "value": "apple"}, {"name": "香蕉", "value": "banana"}]'>
+ * </hm-select>
+ *
+ * <script>
+ *   document.getElementById('mySelect').addEventListener('hm-select-change', (e) => {
+ *     console.log(`选择了: ${e.detail.name}, 值: ${e.detail.value}, 索引: ${e.detail.index}`);
+ *   });
+ * </script>
  * ```
  *
- * @example
- * 禁用状态:
- * ```html
- * <hm-select .labelList="${[['选项1', 'value1'], ['选项2', 'value2']]}" disabled></hm-select>
+ * 也可以通过JavaScript动态设置属性：
+ * ```javascript
+ * const selectEl = document.createElement('hm-select');
+ * selectEl.labelList = [
+ *   { name: '春季', value: 'spring' },
+ *   { name: '夏季', value: 'summer' },
+ *   { name: '秋季', value: 'autumn' },
+ *   { name: '冬季', value: 'winter' }
+ * ];
+ * selectEl.addEventListener('hm-select-change', (e) => {
+ *   console.log(e.detail); // { index: number, value: any, name: string }
+ * });
  * ```
- *
- * @example
- * 带默认选中项:
- * ```html
- * <hm-select .labelList="${[['选项1', 'value1'], ['选项2', 'value2']]}" .index="${1}"></hm-select>
- * ```
- *
- * @example
- * 使用数字值:
- * ```html
- * <hm-select .labelList="${[['一', 1], ['二', 2], ['三', 3]]}" .index="${0}"></hm-select>
- * ```
- *
- * @slot - 默认插槽，用于放置额外内容
- * @fires change - 当选择项改变时触发，携带 { value, label, index } 信息
  */
 declare class HmSelect extends LitElement {
     /**
      * 当前选中项的索引，默认为 0
      * @type {number}
+     * @default 0
      */
     index: number;
     /**
      * 当前选中项的值
      * @type {any}
+     * @default 0
      */
     value: any;
     /**
-     * 选择项列表，每个项为 [label, value] 的数组格式
-     * @type {Array<Array<string | any>>}
+     * 选择项列表，每个项为 {name: string, value: any} 的对象
+     * @type {Array<{name: string, value: any}>}
+     * @default [{ name: '选项0', value: 0 }, { name: '选项1', value: 1 }, { name: '选项2', value: 2 }]
      */
-    labelList: (string | any)[][];
+    labelList: Array<{
+        name: string;
+        value: any;
+    }>;
     /**
      * 是否禁用选择器
      * @type {boolean}
+     * @default false
      */
     disabled: boolean;
-    private selectRef;
+    private _selectRef;
     static styles: CSSResult;
-    constructor();
     connectedCallback(): void;
     render(): TemplateResult<1>;
     /**
      * 处理选择项改变事件
-     * @param {Event} e - change 事件
+     * @param {Event} event - 选择框的change事件
      * @private
      */
     private _handleChange;
-    /**
-     * 获取当前选中的值
-     * @returns {any} 当前选中的值，返回labelList中对应项的实际值类型
-     */
-    getValue(): any;
-    /**
-     * 设置选中值
-     * @param {any} value - 要设置的值，可以是字符串或数字等类型
-     */
-    setValue(value: any): void;
 }
 
 /**

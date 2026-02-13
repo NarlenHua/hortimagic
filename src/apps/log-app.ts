@@ -120,53 +120,38 @@ class HmLogApp extends LitElement {
         margin-top: 4px;
         max-height: 60px; /* 限制高度，触发折叠 */
         overflow: hidden;
-        cursor: pointer;
+        cursor: text; /* 改变光标形状以表示可选择 */
         position: relative;
         display: block; /* 确保每条消息独占一行 */
         // 强制显示滚动条
-        scrollbar-width: auto; /* Firefox */
-        -ms-overflow-style: scrollbar; /* IE and Edge */
-        overflow-y: scroll; /* 强制显示垂直滚动条 */
+        scrollbar-width: none; /* Firefox - 隐藏滚动条 */
+        -ms-overflow-style: none; /* IE and Edge - 隐藏滚动条 */
         font-size: 14px; /* 调整消息字体大小 */
         line-height: 1.5; /* 调整行高 */
         background-color: #fff; /* 设置背景色 */
         padding: 5px; /* 添加内边距 */
         border-radius: 4px; /* 圆角 */
+        white-space: nowrap; /* 防止文本换行 */
+        text-overflow: ellipsis; /* 显示省略号 */
+        user-select: text; /* 允许文本选择 */
+        -webkit-user-select: text; /* Safari兼容 */
+        -moz-user-select: text; /* Firefox兼容 */
+        -ms-user-select: text; /* IE/Edge兼容 */
     }
     
-    .message.collapsed::after {
-        content: " ...";
-        color: #999;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background: linear-gradient(to right, transparent, #f5f5f5 70%);
+    .message::-webkit-scrollbar { /* 隐藏Webkit浏览器的滚动条 */
+        display: none;
     }
     
     .message.expanded {
         max-height: none;
-        overflow: visible;
-    }
-    
-    .controls {
-        padding: 10px;
-        display: flex;
-        gap: 10px;
-        background-color: #eaeaea; /* 设置控制区域背景色 */
-        border-bottom: 1px solid #ddd; /* 添加下边框 */
-    }
-    
-    .clear-btn {
-        background: #ff3333;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 3px;
-    }
-    
-    .clear-btn:hover {
-        background: #cc0000;
+        overflow-y: auto;
+        overflow-x: hidden;
+        white-space: normal; /* 展开时允许正常换行 */
+        user-select: text; /* 允许文本选择 */
+        -webkit-user-select: text; /* Safari兼容 */
+        -moz-user-select: text; /* Firefox兼容 */
+        -ms-user-select: text; /* IE/Edge兼容 */
     }
 `;
 
