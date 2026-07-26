@@ -28,9 +28,10 @@
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.13.3",
+    "tsx": "^4.21.0",
     "typescript": "~5.9.3",
-    "vite": "^7.1.7"
+    "vite": "^8.0.3"
   },
   "main": "dist/Horticraft.life.js",
   "module": "dist/HortiCraft.es.js",

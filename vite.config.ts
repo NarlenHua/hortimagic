@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import pkg from './package.json' with { type: 'json' };
+import { hortimagicPostBuild } from "./script/build-plugin";
 
 export default defineConfig({
   define: {
@@ -12,7 +13,14 @@ export default defineConfig({
     __REPOSITORY__: JSON.stringify(pkg.repository),
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
-  plugins: [dts({ rollupTypes: true, insertTypesEntry: true })],
+  plugins: [
+    dts({
+      include: ["src", "types"],
+      rollupTypes: true,
+      insertTypesEntry: true,
+    }),
+    hortimagicPostBuild(),
+  ],
   build: {
     target: ["edge130", "firefox130", "chrome130", "safari18.0"],
     rollupOptions: {

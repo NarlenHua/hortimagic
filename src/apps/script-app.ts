@@ -1,9 +1,9 @@
-import { movePanelHolder } from '../holders/move-panel';
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import *as script_tool from '../core/script-tools';
-import { notice } from '../easy-tools';
-import { HortimagicStore, saveStore, loadStore, reactive } from '../core/store';
+import { scriptTools, Script } from '../core/script-tools';
+import { store } from '../core/store';
+import { easyTools } from '../easy-tools';
+import { holders } from '../core';
 // import { logger } from '../main';
 
 const Tag = 'hm-script-app';
@@ -16,7 +16,7 @@ class HmScriptApp extends LitElement {
   @property({ type: Boolean })
   scriptEnable = true;
   @property({ type: Boolean })
-  scriptIngected = false;
+  scriptinjected = false;
 
   @property({ type: Boolean })
   dialogOpen = false;
@@ -26,12 +26,12 @@ class HmScriptApp extends LitElement {
 
 
   // 返回一个只读的快照
-  storeSnap = reactive.snapshot(HortimagicStore);
+  storeSnap = store.reactive.snapshot(store.HortimagicStore);
 
   constructor() {
     super();
-    reactive.subscribe(HortimagicStore, () => {
-      this.storeSnap = reactive.snapshot(HortimagicStore);
+    store.reactive.subscribe(store.HortimagicStore, () => {
+      this.storeSnap = store.reactive.snapshot(store.HortimagicStore);
       this.requestUpdate();
     });
   }
@@ -45,29 +45,30 @@ class HmScriptApp extends LitElement {
 <hm-dialog ?isopen="${this.dialogOpen}"
   @hm-dialog-close="${() => {
         this.dialogOpen = false;
+        this.isUpdate = false;
       }}"
   @hm-dialog-confirm="${() => {
         if (this.scriptName.trim() == "" || this.scriptUrl.trim() == "") {
-          notice.error(Tag, "请填写完整的脚本信息"); return;
+          easyTools.notice.error(Tag, "请填写完整的脚本信息"); return;
         }
         // logger.debug(Tag, '要添加的脚本', `${this.scriptName}${this.scriptUrl}`);
         this.scriptEnable = true;
-        this.scriptIngected = false;
-        let script = new script_tool.Script(this.scriptName, this.scriptUrl, this.scriptEnable);
+        this.scriptinjected = false;
+        let script = new Script(this.scriptName, this.scriptUrl, this.scriptEnable);
         let res = false;
         if (this.isUpdate)
-          res = script_tool.updateScriptInList(script);
+          res = scriptTools.updateScriptInList(script);
         else
-          res = script_tool.addScriptToList(script);
+          res = scriptTools.addScriptToList(script);
         if (res) {
-          notice.success(Tag, "脚本添加成功");
+          easyTools.notice.success(Tag, "脚本添加成功");
         } else {
-          notice.error(Tag, "脚本添加失败");
+          easyTools.notice.error(Tag, "脚本添加失败");
         }
         /** 关闭修改标志 */
         this.isUpdate = false;
         this.dialogOpen = false;
-        this.storeSnap = reactive.snapshot(HortimagicStore);
+        this.storeSnap = store.reactive.snapshot(store.HortimagicStore);
         /** 刷新渲染 */
         // this.requestUpdate();
       }}"
@@ -99,13 +100,13 @@ class HmScriptApp extends LitElement {
         <hm-button
           icon="delete"
           @hm-button-click="${() => {
-            let res = script_tool.removeScriptFromList(script);
+            let res = scriptTools.removeScriptFromList(script);
             if (res) {
-              notice.success(Tag, "脚本删除成功");
+              easyTools.notice.success(Tag, "脚本删除成功");
             } else {
-              notice.error(Tag, "脚本已经不在脚本列表中");
+              easyTools.notice.error(Tag, "脚本已经不在脚本列表中");
             }
-            this.storeSnap = reactive.snapshot(HortimagicStore);
+            this.storeSnap = store.reactive.snapshot(store.HortimagicStore);
             /** 刷新渲染 */
             // this.requestUpdate();
           }
@@ -117,13 +118,14 @@ class HmScriptApp extends LitElement {
         <hm-switch
           ?checked="${script.enable}"
           @hm-switch-change="${(e: CustomEvent) => {
-            let sc = new script_tool.Script(script.name, script.url, e.detail.checked);
-            let res = script_tool.updateScriptInList(sc);
+            let sc = new Script(script.name, script.url, e.detail.checked);
+            let res = scriptTools.updateScriptInList(sc);
             if (res) {
-              notice.success(Tag, "脚本修改成功");
+              easyTools.notice.success(Tag, "脚本修改成功");
             } else {
-              notice.error(Tag, "脚本修改失败");
+              easyTools.notice.error(Tag, "脚本修改失败");
             }
+            this.storeSnap = store.reactive.snapshot(store.HortimagicStore);
           }
           }"
         ></hm-switch>
@@ -145,14 +147,15 @@ class HmScriptApp extends LitElement {
         >
         <hm-button
           icon="run"
-          ?enable="${!script_tool.ingectedUrlList.includes(script.url)}"
+          ?enable="${!scriptTools.injectedUrlList.includes(script.url)}"
           @hm-button-click="${() => {
-            let res = script_tool.ingecteScript(script);
+            let res = scriptTools.injecteScript(script);
             if (res) {
-              notice.success(Tag, "脚本运行成功");
+              easyTools.notice.success(Tag, "脚本运行成功");
             } else {
-              notice.error(Tag, "脚本运行失败,脚本已经在运行了");
+              easyTools.notice.error(Tag, "脚本运行失败,脚本已经在运行了");
             }
+            this.storeSnap = store.reactive.snapshot(store.HortimagicStore);
           }
           }"
           >运行</hm-button
@@ -165,8 +168,8 @@ class HmScriptApp extends LitElement {
       <hm-button
         icon="refresh"
         @click="${() => {
-        loadStore();
-        this.storeSnap = reactive.snapshot(HortimagicStore);
+        store.loadStore();
+        this.storeSnap = store.reactive.snapshot(store.HortimagicStore);
         /** 刷新渲染 */
         // this.requestUpdate();
       }}"
@@ -184,7 +187,7 @@ class HmScriptApp extends LitElement {
       <hm-button
         icon="save"
         @click="${() => {
-        saveStore();
+        store.saveStore();
       }}">
             保存
         </hm-button>
@@ -201,15 +204,15 @@ export function initScriptApp() {
   panel.leftButtonText = "读取"
   panel.leftIcon = 'load';
   panel.addEventListener('left-button-click', function () {
-    loadStore();
+    store.loadStore();
   });
   panel.rightButtonText = "保存"
   panel.rightIcon = 'save';
   panel.addEventListener('right-button-click', function () {
-    saveStore();
+    store.saveStore();
   });
   // panel.showMovePanel();
-  movePanelHolder.appendChild(panel);
+  holders.movePanelHolder.appendChild(panel);
   let template = `<hm-script-app> </hm-script-app>
     `;
   panel.innerHTML = template;

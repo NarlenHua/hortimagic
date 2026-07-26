@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { dialogHolder } from '../holders/dialog';
+import { holders } from '../core/holders';
 
 /**
  * 对话框模块
@@ -58,5 +58,5 @@ export async function initDialogApp() {
     dialogApp.closeCallback = null;
     dialogApp.cancelCallback = null;
     dialogApp.confirmCallback = null;
-    dialogHolder.append(dialogApp);
+    holders.dialogHolder.append(dialogApp);
 }

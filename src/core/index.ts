@@ -1,10 +1,15 @@
-export * as tools from "./tools";
-export * as Message from "./Message";
-export * as socket_tools from "./socket-tools";
-export * as encoder from "./encoder";
-export * as decoder from "./decoder";
-export * as elements_hooks from "./elements-hooks";
-export { Emitter } from "./Emitter";
-export * as log_tools from "./log-tools";
-export * as store from "./store";
-export * as script_tools from "./script-tools";
+export * from "./tools";
+export * from "./socket-tools";
+
+export * from "./elements-hooks";
+
+export * from "./store";
+
+export * from "./decoder";
+export * from "./elements-hooks";
+export * from "./Emitter";
+export * from "./encoder";
+export * from "./holders";
+export * from "./log-tools";
+export * from "./Message";
+export * from "./script-tools";

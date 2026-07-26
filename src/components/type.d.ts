@@ -17,6 +17,7 @@ declare global {
         'hm-button': HmButton;
         'hm-cell': HmCell;
         'hm-dialog': HmDialog;
+        "hm-icon": HmIcon;
         'hm-input': HmInput;
         'hm-menu': HmMenu
         "hm-move-panel": HmMovePanel;
@@ -24,7 +25,6 @@ declare global {
         "hm-select": HmSelect,
         "hm-swipe-cell": HmSwipeCell;
         'hm-switch': HmSwitch;
-        "hm-icon": HmIcon;
     }
 }
 

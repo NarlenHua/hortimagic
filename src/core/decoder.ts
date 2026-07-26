@@ -1,32 +1,12 @@
 import { type MessageClass, Public, Private, Hidden, Danmu, Withdrawn, Stock, System, Unkonw } from "./Message";
 
-/** 解析好后的消息列表 */
-export let messageObjList: MessageClass[] = [];
+
 
 /**
  * 判断消息类型并返回对应的类型字符串
  * @param message 
  */
-export function judegMessageClass(messageObj: MessageClass) {
-    //判断消息类型并返回对应的类型字符串
-    if (messageObj instanceof Public) {
-        return 'public';
-    } else if (messageObj instanceof Private) {
-        return 'private';
-    } else if (messageObj instanceof Hidden) {
-        return 'hidden';
-    } else if (messageObj instanceof Danmu) {
-        return 'danmu';
-    } else if (messageObj instanceof Withdrawn) {
-        return 'withdrawn';
-    } else if (messageObj instanceof System) {
-        return 'system';
-    } else if (messageObj instanceof Stock) {
-        return 'stock';
-    } else {
-        return 'unknown';
-    }
-}
+// export function 
 function publicChat(message: string) {
     let messageObj = new Public();
     let message_list = message.split('>');
@@ -164,44 +144,72 @@ function unkonw(message: string) {
     return messageObj;
 }
 
-/**
+
+/** 
+ * 消息解析器
+ */
+export const decoder = {
+    /** 解析好后的消息列表 */
+    messageObjList: [] as MessageClass[],
+    judegMessageClass(messageObj: MessageClass) {
+        //判断消息类型并返回对应的类型字符串
+        if (messageObj instanceof Public) {
+            return 'public';
+        } else if (messageObj instanceof Private) {
+            return 'private';
+        } else if (messageObj instanceof Hidden) {
+            return 'hidden';
+        } else if (messageObj instanceof Danmu) {
+            return 'danmu';
+        } else if (messageObj instanceof Withdrawn) {
+            return 'withdrawn';
+        } else if (messageObj instanceof System) {
+            return 'system';
+        } else if (messageObj instanceof Stock) {
+            return 'stock';
+        } else {
+            return 'unknown';
+        }
+    },
+    /**
  * 解析消息字符串并将对应的消息对象添加到消息列表中
  * @param message 原消息字符串
  */
-export function decodeMessage(message: string) {
-    messageObjList = [];
-    if (/^"[^"].*/gs.test(message)) {
-        // 房间的消息
-        let temp_list = message.slice(1).split('<')
-        for (let i = temp_list.length - 1; i >= 0; i--)
-            messageObjList.push(publicChat(temp_list[i]))
-    } else if (/^"".*/gs.test(message)) {
-        // 私聊消息
-        let temp_list = message.slice(1).split('<')
-        for (let i = temp_list.length - 1; i >= 0; i--) {
-            messageObjList.push(privateChat(temp_list[i]))
+    decodeMessage(message: string) {
+        decoder.messageObjList = [];
+        if (/^"[^"].*/gs.test(message)) {
+            // 房间的消息
+            let temp_list = message.slice(1).split('<')
+            for (let i = temp_list.length - 1; i >= 0; i--)
+                decoder.messageObjList.push(publicChat(temp_list[i]))
+        } else if (/^"".*/gs.test(message)) {
+            // 私聊消息
+            let temp_list = message.slice(1).split('<')
+            for (let i = temp_list.length - 1; i >= 0; i--) {
+                decoder.messageObjList.push(privateChat(temp_list[i]))
+            }
+        } else if (/^=.*/gs.test(message)) {
+            // 弹幕消息
+            let temp_list = message.slice(1).split('<')
+            for (let i = temp_list.length - 1; i >= 0; i--) {
+                decoder.messageObjList.push(danmu(temp_list[i]))
+            }
+        } else if (/^[/]<.*>[0-9|a-z]{13}:.*/gs.test(message)) {
+            // 隐式消息
+            decoder.messageObjList.push(hidden(message));
+        } else if (/^v0.*/gs.test(message)) {
+            // 撤回消息
+            decoder.messageObjList.push(withdrawn(message));
+        } else if (/^%\*".*/gs.test(message)) {
+            // 系统消息
+            decoder.messageObjList.push(system(message));
+        } else if (/^>.*/gs.test(message)) {
+            // 股票消息
+            decoder.messageObjList.push(stock(message));
+        } else {
+            // 未知消息
+            decoder.messageObjList.push(unkonw(message));
         }
-    } else if (/^=.*/gs.test(message)) {
-        // 弹幕消息
-        let temp_list = message.slice(1).split('<')
-        for (let i = temp_list.length - 1; i >= 0; i--) {
-            messageObjList.push(danmu(temp_list[i]))
-        }
-    } else if (/^[/]<.*>[0-9|a-z]{13}:.*/gs.test(message)) {
-        // 隐式消息
-        messageObjList.push(hidden(message));
-    } else if (/^v0.*/gs.test(message)) {
-        // 撤回消息
-        messageObjList.push(withdrawn(message));
-    } else if (/^%\*".*/gs.test(message)) {
-        // 系统消息
-        messageObjList.push(system(message));
-    } else if (/^>.*/gs.test(message)) {
-        // 股票消息
-        messageObjList.push(stock(message));
-    } else {
-        // 未知消息
-        messageObjList.push(unkonw(message));
+        // console.log('正在解码消息', { message, list: decoder.messageObjList });
     }
-    // console.log('正在解码消息', { message, list: messageObjList });
-}
+};

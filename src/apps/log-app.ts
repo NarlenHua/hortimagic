@@ -1,8 +1,8 @@
-import { movePanelHolder } from '../holders/move-panel';
+import { holders } from '../core/holders';
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { logEmitter } from '../core/log-tools';
-import { HortimagicStore } from '../core/store';
+import { logTools } from '../core/log-tools';
+import { store } from '../core/store';
 
 interface LogEntry {
   timestamp: Date;
@@ -22,11 +22,11 @@ class HmLogApp extends LitElement {
     super();
 
     // 确保日志列表长度配置存在
-    if (HortimagicStore.logListLength < 1) {
-      HortimagicStore.logListLength = 50; // 默认保留50条日志
+    if (store.HortimagicStore.logListLength < 1) {
+      store.HortimagicStore.logListLength = 50; // 默认保留50条日志
     }
 
-    logEmitter.on('log', (tag: string, ...args: any[]) => {
+    logTools.logEmitter.on('log', (tag: string, ...args: any[]) => {
       // 从参数中提取日志级别
       let level = 'log';
       if (args.length > 0) {
@@ -55,7 +55,7 @@ class HmLogApp extends LitElement {
       };
 
       /** 确保日志列表长度不超过最大长度 */
-      while (this.logList.length >= HortimagicStore.logListLength) {
+      while (this.logList.length >= store.HortimagicStore.logListLength) {
         this.logList.shift();
       }
       this.logList.push(logEntry);
@@ -221,7 +221,7 @@ export function initLogApp() {
   panel.width = 400;
 
   // panel.showMovePanel();
-  movePanelHolder.appendChild(panel);
+  holders.movePanelHolder.appendChild(panel);
   let template = `<hm-log-app></hm-log-app>`;
   panel.innerHTML = template;
   let menuItem = document.createElement('hm-menu');

@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { logger } from '../core/log-tools';
+import { logTools } from '../core/log-tools';
 
 let Tag = 'MovePanel';
 /** 创建的窗口列表 */
@@ -243,7 +243,7 @@ export class HmMovePanel extends LitElement {
       this.zIndex = movePanelItemMaxZindex;
       res = true;
     } else {
-      logger.warn(Tag, '置顶失败，窗口不在列表中');
+      logTools.logger.warn(Tag, '置顶失败，窗口不在列表中');
       res = false;
     }
     return res;

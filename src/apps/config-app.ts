@@ -1,9 +1,10 @@
-import { movePanelHolder } from '../holders/move-panel';
+import { holders } from '../core/holders';
 import { LitElement, css, html } from 'lit';
 // import { property } from 'lit/decorators.js';
-import { HortimagicStore, saveStore, loadStore, reactive } from '../core/store';
-import { logger } from '../core/log-tools';
+import { store } from '../core/store';
+import { logTools } from '../core/log-tools';
 
+const { HortimagicStore, saveStore, loadStore, reactive } = store;
 class HmConfigApp extends LitElement {
     // 返回一个只读的、响应式的快照
     storeSnap = reactive.snapshot(HortimagicStore);
@@ -131,7 +132,7 @@ class HmConfigApp extends LitElement {
                         @hm-input-change="${(e: CustomEvent) => {
                 const value = parseInt(e.detail.value) || 100;
                 HortimagicStore.logListLength = value;
-                logger.debug('log list length changed:', value);
+                logTools.logger.debug('log list length changed:', value);
             }}"
                     ></hm-input>
             </div>
@@ -155,7 +156,7 @@ export function initConfigApp() {
         saveStore();
     });
     // panel.showMovePanel();
-    movePanelHolder.appendChild(panel);
+    holders.movePanelHolder.appendChild(panel);
     let template = `
         <hm-config-app></hm-config-app>
     `;

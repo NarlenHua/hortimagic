@@ -30,7 +30,7 @@ HortiMagic（园艺魔法）是一个基于Lit构建的蔷薇花园（iirose）�
 ## 安装使用
 
 1. 在花园中打开终端（左侧菜单）
-2. 输入`js`命令
+2. 输入 `js`命令
 3. 输入本插件的脚本链接即可使用
 
 ## 开发
@@ -49,6 +49,8 @@ npm run build
 ```
 
 ### 项目结构
+
+文件里唯一的变量和依赖唯一的方法都应聚合导出为变量
 
 ```
 src/
@@ -92,3 +94,7 @@ MIT License
 
 1. 花园房间：[留不住别样年华](https://iirose.com/#s=61aef798c94e6&act=i:61aef798c94e6)
 2. QQ群：[56246005](https://qun.qq.com/universal-share/share?ac=1&authKey=bWDSbs%2Bly0dpxZm%2Ff8OsufXeRWSn6fhRWfaz6K%2FJDCKY%2Bt05wP%2BsKeRkovoMfdfQ&busi_data=eyJncm91cENvZGUiOiI5OTU5MzE3MTAiLCJ0b2tlbiI6Im1NSVpiOUhWeE91ZDFLTERla2hiMzdaWDlBd2h3Z2s2ZFREMWMxbUhSaktNSTVIUUxOTkR6RjFQS0tnTWRjNUEiLCJ1aW4iOiIyOTE4NTIzNjk1In0%3D&data=L0gUu0j7KKkHQgShTclZcmvfKQKp7VSQOxmMKJcxhHUviRlnP5nY6pDW-PXvV305qdl4W8DIal1MqjUAPFoJEg&svctype=4&tempid=h5_group_info)
+
+## 下载链接
+
+[v1.1.5 下载](https://r.iirose.com/f/26/7/26/16/0812-IH.txt)

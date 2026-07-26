@@ -135,8 +135,8 @@ export class HmAccordion extends LitElement {
   }
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'hm-accordion': HmAccordion;
-  }
-}
+// declare global {
+//   interface HTMLElementTagNameMap {
+//     'hm-accordion': HmAccordion;
+//   }
+// }
