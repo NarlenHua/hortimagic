@@ -4,10 +4,10 @@ import { property } from 'lit/decorators.js';
 import { logTools } from '../core/log-tools';
 import { store } from '../core/store';
 
+/** 日志条目接口 */
 interface LogEntry {
   timestamp: Date;
   level: string;
-  tag: string;
   message: any[];
 }
 
@@ -26,41 +26,12 @@ class HmLogApp extends LitElement {
       store.HortimagicStore.logListLength = 50; // 默认保留50条日志
     }
 
-    logTools.logEmitter.on('log', (tag: string, ...args: any[]) => {
-      // 从参数中提取日志级别
-      let level = 'log';
-      if (args.length > 0) {
-        // 通过检查console方法来确定日志级别
-        const firstArg = args[0];
-        if (typeof firstArg === 'string') {
-          if (firstArg.startsWith('[DEBUG]')) level = 'debug';
-          else if (firstArg.startsWith('[INFO]')) level = 'info';
-          else if (firstArg.startsWith('[WARN]')) level = 'warn';
-          else if (firstArg.startsWith('[ERROR]')) level = 'error';
-        }
-      }
-
-      // 移除可能的级别标记
-      const cleanArgs = [...args];
-      if (cleanArgs.length > 0 && typeof cleanArgs[0] === 'string' &&
-        ['[DEBUG]', '[INFO]', '[WARN]', '[ERROR]'].some(marker => cleanArgs[0].startsWith(marker))) {
-        cleanArgs.shift();
-      }
-
-      const logEntry: LogEntry = {
-        timestamp: new Date(),
-        level,
-        tag,
-        message: cleanArgs
-      };
-
-      /** 确保日志列表长度不超过最大长度 */
-      while (this.logList.length >= store.HortimagicStore.logListLength) {
-        this.logList.shift();
-      }
-      this.logList.push(logEntry);
-      this.requestUpdate();
-    });
+    /** 订阅普通级别日志输出 */
+    logTools.logEmitter.on('log', (...args: any[]) => { this.pushLogEntry('log', ...args) });
+    logTools.logEmitter.on('debug', (...args: any[]) => { this.pushLogEntry('debug', ...args) });
+    logTools.logEmitter.on('info', (...args: any[]) => { this.pushLogEntry('info', ...args) });
+    logTools.logEmitter.on('warn', (...args: any[]) => { this.pushLogEntry('warn', ...args) });
+    logTools.logEmitter.on('error', (...args: any[]) => { this.pushLogEntry('error', ...args) });
   }
 
   static styles = css`
@@ -163,7 +134,7 @@ class HmLogApp extends LitElement {
             </div>
             <div class="log-container">
                 ${this.logList.map((entry: LogEntry) => {
-      const key = `${entry.timestamp.getTime()}-${entry.tag}-${entry.level}`;
+      const key = `${entry.timestamp.getTime()}-${entry.level}`;
       const isExpanded = this.foldState.get(key) ?? false;
       const messageStr = entry.message.map(msg =>
         typeof msg === 'object' ? JSON.stringify(msg) : String(msg)
@@ -177,7 +148,6 @@ class HmLogApp extends LitElement {
                             <div class="log-header">
                                 <span class="timestamp">${this.formatTime(entry.timestamp)}</span>
                                 <span class="level ${entry.level}">[${entry.level.toUpperCase()}]</span>
-                                <span class="tag">${entry.tag}</span>
                             </div>
                             <div 
                                 class="message ${isExpanded || !shouldCollapse ? 'expanded' : 'collapsed'}"
@@ -204,7 +174,18 @@ class HmLogApp extends LitElement {
     this.logList = [];
     this.requestUpdate();
   }
-
+  private pushLogEntry(level: string, ...args: any[]) {
+    /** 确保日志列表长度不超过最大长度 */
+    while (this.logList.length >= store.HortimagicStore.logListLength) {
+      this.logList.shift();
+    }
+    this.logList.push({
+      timestamp: new Date(),
+      level: level,
+      message: args
+    });
+    this.requestUpdate();
+  }
   // 新增：切换日志消息的折叠状态
   private toggleFold(key: string) {
     const currentState = this.foldState.get(key) ?? false;

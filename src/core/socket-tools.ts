@@ -1,3 +1,4 @@
+import { information } from "../main";
 import { decoder } from "./decoder";
 import { Emitter } from "./Emitter";
 import { logTools } from "./log-tools";
@@ -40,12 +41,12 @@ export const socketTools = {
     originalOnmessage(message: string) { return message; },
     /** 接收后的处理函数 */
     async afterOnmessage(message: string) {
-        // logTools.logger.debug(Tag,'准备触发', message, messageObjList);
         for (let messageObj of decoder.messageObjList) {
-            if (store.HortimagicStore.messageLogFlag.emit) {
+            /** 如果允许消息解析日志输出 */
+            if (information.messageDebug && store.HortimagicStore.messageLogFlag.emit) {
                 logTools.logger.debug(Tag, `触发${decoder.judegMessageClass(messageObj)}消息`, {
-                    message,
-                    messageObj
+                    messageObj,
+                    message
                 });
             }
             socketTools.messageEmitter.emit(decoder.judegMessageClass(messageObj), messageObj)

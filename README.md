@@ -97,4 +97,4 @@ MIT License
 
 ## 下载链接
 
-[v1.1.5 下载](https://r.iirose.com/f/26/7/26/16/0812-IH.txt)
+[v1.1.6 下载](https://r.iirose.com/f/26/7/29/4/0138-9M.txt)

@@ -975,6 +975,11 @@ export declare const information: {
     buildTime: string;
     /** 项目是否注入完成 */
     injected: boolean;
+    /**
+     * 是否允许输出消息的调试信息
+     * 手动在控制台输入 'hortimagic.messageDebug' 可以切换调试模式
+     */
+    messageDebug: boolean;
 };
 
 declare function init(): Promise<void>;
@@ -988,11 +993,11 @@ declare function initDialogApp(): Promise<void>;
 declare type Listener = (...args: any[]) => void;
 
 export declare const logger: {
-    log(tag: string, ...args: any[]): void;
-    debug(tag: string, ...args: any[]): void;
-    info(tag: string, ...args: any[]): void;
-    warn(tag: string, ...args: any[]): void;
-    error(tag: string, ...args: any[]): void;
+    log(...args: any[]): void;
+    debug(...args: any[]): void;
+    info(...args: any[]): void;
+    warn(...args: any[]): void;
+    error(...args: any[]): void;
 };
 
 /**
@@ -1015,31 +1020,31 @@ declare const logTools: {
          * 只有在配置的日志级小于等于DEBUG时才会输出
          * @param args 要输出的参数
          */
-        log(tag: string, ...args: any[]): void;
+        log(...args: any[]): void;
         /**
          * 输出调试日志
          * 仅在配置的日志级别小于等于DEBUG时才会输出
          * @param args 要输出的参数
          */
-        debug(tag: string, ...args: any[]): void;
+        debug(...args: any[]): void;
         /**
          * 输出信息日志
          * 仅在配置的日志级别小于等于INFO时才会输出
          * @param args 要输出的参数
          */
-        info(tag: string, ...args: any[]): void;
+        info(...args: any[]): void;
         /**
          * 输出警告日志
          * 仅在配置的日志级别小于等于WARN时才会输出
          * @param args 要输出的参数
          */
-        warn(tag: string, ...args: any[]): void;
+        warn(...args: any[]): void;
         /**
          * 输出错误日志
          * 仅在配置的日志级别小于等于ERROR时才会输出
          * @param args 要输出的参数
          */
-        error(tag: string, ...args: any[]): void;
+        error(...args: any[]): void;
     };
 };
 

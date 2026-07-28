@@ -23,37 +23,17 @@ export default defineConfig({
   ],
   build: {
     target: ["edge130", "firefox130", "chrome130", "safari18.0"],
-    rollupOptions: {
-      // external: ['react', 'react-dom'],
-      // output: {
-      //   globals: {
-      //     react: 'React',
-      //     'react-dom': 'ReactDOM',
-      //   }
-      // }
-    },
     lib: {
       entry: "./src/main.ts",
-      name: `${pkg.name}`,
-      // formats: ['es', 'cjs', 'umd', 'iife'],
-      // formats: ["es", "iife"],
+      name: pkg.name,
       formats: ["iife"],
-      fileName: (format, entryName) => {
-        return `${pkg.name}.${format}.js`;
-      },
+      fileName: (_format) => `${pkg.name}.iife.js`,
     },
     minify: "terser",
     terserOptions: {
-      // 删除所有注释，包括 license 注释
       format: {
         comments: false,
       },
-
-      compress: {
-        // 删除命令台输出
-        // drop_console: true,
-        // drop_debugger: true,
-      },
-    }
+    },
   },
 });

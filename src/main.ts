@@ -28,7 +28,12 @@ const information = {
     /** 项目构建时间 */
     buildTime: __BUILD_TIME__,
     /** 项目是否注入完成 */
-    injected: false
+    injected: false,
+    /**
+     * 是否允许输出消息的调试信息
+     * 手动在控制台输入 'hortimagic.messageDebug' 可以切换调试模式
+     */
+    messageDebug: false,
 }
 async function main() {
     await apps.main_app.init();

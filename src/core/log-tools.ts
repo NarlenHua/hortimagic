@@ -21,10 +21,10 @@ export const logTools = {
          * 只有在配置的日志级小于等于DEBUG时才会输出
          * @param args 要输出的参数
          */
-        log(tag: string, ...args: any[]): void {
+        log(...args: any[]): void {
             if (store.HortimagicStore.logFlag.log) {
-                logTools.logEmitter.emit('log', tag, ...args);
-                console.log(tag, ...args);
+                logTools.logEmitter.emit('log', ...args);
+                console.log(...args);
             }
         },
         /**
@@ -32,10 +32,10 @@ export const logTools = {
          * 仅在配置的日志级别小于等于DEBUG时才会输出
          * @param args 要输出的参数
          */
-        debug(tag: string, ...args: any[]): void {
+        debug(...args: any[]): void {
             if (store.HortimagicStore.logFlag.debug) {
-                logTools.logEmitter.emit('debug', tag, ...args);
-                console.debug(tag, ...args);
+                logTools.logEmitter.emit('debug', ...args);
+                console.debug(...args);
             }
         },
         /**
@@ -43,10 +43,10 @@ export const logTools = {
          * 仅在配置的日志级别小于等于INFO时才会输出
          * @param args 要输出的参数
          */
-        info(tag: string, ...args: any[]): void {
+        info(...args: any[]): void {
             if (store.HortimagicStore.logFlag.info) {
-                logTools.logEmitter.emit('info', tag, ...args);
-                console.info(tag, ...args);
+                logTools.logEmitter.emit('info', ...args);
+                console.info(...args);
             }
         },
         /**
@@ -54,10 +54,10 @@ export const logTools = {
          * 仅在配置的日志级别小于等于WARN时才会输出
          * @param args 要输出的参数
          */
-        warn(tag: string, ...args: any[]): void {
+        warn(...args: any[]): void {
             if (store.HortimagicStore.logFlag.warn) {
-                logTools.logEmitter.emit('warn', tag, ...args);
-                console.warn(tag, ...args);
+                logTools.logEmitter.emit('warn', ...args);
+                console.warn(...args);
             }
         },
         /**
@@ -65,10 +65,10 @@ export const logTools = {
          * 仅在配置的日志级别小于等于ERROR时才会输出
          * @param args 要输出的参数
          */
-        error(tag: string, ...args: any[]): void {
+        error(...args: any[]): void {
             if (store.HortimagicStore.logFlag.error) {
-                logTools.logEmitter.emit('error', tag, ...args);
-                console.error(tag, ...args);
+                logTools.logEmitter.emit('error', ...args);
+                console.error(...args);
             }
         },
     }

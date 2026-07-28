@@ -1,10 +1,10 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.1.5",
-  "changelog": "移除了气泡组件",
+  "version": "1.1.6",
+  "changelog": "优化了打包流程，改善了类型说明文件。",
   "author": "Narlen",
-  "description": "园艺魔法，花园插件",
+  "description": "花园插件",
   "keywords": [
     "iirose",
     "plugins",
