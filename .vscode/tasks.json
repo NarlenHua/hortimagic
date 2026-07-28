@@ -10,9 +10,9 @@
       "command": "npm run build"
     },
     {
-      "label": "add_description",
+      "label": "upload_To_Iirose",
       "type": "shell",
-      "command": "npx tsx .//script//addDescription.ts"
+      "command": " npx tsx script/upload.ts"
     },
     {
       "label": "publish",
@@ -20,11 +20,11 @@
       "command": "npm publish --registry https://registry.npmjs.org"
     },
     {
-      "label": "generate_script",
+      "label": "build_and_upload",
       "type": "shell",
       "dependsOn": [
         "iirose_build",
-        "add_description"
+        "upload_To_Iirose"
       ],
       "dependsOrder": "sequence",
       "problemMatcher": []

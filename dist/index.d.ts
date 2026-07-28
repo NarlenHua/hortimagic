@@ -1,321 +1,404 @@
-
 /// <reference path="../types/vite-env.d.ts" />
 /// <reference path="../types/global.d.ts" />
 /// <reference path="../src/components/type.d.ts"/>
+
 import { CSSResult } from 'lit';
 import { LitElement } from 'lit';
+import { proxy } from 'valtio/vanilla';
+import { snapshot } from 'valtio/vanilla';
+import { subscribe } from 'valtio/vanilla';
 import { TemplateResult } from 'lit-html';
-import { TinyEmitter } from 'tiny-emitter';
 
-/**
- * 向列表加入一个脚本，具有唯一性,名字或链接一样的话就覆盖
- * @param script 要添加的脚本对象
- * @returns 是否添加成功
- */
-declare function addScriptToList(script: Script): boolean;
-
-/**
- * 向页面添加一个样式元素
- * @param css css字符串
- */
-declare function addStyle(css: string): void;
-
-declare function afterOnmessage(message: string): Promise<string>;
-
-declare function afterSend(message: string): string;
-
-export declare namespace app_tools {
-    export {
-        notice,
-        confirm_2 as confirm
-    }
-}
-
+/** 应用模块 */
 declare namespace apps {
     export {
         main_app,
-        example_app,
-        dialog_app,
-        script_app,
-        app_tools
+        dialog_app
     }
 }
 export { apps }
 
-declare function beforeOnmessage(message: string): Promise<string | null>;
-
-declare function beforeSend(message: string): Promise<string | null>;
-
-/**
- * 切换房间
- * @param {string} roomId 房间ID
- */
-declare function changeRoom(roomId: string): void;
-
+/** 组件模块 */
 declare namespace components {
     export {
-        hm_move_panel,
-        hm_icon,
-        hm_menu,
-        hm_notification,
-        hm_button,
-        hm_cell,
-        hm_swipe_cell,
-        hm_switch,
-        hm_accordion,
-        hm_input,
-        hm_dialog
+        movePanelItemList,
+        movePanelItemMaxZindex,
+        HmMovePanel,
+        registerIcon,
+        getIcon,
+        iconMap,
+        HmIcon,
+        HmMenu,
+        HmNotification,
+        HmButton,
+        HmCell,
+        HmSelect,
+        HmSwipeCell,
+        HmSwitch,
+        HmAccordion,
+        HmInput,
+        HmDialog
     }
 }
 export { components }
 
-/**
- * 去除css字符串中的多余空白字符、注释
- * @param css 要压缩的css字符串
- * @returns 去除空白字符的字符串
- */
-declare function compressCSS(css: string): string;
+declare const confirm_2: (message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function) => void;
+export { confirm_2 as confirm }
 
-/**
- * 去除html字符串中的多余空白字符、注释
- * @param html 要压缩的html字符串
- * @returns 去除空白字符的字符串
- */
-declare function compressHTML(html: string): string;
-
-/**
- * 确认弹窗函数
- * @param message 消息提示
- * @param confirmCallback 选择确认时的回调函数
- * @param cancelCallback 选择取消时的回调函数
- * @param closeCallback 关闭弹窗时的回调函数
- * @example ```javascript
- * hortimagic.apps.app_tools.confirm('hhhhhhhhhhhhhh',()=>{console.log('qqqqqqqqqqq')},()=>{console.log('cccccccccccc')})
- * ```
- */
-declare function confirm_2(message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function): void;
-
+/** 核心模块 */
 declare namespace core {
     export {
         tools,
-        iirose_socket,
-        event_emitter,
-        Message,
-        encoder,
+        socketTools,
+        elementsHooks,
+        store,
         decoder,
-        elements_hooks,
-        script_tools
+        Emitter,
+        encoder,
+        holders,
+        logTools,
+        Public,
+        Private,
+        Hidden,
+        Danmu,
+        Withdrawn,
+        System,
+        Stock,
+        Unkonw,
+        MessageClass,
+        Script,
+        scriptTools
     }
 }
 export { core }
 
+/**
+ * 弹幕消息类
+ * 用于表示弹幕类型的消息
+ */
 declare class Danmu {
-    /**  */
+    /** 用户名 */
     username: string;
-    /**  */
+    /** 头像链接 */
     avatar: string;
-    /**  */
+    /** 消息 */
     message: string;
-    /**  */
+    /** 消息颜色 */
     color: string;
-    /**  */
+    /** 性别 */
     gender: string;
-    /**  */
+    /** 时间戳 */
     timeStamp: string;
-    /**  */
+    /** 唯一id */
     uid: string;
-    /** 消息类型 */
-    readonly messageClass = "danmu";
 }
 
 /**
- * 生成弹幕消息
- * @param message 消息
- * @param color 颜色
- * @param v v,默认是0
- * @returns 返回格式化好的弹幕消息
+ * 消息解析器
  */
-declare function danmu(message: string, color: string, v?: string): string;
-
-declare function decodeMessage(message: string): void;
-
-declare namespace decoder {
-    export {
-        messageObjList,
-        decodeMessage
-    }
-}
-
-export declare namespace dialog {
-    export {
-        initDialogHolder,
-        dialogHolder
-    }
-}
+declare const decoder: {
+    /** 解析好后的消息列表 */
+    messageObjList: MessageClass[];
+    judegMessageClass(messageObj: MessageClass): "hidden" | "public" | "private" | "danmu" | "withdrawn" | "system" | "stock" | "unknown";
+    /**
+     * 解析消息字符串并将对应的消息对象添加到消息列表中
+     * @param message 原消息字符串
+     */
+    decodeMessage(message: string): void;
+};
 
 export declare namespace dialog_app {
     export {
-        dialogApp,
-        initDialogApp
+        initDialogApp,
+        HmDialogApp,
+        dialogApp
     }
 }
 
-declare let dialogApp: HmDialogApp;
+/**
+ * 默认的对话框模块
+ */
+declare const dialogApp: HmDialogApp;
 
-/** 移动面板容器 */
-declare let dialogHolder: HTMLDivElement;
-
-/** 原来界面的元素 */
-declare let elements: {
-    /** 移动窗口父元素,移动窗口容器 */
-    movePanelHolder: Element | null;
-    /** 侧边菜单按钮 */
-    functionHolder: Element | null;
-    /** 侧边菜单按钮列表 */
-    functionButtonGroupList: Element[];
-    /** 主消息列表的父元素 */
-    msgholderBox: Element | null;
-    /** home界面的消息列表父元素 */
-    homeHolderMsgBox: Element | null;
-    /** 最近会话列表 */
-    sessionHolderPmTaskBoxItems: Element[];
-    /** 主输入元素盒子 */
-    moveinputDisplay: Element | null;
-    /** 主输入元素 */
-    moveinput: HTMLElement | null;
-    /** 可以打开home界面 */
-    moveinputSendBtnFunc: Element | null;
-    /** 发送按钮 */
-    moveinputSendBtnSend: Element | null;
+/**
+ * 基于组件等组成的工具
+ */
+export declare const easyTools: {
+    /**
+     * 消失通知函数
+     * @example
+     * ```javascript
+     * // 显示成功通知
+     * hortimagic.easy_tools.notice.success('操作成功', '您的操作已成功完成');
+     *
+     * // 显示警告通知
+     * hortimagic.easy_tools.notice.warning('警告', '请注意检查输入信息', 5000);
+     *
+     * // 显示错误通知
+     * hortimagic.easy_tools.notice.error('错误', '操作失败，请重试');
+     *
+     * // 显示普通通知
+     * hortimagic.easy_tools.notice.normal('提示', '这是一条普通提示信息');
+     * ```
+     */
+    notice: {
+        /**
+         * 显示成功通知
+         * 创建并显示一个成功状态的通知组件
+         * @param title - 通知的标题文本
+         * @param content - 通知的内容文本
+         * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+         * @returns 无返回值
+         */
+        success(title: string, content: string, displayTime?: number): void;
+        /**
+         * 显示警告通知
+         * 创建并显示一个警告状态的通知组件
+         * @param title - 通知的标题文本
+         * @param content - 通知的内容文本
+         * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+         * @returns 无返回值
+         */
+        warning(title: string, content: string, displayTime?: number): void;
+        /**
+         * 显示错误通知
+         * 创建并显示一个错误状态的通知组件
+         * @param title - 通知的标题文本
+         * @param content - 通知的内容文本
+         * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+         * @returns 无返回值
+         */
+        error(title: string, content: string, displayTime?: number): void;
+        /**
+         * 显示普通通知
+         * 创建并显示一个普通状态的通知组件
+         * @param title - 通知的标题文本
+         * @param content - 通知的内容文本
+         * @param displayTime - 通知显示的时间（毫秒），默认为3000毫秒
+         * @returns 无返回值
+         */
+        normal(title: string, content: string, displayTime?: number): void;
+    };
+    /**
+     * 确认弹窗函数
+     * @param message 消息提示
+     * @param confirmCallback 选择确认时的回调函数
+     * @param cancelCallback 选择取消时的回调函数
+     * @param closeCallback 关闭弹窗时的回调函数
+     * @example ```javascript
+     * hortimagic.easy_tools.confirm('hhhhhhhhhhhhhh',()=>{console.log('qqqqqqqqqqq')},()=>{console.log('cccccccccccc')})
+     * ```
+     */
+    confirm(message: string, confirmCallback?: Function, cancelCallback?: Function, closeCallback?: Function): void;
 };
 
-declare namespace elements_hooks {
-    export {
-        elements,
-        refreshAll,
-        Hooks,
-        initHooks
-    }
+/**
+ * dom元素和注入的hook函数
+ */
+declare const elementsHooks: {
+    /** 原来界面的元素 */
+    elements: {
+        /** 移动窗口父元素,移动窗口容器 */
+        movePanelHolder: Element | null;
+        /** 侧边菜单按钮 */
+        functionHolder: Element | null;
+        /** 侧边菜单按钮列表 */
+        functionButtonGroupList: Element[];
+        /** 主消息列表的父元素 */
+        msgholderBox: Element | null;
+        /** home界面的消息列表父元素 */
+        homeHolderMsgBox: Element | null;
+        /** 最近会话列表 */
+        sessionHolderPmTaskBoxItems: Element[];
+        /** 主输入元素盒子 */
+        moveinputDisplay: Element | null;
+        /** 主输入元素 */
+        moveinput: HTMLElement | null;
+        /** 可以打开home界面 */
+        moveinputSendBtnFunc: Element | null;
+        /** 发送按钮 */
+        moveinputSendBtnSend: Element | null;
+    };
+    /**
+     * 更新一些element
+     */
+    refreshAll(): void;
+    /** 钩子函数 */
+    Hooks: {
+        elementHooks: {
+            moveinput: {
+                oninputBefore: () => boolean;
+                oninputAfter: () => boolean;
+                onblurBefore: () => boolean;
+                onblurAfter: () => boolean;
+                onfocusBefore: () => boolean;
+                onfocusAfter: () => boolean;
+            };
+        };
+        functionHooks: {
+            processer: {
+                onBefore: (e: any, s: any, t: any, r: any) => boolean;
+                onAfter: (e: any, s: any, t: any, r: any) => boolean;
+            };
+        };
+        replaceMoveinput: () => void;
+        replaceButtonProcesser: () => void;
+    };
+    /**
+     * 注入钩子函数
+     */
+    initHooks(): void;
+};
+
+/**
+ * Emitter 类提供事件驱动的编程模式，允许对象间通过事件进行通信
+ * 支持事件监听、取消监听、一次性监听和事件触发功能
+ */
+declare class Emitter {
+    /**
+     * 存储事件名称和对应监听器数组的映射
+     * @private
+     */
+    private events;
+    /**
+     * 为指定事件添加监听器
+     * @param eventName 事件名称
+     * @param listener 事件触发时要调用的回调函数
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * emitter.on('test', (data) => console.log('接收到数据:', data));
+     * emitter.emit('test', { message: 'Hello' }); // 输出: 接收到数据: { message: 'Hello' }
+     * ```
+     */
+    on(eventName: string, listener: Listener): void;
+    /**
+     * 移除指定事件的监听器
+     * @param eventName 事件名称
+     * @param listener 要移除的监听器函数，如果未提供则移除该事件的所有监听器
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * const listener = (data) => console.log(data);
+     * emitter.on('test', listener);
+     * emitter.off('test', listener); // 移除特定监听器
+     * emitter.off('test'); // 移除所有 'test' 事件的监听器
+     * ```
+     */
+    off(eventName: string, listener?: Listener): void;
+    /**
+     * 为指定事件添加一次性监听器，监听器在第一次触发后将被移除
+     * @param eventName 事件名称
+     * @param listener 事件触发时要调用的回调函数，只执行一次
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * emitter.once('start', () => console.log('仅执行一次'));
+     * emitter.emit('start'); // 输出: 仅执行一次
+     * emitter.emit('start'); // 没有输出，因为监听器已被移除
+     * ```
+     */
+    once(eventName: string, listener: Listener): void;
+    /**
+     * 触发指定事件，并传递参数给监听器
+     * @param eventName 事件名称
+     * @param args 传递给监听器的参数
+     * @returns 如果至少有一个监听器被调用则返回 true，否则返回 false
+     * @example
+     * ```ts
+     * const emitter = new Emitter();
+     * emitter.on('greet', (name, age) => console.log(`你好 ${name}, 你 ${age} 岁了`));
+     * emitter.emit('greet', '小明', 25); // 输出: 你好 小明, 你 25 岁了
+     * ```
+     */
+    emit(eventName: string, ...args: any[]): boolean;
 }
 
 /**
- * 事件触发器
+ * 消息编码器
+ * 用于生成发送的消息
  */
-declare let emitter: TinyEmitter;
+declare const encoder: {
+    /**
+     * 生成公屏消息
+     * @param message 消息
+     * @param color 消息颜色
+     * @returns 返回格式化好的消息
+     */
+    publicChat(message: string, color: string): string;
+    /**
+     * 生成隐藏发送的私聊消息，自己看不到
+     * @param uid 对方的UID
+     * @param message 消息
+     * @param color 消息颜色
+     * @returns 返回格式化好的消息
+     */
+    privateChat(uid: string, message: string, color: string): string;
+    /**
+     * 生成隐藏的消息
+     * @param messageNmae 消息的标题或者名字
+     * @param uid 要发送的对象
+     * @param data 消息数据
+     * @returns 返回生成的数据
+     */
+    hidden(messageNmae: string, uid: string, data: string): string;
+    /**
+     * 生成一个音乐卡片消息
+     * @param typeId 音乐平台从0开始
+     * @param title 音乐名字
+     * @param singerName 歌手名字
+     * @param coverUrl 封面图片链接
+     * @param color 颜色
+     * @param resolutionRatio 音乐的压缩率
+     */
+    musicCard(typeId: string, title: string, singerName: string, coverUrl: string, color: string, resolutionRatio: string): string;
+    /**
+     * 生成一个视频卡片消息
+     * @param typeId 视频平台从0开始
+     * @param title 视频名字
+     * @param singerName 制作者名字
+     * @param coverUrl 封面图片链接
+     * @param color 颜色
+     * @param resolutionRatio 分辨率，64会被识别成1080p
+     */
+    videoCard(typeId: string, title: string, singerName: string, coverUrl: string, color: string, resolutionRatio: string, time: string): string;
+    /**
+     * 编码点赞消息
+     * @param targetUid 目标id
+     * @param content 正文
+     * @returns 格式化好的消息
+     */
+    like(targetUid: string, content?: string): string;
+    /**
+     * 生成弹幕消息
+     * @param message 消息
+     * @param color 颜色
+     * @param v v,默认是0
+     * @returns 返回格式化好的弹幕消息
+     */
+    danmu(message: string, color: string, v?: string): string;
+    /**
+     * 生成撤回的消息
+     * @param randomNumber 指定消息的随机数如：491855401763
+     * @param privateUID 私聊对象的UID
+     * @returns
+     */
+    withdrawn(randomNumber: string, privateUID?: string): string;
+    /**
+     * 生成股票请求消息
+     * @param count 股票数量，不填或等于0时返回正常查看
+     * @returns
+     */
+    stockRequest(count: number | undefined): string;
+};
 
-declare namespace encoder {
-    export {
-        publicChat,
-        privateChat,
-        hidden,
-        musicCard,
-        videoCard,
-        like,
-        danmu,
-        withdrawn,
-        stockRequest
-    }
-}
-
-declare namespace event_emitter {
-    export {
-        TinyEmitter,
-        emitter
-    }
-}
-
-export declare namespace example_app {
-    export {
-        initExampleApp
-    }
-}
-
-/**
- * 创造一个新的私聊气泡，搭配静默发送私聊消息才能和“正常一样使用。
- * @param {string} targetUid 目标UID
- * @param {string} content 正文
- * @param {string} messageId 消息气泡的ID
- */
-declare function generatePrivateMessageBubble(targetUid: string, content: string, messageId: string): void;
-
-/**
- * 获取所有在线用户的信息
- * @returns 用户消息列表
- */
-declare function getAllOnlineUserInfo(): {
-    name: any;
-    uid: any;
-    color: any;
-    avatar: any;
-    roomId: any;
-    personalizedSignature: any;
-}[] | null;
-
+/** 获取svg代码 */
 declare function getIcon(name: string): string;
 
 /**
- * 通过uid获取在线用户的信息
- * @param {string} uid
- * @returns 用户消息
+ * 隐藏消息类
+ * 用于表示隐藏类型的消息
  */
-declare function getOnlineUserInfoById(uid: string): {
-    name: string;
-    uid: string;
-    color: string;
-    avatar: string;
-    roomId: string;
-    personalizedSignature: string;
-} | null;
-
-/**
- * 获取当前房间ID
- * @returns 返回当前用户的UID，没找到返回null
- */
-declare function getRoomId(): string | null;
-
-/**
- * 通过房间id返回房间消息
- * @param roomId 房间的id
- * @returns 返回返回消息
- */
-declare function getRoomInfoById(roomId: string): {
-    name: string;
-    roomPath: Array<string>;
-    color: string;
-    description: string;
-    roomImage: string;
-    currentUserNum: number | "hidden";
-    ownerName: string;
-    member: Array<{
-        name: string;
-        auth: "member" | "admin" | "unknow";
-    }>;
-} | null;
-
-/**
- * 获取用户蔷薇输入颜色
- * @returns 获取不到返回null
- */
-declare function getUserInputColor(): string | null;
-
-/**
- * 获取当前用户的名字
- * @returns 返回当前用户的名字，没找到返回null
- */
-declare function getUserName(): string | null;
-
-/**
- * 获取用户蔷薇头像url
- * @returns {string}
- */
-declare function getUserProfilePictureUrl(): string | null;
-
-/**
- * 获取当前用户的UID
- * @returns 返回当前用户的UID，没找到返回null
- */
-declare function getUserUid(): string | null;
-
 declare class Hidden {
     /** 消息的标题，名字？主题 */
     messageName: string;
@@ -323,92 +406,13 @@ declare class Hidden {
     uid: string;
     /** 数据 */
     data: string;
-    /** 消息类型 */
-    readonly messageClass = "hidden";
 }
 
 /**
- * 生成隐藏的消息
- * @param messageNmae 消息的标题或者名字
- * @param uid 要发送的对象
- * @param data 消息数据
- * @returns 返回生成的数据
- */
-declare function hidden(messageNmae: string, uid: string, data: string): string;
-
-export declare namespace hm_accordion {
-    export {
-        HmAccordion
-    }
-}
-
-export declare namespace hm_button {
-    export {
-        HmButton
-    }
-}
-
-export declare namespace hm_cell {
-    export {
-        HmCell
-    }
-}
-
-export declare namespace hm_dialog {
-    export {
-        HmDialog
-    }
-}
-
-export declare namespace hm_icon {
-    export {
-        registerIcon,
-        getIcon,
-        HmIcon
-    }
-}
-
-export declare namespace hm_input {
-    export {
-        HmInput
-    }
-}
-
-export declare namespace hm_menu {
-    export {
-        HmMenu
-    }
-}
-
-export declare namespace hm_move_panel {
-    export {
-        movePanelItemList,
-        movePanelItemMaxZindex,
-        HmMovePanel
-    }
-}
-
-export declare namespace hm_notification {
-    export {
-        HmNotification
-    }
-}
-
-export declare namespace hm_swipe_cell {
-    export {
-        HmSwipeCell
-    }
-}
-
-export declare namespace hm_switch {
-    export {
-        HmSwitch
-    }
-}
-
-/**
+ * 折叠面板
  * @example
- *   <hm-accordion>
+ * <hm-accordion title-content="标题内容"></hm-accordion>
+ * <hm-accordion>
  <span slot="header">我的折叠面板</span>
  <div>内容项 1</div>
  <div>内容项 2</div>
@@ -416,7 +420,10 @@ export declare namespace hm_switch {
  */
 declare class HmAccordion extends LitElement {
     maxHeight: string;
+    /** 折叠项 */
     items: any[];
+    /** 标题内容 */
+    titleContent: string;
     /** 是否展开 */
     expanded: boolean;
     static styles: CSSResult;
@@ -489,42 +496,13 @@ declare class HmButton extends LitElement {
  * @cssprop --hm-cell-background - 背景颜色
  *
  * @example
- * ```html
- * <!-- 基础用法 -->
- * <hm-cell
- *   titleName="单元格标题"
- *   descripthion="这是描述信息"
- *   content="内容区域">
- * </hm-cell>
- *
- * <!-- 使用插槽自定义内容 -->
- * <hm-cell>
- *   <div slot="title">自定义标题</div>
- *   <div slot="description">自定义描述</div>
- *   <div slot="content">自定义内容</div>
- * </hm-cell>
- *
- * <!-- 带点击事件 -->
- * <hm-cell
- *   titleName="可点击标题"
- *   content="点击查看详情"
- *   .titleClickCallback="${() => console.log('标题被点击')}"
- *   .contentClickCallback="${() => console.log('内容被点击')}">
- * </hm-cell>
- *
- * <!-- 自定义样式 -->
- * <hm-cell
- *   titleName="自定义样式"
- *   content="特殊样式"
- *   style="--hm-cell-background: #f0f8ff; --hm-cell-title-color: #1890ff;">
- * </hm-cell>
- * ```
+ * <hm-cell title-name="标题" description="描述信息" content="内容"></hm-cell>
  */
 declare class HmCell extends LitElement {
     /** 标题，使用slot后失效 */
     titleName: string;
     /** 标题下方描述，使用slot后失效 */
-    descripthion: string;
+    description: string;
     /** 右侧正文，使用slot后失效 */
     content: string;
     /** 标题点击回调函数 */
@@ -566,6 +544,10 @@ declare class HmDialog extends LitElement {
     render(): TemplateResult<1>;
 }
 
+/**
+ * 对话框模块
+ * @slot - 默认slot
+ */
 declare class HmDialogApp extends LitElement {
     dialogOpen: boolean;
     message: string;
@@ -578,7 +560,15 @@ declare class HmDialogApp extends LitElement {
     render(): TemplateResult<1>;
 }
 
+/** 图标组件
+ * @example
+ * <hm-icon icon="magic-wand"></hm-icon>
+ * <hm-icon icon="close"></hm-icon>
+ * <hm-icon icon="open"></hm-icon>
+ * <hm-icon icon="arrow-up"></hm-icon>
+ */
 declare class HmIcon extends LitElement {
+    /** 图标名称 */
     icon: string;
     size: string;
     /** 触发点击事件 */
@@ -595,10 +585,22 @@ declare class HmIcon extends LitElement {
  * <hm-input label="密码" icon="password" placeholder="请输入密码"></hm-input>
  *
  * @example <caption>禁用状态</caption>
- * <hm-input label="禁用输入框" value="已禁用" enable="false"></hm-input>
+ * <hm-input label="禁用输入框" value="已禁用" disabled="true"></hm-input>
  *
  * @example <caption>只读状态</caption>
  * <hm-input label="只读输入框" value="只读内容" readonly="true"></hm-input>
+ *
+ * @example <caption>双向数据绑定</caption>
+ * <!-- 在父组件中监听hm-input-change事件 -->
+ * <hm-input label="用户名" value="${this.username}" @hm-input-change="${(e) => this.username = e.detail.value}"></hm-input>
+ *
+ * <!-- 或者在JavaScript中监听事件 -->
+ * const inputElement = document.querySelector('hm-input');
+ * inputElement.addEventListener('hm-input-change', (e) => {
+ *   console.log('输入值改变:', e.detail.value);
+ *   // 更新你的数据模型
+ *   myDataModel.value = e.detail.value;
+ * });
  */
 declare class HmInput extends LitElement {
     type: string;
@@ -608,8 +610,8 @@ declare class HmInput extends LitElement {
     label: string;
     /** 占位符文本 */
     placeholder: string;
-    /** 是否启用 */
-    enable: boolean;
+    /** 是否禁用 */
+    disabled: boolean;
     readonly: boolean;
     value: string;
     static styles: CSSResult;
@@ -619,9 +621,13 @@ declare class HmInput extends LitElement {
 }
 
 declare class HmMenu extends LitElement {
+    /** 图标 */
     icon: string;
+    /** 内容 */
     content: string;
+    /** 标记 */
     flag: boolean;
+    /** 是否是菜单项（二级菜单） */
     isMenuItem: boolean;
     static styles: CSSResult;
     /** 触发点击事件 */
@@ -640,25 +646,25 @@ declare class HmMovePanel extends LitElement {
     bodyBackgroundColor: string;
     bodyColor: string;
     footerBackgroundColor: string;
-    buttonBackgroundColor: string;
+    /** 按钮背景 */
+    buttonBackground: string;
+    /** 按钮文字色 */
     buttonColor: string;
     /** 标题 */
     titleContent: string;
     leftButtonText: string;
     rightButtonText: string;
-    /** 显示状态,不建议直接修改，请使用show()和hide()方法，否则无法触发对应事件 */
+    /** 显示状态,不建议直接修改，请使用showMovePanel()和hideMovePanel()方法，否则无法触发对应事件 */
     isDisplay: boolean;
     zIndex: number;
     /** 左上角图标 */
     icon: string;
+    /** 左下角图标 */
+    leftIcon: string;
+    /** 右下角图标 */
+    rightIcon: string;
     left: number;
     top: number;
-    handleLeftClick(): void;
-    handleRightClick(): void;
-    /**
-     * 组件内部的body元素
-     */
-    body: Promise<HTMLDivElement>;
     static styles: CSSResult;
     constructor();
     /** 关闭移动窗口 */
@@ -680,8 +686,8 @@ declare class HmMovePanel extends LitElement {
     putTopToggel(): void;
     render(): TemplateResult<1>;
     _handleClose(): void;
-    _handleLeftButtonClick(): void;
-    _handleRightButtonClick(): void;
+    handleLeftButtonClick(): void;
+    handleRightButtonClick(): void;
 }
 
 /** 通知消息组件
@@ -726,6 +732,85 @@ declare class HmNotification extends LitElement {
     firstUpdated(): void;
     private startLeaveAnimation;
     render(): TemplateResult<1>;
+}
+
+/**
+ * HmSelect 自定义下拉选择组件
+ *
+ * 使用示例：
+ * ```html
+ * <!-- 基础用法 -->
+ * <hm-select
+ *   index="1"
+ *   label-list='[{"name": "选项1", "value": 1}, {"name": "选项2", "value": 2}]'>
+ * </hm-select>
+ *
+ * <!-- 监听选择变化事件 -->
+ * <hm-select
+ *   id="mySelect"
+ *   index="0"
+ *   label-list='[{"name": "苹果", "value": "apple"}, {"name": "香蕉", "value": "banana"}]'>
+ * </hm-select>
+ *
+ * <script>
+ *   document.getElementById('mySelect').addEventListener('hm-select-change', (e) => {
+ *     console.log(`选择了: ${e.detail.name}, 值: ${e.detail.value}, 索引: ${e.detail.index}`);
+ *   });
+ * </script>
+ * ```
+ *
+ * 也可以通过JavaScript动态设置属性：
+ * ```javascript
+ * const selectEl = document.createElement('hm-select');
+ * selectEl.labelList = [
+ *   { name: '春季', value: 'spring' },
+ *   { name: '夏季', value: 'summer' },
+ *   { name: '秋季', value: 'autumn' },
+ *   { name: '冬季', value: 'winter' }
+ * ];
+ * selectEl.addEventListener('hm-select-change', (e) => {
+ *   console.log(e.detail); // { index: number, value: any, name: string }
+ * });
+ * ```
+ */
+declare class HmSelect extends LitElement {
+    /**
+     * 当前选中项的索引，默认为 0
+     * @type {number}
+     * @default 0
+     */
+    index: number;
+    /**
+     * 当前选中项的值
+     * @type {any}
+     * @default 0
+     */
+    value: any;
+    /**
+     * 选择项列表，每个项为 {name: string, value: any} 的对象
+     * @type {Array<{name: string, value: any}>}
+     * @default [{ name: '选项0', value: 0 }, { name: '选项1', value: 1 }, { name: '选项2', value: 2 }]
+     */
+    labelList: Array<{
+        name: string;
+        value: any;
+    }>;
+    /**
+     * 是否禁用选择器
+     * @type {boolean}
+     * @default false
+     */
+    disabled: boolean;
+    private _selectRef;
+    static styles: CSSResult;
+    connectedCallback(): void;
+    render(): TemplateResult<1>;
+    /**
+     * 处理选择项改变事件
+     * @param {Event} event - 选择框的change事件
+     * @private
+     */
+    private _handleChange;
 }
 
 /**
@@ -811,7 +896,7 @@ declare class HmSwipeCell extends LitElement {
  * <hm-switch openIcon="check" closeIcon="close"></hm-switch>
  *
  * <!-- 监听状态变化 -->
- * <hm-switch @hm-switch-change="${(e) => console.log('开关状态:', e.detail.checked)}"></hm-switch>
+ * <hm-switch @hm-switch-change="${(e) => logger.log('hm-switch','开关状态:', e.detail.checked)}"></hm-switch>
  * ```
  */
 declare class HmSwitch extends LitElement {
@@ -836,58 +921,36 @@ declare class HmSwitch extends LitElement {
     static styles: CSSResult;
 }
 
-declare namespace holders {
-    export {
-        move_panel,
-        menu,
-        notification,
-        dialog
-    }
-}
-export { holders }
-
-/** 钩子函数 */
-declare let Hooks: {
-    elementHooks: {
-        moveinput: {
-            oninputBefore: () => boolean;
-            oninputAfter: () => boolean;
-            onblurBefore: () => boolean;
-            onblurAfter: () => boolean;
-            onfocusBefore: () => boolean;
-            onfocusAfter: () => boolean;
-        };
-    };
-    functionHooks: {
-        processer: {
-            onBefore: (e: any, s: any, t: any, r: any) => boolean;
-            onAfter: (e: any, s: any, t: any, r: any) => boolean;
-        };
-    };
-    replaceMoveinput: () => void;
-    replaceButtonProcesser: () => void;
+/**
+ * 容器元素
+ */
+declare const holders: {
+    /** 弹窗容器 */
+    dialogHolder: HTMLDivElement;
+    /** 初始化弹窗容器 */
+    initDialogHolder(): void;
+    /** 菜单容器 */
+    menuHolder: HTMLDivElement;
+    /** 初始化菜单容器 */
+    initMenuHolder(): void;
+    /** 移动面板容器 */
+    movePanelHolder: HTMLDivElement;
+    /** 初始化移动面板容器 */
+    initMovePanelHolder(): void;
+    /** 渲染的容器元素 */
+    notificationHolder: HTMLDivElement;
+    /** 初始化通知容器 */
+    initNotificationHolder(): void;
 };
 
-/**
- * html特殊符号反转义
- * @param {string} e
- * @returns {string}
+/** 存储图标的map类型数据
+ * key: 图标名称
+ * value: 图标svg代码
+ * 遍历图标名称的方式如下：
+ * @example
+ * for (const [iconName, iconSvg] of iconMap) {}
  */
-declare function htmlSpecialCharsDecode(e: string): string;
-
-/**
- * html特殊符号转义
- * @param {string} e
- * @returns {string}
- */
-declare function htmlSpecialCharsEscape(e: string): string;
-
-declare namespace iirose_socket {
-    export {
-        sockets,
-        initSocket
-    }
-}
+declare const iconMap: Map<string, string>;
 
 /** package配置信息 */
 export declare const information: {
@@ -911,60 +974,79 @@ export declare const information: {
     /** 项目构建时间 */
     buildTime: string;
     /** 项目是否注入完成 */
-    ingected: boolean;
+    injected: boolean;
+    /**
+     * 是否允许输出消息的调试信息
+     * 手动在控制台输入 'hortimagic.messageDebug' 可以切换调试模式
+     */
+    messageDebug: boolean;
 };
-
-/**
- * 读取本地脚本列表并注入
- */
-declare function ingectlocalScript(): void;
 
 declare function init(): Promise<void>;
 
 /** 初始化对话框模块 */
 declare function initDialogApp(): Promise<void>;
 
-/** 初始化移动面板容器 */
-declare function initDialogHolder(): void;
+/**
+ * 事件监听器类型定义，表示一个可以接收任意参数的函数
+ */
+declare type Listener = (...args: any[]) => void;
 
-declare function initExampleApp(): Promise<HmMenu>;
+export declare const logger: {
+    log(...args: any[]): void;
+    debug(...args: any[]): void;
+    info(...args: any[]): void;
+    warn(...args: any[]): void;
+    error(...args: any[]): void;
+};
 
 /**
- * 注入钩子函数
+ * 日志工具
  */
-declare function initHooks(): void;
-
-declare function initMenuHolder(): void;
-
-/** 初始化移动面板容器 */
-declare function initMovePanelHolder(): void;
-
-/** 初始化通知容器 */
-declare function initNotificationHolder(): void;
-
-declare function initScriptApp(): Promise<HmMenu>;
-
-declare function initSocket(): Promise<void>;
-
-/**
- * 注入一个JS脚本
- * @param script 要注入的脚本对象
- */
-declare function injectScript(script: Script): boolean;
-
-/**
- * 注入一组JS脚本
- * @param list 脚本列表
- */
-declare function injectScriptList(list: Script[]): void;
-
-/**
- * 编码点赞消息
- * @param targetUid 目标id
- * @param content 正文
- * @returns 格式化好的消息
- */
-declare function like(targetUid: string, content?: string): string;
+declare const logTools: {
+    /**
+     * 日志事件触发器
+     * 每次日志输出时都会触发'log'|'debug'|'info'|'warn'|'error'事件
+     */
+    logEmitter: Emitter;
+    /**
+     * 日志记录器
+     * 根据配置中的日志级别来决定是否输出日志
+     * 只有当配置的日志级别与当前输出的日志级别匹配时才会输出日志
+     */
+    logger: {
+        /**
+         * 记录普通日志
+         * 只有在配置的日志级小于等于DEBUG时才会输出
+         * @param args 要输出的参数
+         */
+        log(...args: any[]): void;
+        /**
+         * 输出调试日志
+         * 仅在配置的日志级别小于等于DEBUG时才会输出
+         * @param args 要输出的参数
+         */
+        debug(...args: any[]): void;
+        /**
+         * 输出信息日志
+         * 仅在配置的日志级别小于等于INFO时才会输出
+         * @param args 要输出的参数
+         */
+        info(...args: any[]): void;
+        /**
+         * 输出警告日志
+         * 仅在配置的日志级别小于等于WARN时才会输出
+         * @param args 要输出的参数
+         */
+        warn(...args: any[]): void;
+        /**
+         * 输出错误日志
+         * 仅在配置的日志级别小于等于ERROR时才会输出
+         * @param args 要输出的参数
+         */
+        error(...args: any[]): void;
+    };
+};
 
 export declare namespace main_app {
     export {
@@ -972,40 +1054,11 @@ export declare namespace main_app {
     }
 }
 
-export declare namespace menu {
-    export {
-        initMenuHolder,
-        menuHolder
-    }
-}
-
-declare let menuHolder: HTMLDivElement;
-
-declare namespace Message {
-    export {
-        Public,
-        Private,
-        Hidden,
-        Danmu,
-        Withdrawn,
-        System,
-        Stock,
-        Unkonw
-    }
-}
-
-/** 解析好后的消息列表 */
-declare let messageObjList: (Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw)[];
-
-export declare namespace move_panel {
-    export {
-        initMovePanelHolder,
-        movePanelHolder
-    }
-}
-
-/** 移动面板容器 */
-declare let movePanelHolder: HTMLDivElement;
+/**
+ * 所有消息类型的联合类型
+ * 用于类型检查和类型安全
+ */
+declare type MessageClass = Public | Private | Hidden | Danmu | Withdrawn | System | Stock | Unkonw;
 
 /** 创建的窗口列表 */
 declare let movePanelItemList: HmMovePanel[];
@@ -1013,43 +1066,17 @@ declare let movePanelItemList: HmMovePanel[];
 /** 窗口基础的层级，每新建一个加一,从99999开始加 */
 declare let movePanelItemMaxZindex: number;
 
-/**
- * 生成一个音乐卡片消息
- * @param typeId 音乐平台从0开始
- * @param title 音乐名字
- * @param singerName 歌手名字
- * @param coverUrl 封面图片链接
- * @param color 颜色
- * @param resolutionRatio 音乐的压缩率
- */
-declare function musicCard(typeId: string, title: string, singerName: string, coverUrl: string, color: string, resolutionRatio: string): string;
-
-/**
- * 消失通知函数
- */
-declare let notice: {
+export declare const notice: {
     success(title: string, content: string, displayTime?: number): void;
     warning(title: string, content: string, displayTime?: number): void;
     error(title: string, content: string, displayTime?: number): void;
     normal(title: string, content: string, displayTime?: number): void;
 };
 
-export declare namespace notification {
-    export {
-        initNotificationHolder,
-        notificationHolder
-    }
-}
-
-/** 渲染的容器元素 */
-declare let notificationHolder: HTMLDivElement;
-
-declare function onmessage_2(message: string): Promise<void>;
-
-declare function originalOnmessage(message: string): string;
-
-declare function originalSend(message: string): string;
-
+/**
+ * 私聊消息类
+ * 用于表示私聊消息
+ */
 declare class Private {
     /** 时间戳 */
     timeStamp: string;
@@ -1067,19 +1094,12 @@ declare class Private {
     uid: string;
     /** 消息唯一标识 */
     messageUid: string;
-    /** 消息类型 */
-    readonly messageClass = "private";
 }
 
 /**
- * 生成隐藏发送的私聊消息，自己看不到
- * @param uid 对方的UID
- * @param message 消息
- * @param color 消息颜色
- * @returns 返回格式化好的消息
+ * 公共消息类
+ * 用于表示公共频道中的消息
  */
-declare function privateChat(uid: string, message: string, color: string): string;
-
 declare class Public {
     /** 时间戳 */
     timeStamp: string;
@@ -1099,43 +1119,12 @@ declare class Public {
     designation: string;
     /** 消息UID */
     messageUid: string;
-    /** 消息类别 */
-    readonly messageClass = "public";
 }
 
-/**
- * 生成公屏消息
- * @param message 消息
- * @param color 消息颜色
- * @returns 返回格式化好的消息
- */
-declare function publicChat(message: string, color: string): string;
-
-/**
- * 读取本地存储的脚本列表
- */
-declare function readScriptList(): void;
-
-/**
- * 更新一些element
- */
-declare function refreshAll(): void;
-
+/** 提供静态方法用于外部注册图标 */
 declare function registerIcon(name: string, svgContent: string): void;
 
-/** 从列表中移除一个脚本
- * @param script 要移除的脚本对象
- */
-declare function removeScriptFromList(script: Script): void;
-
-/**
- * 保存脚本列表到本地存储
- */
-declare function saveScriptList(): void;
-
-/**
- * 脚本类
- */
+/** 脚本类 */
 declare class Script {
     /** 名字 */
     name: string;
@@ -1143,54 +1132,64 @@ declare class Script {
     url: string;
     /** 是否启用,默认启用 */
     enable: boolean;
-    /** 是否已经注入,手动修改 */
-    ingected: boolean;
-    constructor(name: string, url: string, enable?: boolean, ingected?: boolean);
+    constructor(name: string, url: string, enable?: boolean);
 }
-
-export declare namespace script_app {
-    export {
-        initScriptApp
-    }
-}
-
-declare namespace script_tools {
-    export {
-        Script,
-        scriptList,
-        addScriptToList,
-        removeScriptFromList,
-        injectScript,
-        injectScriptList,
-        readScriptList,
-        saveScriptList,
-        ingectlocalScript
-    }
-}
-
-/** 脚本列表 */
-declare let scriptList: Script[];
-
-declare function send(message: string): Promise<void>;
 
 /**
- * 异步延时函数
- * @param  ms
+ * 脚本工具
  */
-declare function sleep(ms: number): Promise<unknown>;
-
-declare const sockets: {
-    beforeSend: typeof beforeSend;
-    originalSend: typeof originalSend;
-    afterSend: typeof afterSend;
-    send: typeof send;
-    beforeOnmessage: typeof beforeOnmessage;
-    originalOnmessage: typeof originalOnmessage;
-    afterOnmessage: typeof afterOnmessage;
-    onmessage: typeof onmessage_2;
-    initSocket: typeof initSocket;
+declare const scriptTools: {
+    /** 已经注入的脚本列表 */
+    injectedUrlList: string[];
+    /** 添加脚本到列表
+     * @param script 脚本对象
+     * @returns 是否添加成功
+     */
+    addScriptToList(script: Script): boolean;
+    updateScriptInList(script: Script): boolean;
+    removeScriptFromList(script: Script): boolean;
+    findScriptByUrl(url: string): number;
+    findScriptByName(name: string): number;
+    clearScriptList(): void;
+    /** 注入脚本,不论它是否使能
+     * @param script 脚本对象
+     */
+    injecteScript(script: Script): boolean;
+    /**
+     * 注入脚本列表
+     */
+    injecteScriptList(): void;
 };
 
+/**
+ * socket工具集合
+ */
+declare const socketTools: {
+    messageEmitter: Emitter;
+    /** 发送前的处理函数 */
+    beforeSend(message: string): Promise<string | null>;
+    /** 原始发送函数 */
+    originalSend(message: string): string;
+    /** 发送后的处理函数 */
+    afterSend(message: string): string;
+    /** 发送消息函数 */
+    send(message: string): Promise<void>;
+    /** 接收前的处理函数 */
+    beforeOnmessage(message: string): Promise<string | null>;
+    /** 原始接收函数 */
+    originalOnmessage(message: string): string;
+    /** 接收后的处理函数 */
+    afterOnmessage(message: string): Promise<string>;
+    /** 接收消息函数 */
+    onmessage(message: string): Promise<void>;
+    /** 初始化socket */
+    initSocket(): Promise<void>;
+};
+
+/**
+ * 股票消息类
+ * 用于表示股票相关数据消息
+ */
 declare class Stock {
     /**
      * '*' 表示股价过低无法买股票
@@ -1209,70 +1208,249 @@ declare class Stock {
     totalEquity: number;
     /** 账户余额 */
     balance: number;
-    /** 消息类型 */
-    readonly messageClass = "stock";
 }
 
-/**
- * 生成股票请求消息
- * @param count 股票数量，不填或等于0时返回正常查看
- * @returns
- */
-declare function stockRequest(count: number | undefined): string;
+/**  store 响应式存储库 */
+declare const store: {
+    storKey: string;
+    /**
+     * 导出valtio响应式状态管理库常用方法
+     * @example
+     * // 创建响应式状态
+     * const state = reactive.proxy({ count: 0 })
+     *
+     * // 订阅状态变化
+     * reactive.subscribe(state, () => {
+     *   console.log('state has changed to', state)
+     * })
+     *
+     * // 获取状态快照
+     * const snap = reactive.snapshot(state)
+     *
+     * // 在组件中使用（注意：snapshot返回的是只读快照，不能直接修改）
+     * // 需要通过原始proxy对象进行修改
+     * const updateState = () => {
+     *   state.count++ // 直接修改原始proxy对象
+     * }
+     *
+     * // 无React环境使用示例：
+     * // 1. 创建状态
+     * const counterStore = proxy({ count: 0 });
+     *
+     * // 2. 修改状态
+     * counterStore.count++;
+     *
+     * // 3. 获取快照（用于显示）
+     * const snap = snapshot(counterStore);
+     * console.log(snap.count); // 输出当前值
+     *
+     * // 4. 订阅变化
+     * subscribe(counterStore, () => {
+     *   console.log('counter changed');
+     * });
+     */
+    reactive: {
+        /**
+         * 创建响应式状态
+         * const state = reactive.proxy({ count: 0 })
+         */
+        proxy: typeof proxy;
+        /**
+         * 订阅状态变化
+         * reactive.subscribe(state, () => {
+         *   console.log('state has changed to', state)
+         * })
+         */
+        subscribe: typeof subscribe;
+        /**
+         * 获取快照（用于显示）
+         * const snap = snapshot(counterStore);
+         * console.log(snap.count); // 输出当前值
+         */
+        snapshot: typeof snapshot;
+    };
+    /**
+     * hortiMagicStore存储库
+     */
+    HortimagicStore: {
+        /** 是否自动保存 */
+        autoSave: boolean;
+        /** 日志是否开启 */
+        logFlag: {
+            log: boolean;
+            info: boolean;
+            debug: boolean;
+            warn: boolean;
+            error: boolean;
+        };
+        /** 消息日志是否开启 */
+        messageLogFlag: {
+            send: boolean;
+            decode: boolean;
+            emit: boolean;
+            receive: boolean;
+        };
+        /** 日志列表最大长度 */
+        logListLength: number;
+        /** 脚本列表 */
+        scriptList: Script[];
+    };
+    /**
+     * 保存store
+     */
+    saveStore(): void;
+    /**
+     * 加载store
+     */
+    loadStore(): void;
+    initStore(): void;
+};
 
 /**
- * 切换房间
- * @param {string} roomId
+ * 系统消息类
+ * 用于表示系统通知类消息
  */
-declare function switchRoom(roomId: string): void;
-
 declare class System {
     /** 消息列表 */
     userMessageList: string[];
-    /** 消息类型 */
-    readonly messageClass = "system";
 }
 
-declare namespace tools {
-    export {
-        sleep,
-        compressHTML,
-        compressCSS,
-        addStyle,
-        htmlSpecialCharsEscape,
-        htmlSpecialCharsDecode,
-        getUserName,
-        getUserUid,
-        getRoomId,
-        getRoomInfoById,
-        getOnlineUserInfoById,
-        getAllOnlineUserInfo,
-        changeRoom,
-        getUserProfilePictureUrl,
-        getUserInputColor,
-        generatePrivateMessageBubble,
-        switchRoom
-    }
-}
+/** 工具集合 */
+declare const tools: {
+    /**
+     * 异步延时函数
+     * @param  ms
+     */
+    sleep(ms: number): Promise<unknown>;
+    /**
+     * 去除html字符串中的多余空白字符、注释
+     * @param html 要压缩的html字符串
+     * @returns 去除空白字符的字符串
+     */
+    compressHTML(html: string): string;
+    /**
+     * 去除css字符串中的多余空白字符、注释
+     * @param css 要压缩的css字符串
+     * @returns 去除空白字符的字符串
+     */
+    compressCSS(css: string): string;
+    /**
+     * 向页面添加一个样式元素
+     * @param css css字符串
+     */
+    addStyle(css: string): void;
+    /**
+     * html特殊符号转义
+     * @param {string} e
+     * @returns {string}
+     */
+    htmlSpecialCharsEscape(e: string): string;
+    /**
+     * html特殊符号反转义
+     * @param {string} e
+     * @returns {string}
+     */
+    htmlSpecialCharsDecode(e: string): string;
+    /**
+     * 获取当前用户的名字
+     * @returns 返回当前用户的名字，没找到返回null
+     */
+    getUserName(): string | null;
+    /**
+     * 获取当前用户的UID
+     * @returns 返回当前用户的UID，没找到返回null
+     */
+    getUserUid(): string | null;
+    /**
+     * 获取当前房间ID
+     * @returns 返回当前用户的UID，没找到返回null
+     */
+    getRoomId(): string | null;
+    /**
+     * 通过房间id返回房间消息
+     * @param roomId 房间的id
+     * @returns 返回返回消息
+     */
+    getRoomInfoById(roomId: string): {
+        name: string;
+        roomPath: Array<string>;
+        color: string;
+        description: string;
+        roomImage: string;
+        currentUserNum: number | "hidden";
+        ownerName: string;
+        member: Array<{
+            name: string;
+            auth: "member" | "admin" | "unknow";
+        }>;
+    } | null;
+    /**
+     * 通过uid获取在线用户的信息
+     * @param {string} uid
+     * @returns 用户消息
+     */
+    getOnlineUserInfoById(uid: string): {
+        name: string;
+        uid: string;
+        color: string;
+        avatar: string;
+        roomId: string;
+        personalizedSignature: string;
+    } | null;
+    /**
+     * 获取所有在线用户的信息
+     * @returns 用户消息列表
+     */
+    getAllOnlineUserInfo(): {
+        name: any;
+        uid: any;
+        color: any;
+        avatar: any;
+        roomId: any;
+        personalizedSignature: any;
+    }[] | null;
+    /**
+     * 切换房间
+     * @param {string} roomId 房间ID
+     */
+    changeRoom(roomId: string): void;
+    /**
+     * 获取用户蔷薇头像url
+     * @returns {string}
+     */
+    getUserProfilePictureUrl(): string | null;
+    /**
+     * 获取用户蔷薇输入颜色
+     * @returns 获取不到返回null
+     */
+    getUserInputColor(): string | null;
+    /**
+     * 创造一个新的私聊气泡，搭配静默发送私聊消息才能和“正常一样使用。
+     * @param {string} targetUid 目标UID
+     * @param {string} content 正文
+     * @param {string} messageId 消息气泡的ID
+     */
+    generatePrivateMessageBubble(targetUid: string, content: string, messageId: string): void;
+    /**
+     * 切换房间
+     * @param {string} roomId
+     */
+    switchRoom(roomId: string): void;
+};
 
+/**
+ * 未知消息类
+ * 用于表示无法识别的消息类型
+ */
 declare class Unkonw {
     /** 未知消息的原型 */
     message: string;
-    /** 消息类型 */
-    readonly messageClass = "unkonw";
 }
 
 /**
- * 生成一个视频卡片消息
- * @param typeId 视频平台从0开始
- * @param title 视频名字
- * @param singerName 制作者名字
- * @param coverUrl 封面图片链接
- * @param color 颜色
- * @param resolutionRatio 分辨率，64会被识别成1080p
+ * 撤回消息类
+ * 用于表示撤回操作的消息
  */
-declare function videoCard(typeId: string, title: string, singerName: string, coverUrl: string, color: string, resolutionRatio: string, time: string): string;
-
 declare class Withdrawn {
     /** 可选的，撤回私聊对象窗口的UID */
     privateUID: string;
@@ -1282,18 +1460,6 @@ declare class Withdrawn {
     messageUid: string;
     /** 数据唯一标识，上面两个组合在一起 */
     dataUid: string;
-    /** 消息类型 */
-    readonly messageClass = "withdrawn";
 }
 
-/**
- * 生成撤回的消息
- * @param randomNumber 指定消息的随机数如：491855401763
- * @param privateUID 私聊对象的UID
- * @returns
- */
-declare function withdrawn(randomNumber: string, privateUID?: string): string;
-
 export { }
-
-  

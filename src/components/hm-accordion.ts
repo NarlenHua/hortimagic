@@ -1,8 +1,10 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 /**
+ * 折叠面板
  * @example
- *   <hm-accordion>
+ * <hm-accordion title-content="标题内容"></hm-accordion>
+ * <hm-accordion>
     <span slot="header">我的折叠面板</span>
     <div>内容项 1</div>
     <div>内容项 2</div>
@@ -13,9 +15,12 @@ export class HmAccordion extends LitElement {
   @property({ type: String, attribute: 'max-height' })
   maxHeight = '500px';
 
+  /** 折叠项 */
   @property({ type: Array })
   items: any[] = [];
-
+  /** 标题内容 */
+  @property({ type: String, attribute: 'title-content' })
+  titleContent = '标题内容';
   /** 是否展开 */
   @property({ type: Boolean })
   expanded = false;
@@ -104,15 +109,11 @@ export class HmAccordion extends LitElement {
     return html`
       <div class="accordion-container" style="max-height: ${this.maxHeight}">
         <div class="accordion-header" @click=${this.togglePanel}>
-          <slot name="header">面板标题</slot>
+          <slot name="header">${this.titleContent}</slot>
           <div class="accordion-toggle">
             ${!this.expanded
-        ? html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                  </svg>`
-        : html`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                  </svg>`}
+        ? html`<hm-icon icon="arrow-down"></hm-icon>`
+        : html`<hm-icon icon="arrow-up"></hm-icon>`}
           </div>
         </div>
         
@@ -134,8 +135,8 @@ export class HmAccordion extends LitElement {
   }
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'hm-accordion': HmAccordion;
-  }
-}
+// declare global {
+//   interface HTMLElementTagNameMap {
+//     'hm-accordion': HmAccordion;
+//   }
+// }

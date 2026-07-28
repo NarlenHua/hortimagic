@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property, query } from 'lit/decorators.js'
+// import { logger } from '../core/log-tools';
 
 /** 
  * 滑动单元格组件
@@ -36,7 +37,7 @@ export class HmSwipeCell extends LitElement {
      */
     @property()
     rightButtonCallback = function () {
-        console.debug('点击了一下');
+        // logger.log('cell', '点击了一下');
     };
 
     @query('.slider') sliderElement!: HTMLElement;
@@ -207,14 +208,12 @@ export class HmSwipeCell extends LitElement {
     }
 
     onDragStart = (e: MouseEvent) => {
-        e.preventDefault();
         this.startDrag(e.clientX);
         this.sliderElement.style.cursor = 'grabbing';
         this.sliderElement.style.transition = 'none';
     }
 
     onTouchStart = (e: TouchEvent) => {
-        e.preventDefault();
         this.startDrag(e.touches[0].clientX);
         this.sliderElement.style.transition = 'none';
     }
@@ -232,12 +231,14 @@ export class HmSwipeCell extends LitElement {
     onDragMove = (e: MouseEvent) => {
         if (!this._isDragging) return;
         e.preventDefault();
+        e.stopPropagation(); // 仍然在移动过程中阻止事件冒泡，防止触发全局的滑动事件
         this.handleMove(e.clientX);
     }
 
     onTouchMove = (e: TouchEvent) => {
         if (!this._isDragging) return;
         e.preventDefault();
+        e.stopPropagation(); // 仍然在移动过程中阻止事件冒泡，防止触发全局的滑动事件
         this.handleMove(e.touches[0].clientX);
     }
 
@@ -361,9 +362,7 @@ export class HmSwipeCell extends LitElement {
     <slot name="left-actions"> </slot>
   </div>
   <div class="slider">
-      <slot name="content" class="content">
-        <hm-cell></hm-cell>
-      </slot>
+    <slot><hm-cell class="content"></hm-cell></slot>
   </div>
   <div class="actions right-actions">
     <slot name="right-actions">

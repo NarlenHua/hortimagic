@@ -1,10 +1,10 @@
 {
   "name": "hortimagic",
   "private": false,
-  "version": "1.0.4",
-  "changelog": "增加了存储库",
+  "version": "1.1.6",
+  "changelog": "优化了打包流程，改善了类型说明文件。",
   "author": "Narlen",
-  "description": "园艺魔法，花园插件",
+  "description": "花园插件",
   "keywords": [
     "iirose",
     "plugins",
@@ -24,13 +24,14 @@
   "dependencies": {
     "lit": "^3.3.1",
     "terser": "^5.44.0",
-    "tiny-emitter": "^2.1.0",
+    "valtio": "^2.2.0",
     "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.13.3",
+    "tsx": "^4.21.0",
     "typescript": "~5.9.3",
-    "vite": "^7.1.7"
+    "vite": "^8.0.3"
   },
   "main": "dist/Horticraft.life.js",
   "module": "dist/HortiCraft.es.js",
@@ -38,7 +39,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "src/components",
+    "scripts",
+    "src",
     "types"
   ]
 }

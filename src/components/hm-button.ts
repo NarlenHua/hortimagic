@@ -62,13 +62,13 @@ export class HmButton extends LitElement {
   @property({ type: Boolean })
   loading = false;
 
-
   static styles = css`
       :host {
         display: inline-block;
       }
       
       .button {
+        width: 100%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -122,7 +122,7 @@ export class HmButton extends LitElement {
   render() {
     const buttonStyle = `
           ${this.color ? `color: ${this.color};` : ''}
-          ${this.background ? `background-color: ${this.background};` : ''}
+          ${this.background ? `background: ${this.background};` : ''}
           ${this.width ? `width: ${this.width};` : ''}
           ${this.height ? `height: ${this.height};` : ''}
           ${this.fontSize ? `font-size: ${this.fontSize};` : '14px'}
@@ -155,7 +155,6 @@ export class HmButton extends LitElement {
       e.stopPropagation();
       return;
     }
-
     this.dispatchEvent(new CustomEvent('hm-button-click'));
   }
 }

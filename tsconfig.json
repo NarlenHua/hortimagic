@@ -10,7 +10,8 @@
       "DOM.Iterable"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     "skipLibCheck": true,
     /* Bundler mode */
@@ -25,7 +26,9 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    /** 自定义 */
+    // "erasableSyntaxOnly": false,
   },
   "include": [
     "src/**/*",

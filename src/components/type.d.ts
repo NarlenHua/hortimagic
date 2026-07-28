@@ -1,26 +1,30 @@
 import type { HmNotification } from "./hm-notification";
+import type { HmButton } from "./hm-button";
 import type { HmIcon } from "./hm-icon";
 import type { HmMenu } from "./hm-menu";
 import type { HmMovePanel } from "./hm-move-panel";
 import type { HmCell } from "./hm-cell";
+import type { HmSelect } from "./hm-select";
 import type { HmSwipeCell } from "./hm-swipe-cell";
-import type { HcSwitch, HmSwitch } from "./hm-switch";
+import type { HmSwitch } from "./hm-switch";
 import type { HmAccordion } from "./hm-accordion";
 import type { HmInput } from "./hm-input";
 import type { HmDialog } from "./hm-dialog";
 
 declare global {
     interface HTMLElementTagNameMap {
+        'hm-accordion': HmAccordion;
+        'hm-button': HmButton;
+        'hm-cell': HmCell;
+        'hm-dialog': HmDialog;
         "hm-icon": HmIcon;
+        'hm-input': HmInput;
         'hm-menu': HmMenu
         "hm-move-panel": HmMovePanel;
         "hm-notification": HmNotification;
-        'hm-cell': HmCell;
+        "hm-select": HmSelect,
         "hm-swipe-cell": HmSwipeCell;
         'hm-switch': HmSwitch;
-        'hm-accordion': HmAccordion;
-        'hm-input': HmInput;
-        'hm-dialog': HmDialog;
     }
 }
 

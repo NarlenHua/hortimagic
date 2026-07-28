@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+// import { logger } from '../core/log-tools';
+// const Tag = 'hm-switch';
 
 /**
  * 滑动开关组件
@@ -25,7 +27,7 @@ import { customElement, property } from 'lit/decorators.js';
  * <hm-switch openIcon="check" closeIcon="close"></hm-switch>
  * 
  * <!-- 监听状态变化 -->
- * <hm-switch @hm-switch-change="${(e) => console.log('开关状态:', e.detail.checked)}"></hm-switch>
+ * <hm-switch @hm-switch-change="${(e) => logger.log('hm-switch','开关状态:', e.detail.checked)}"></hm-switch>
  * ```
  */
 @customElement('hm-switch')
@@ -41,20 +43,20 @@ export class HmSwitch extends LitElement {
   @property({ type: String }) color = '#1890ff';
 
   /** 自定义开启状态内容 */
-  @property({ type: String }) openContent = '';
+  @property({ type: String, attribute: 'open-content' }) openContent = '';
 
   /** 自定义关闭状态内容 */
-  @property({ type: String }) closeContent = '';
+  @property({ type: String, attribute: 'close-content' }) closeContent = '';
   /** 自定义开启状态图标 */
-  @property({ type: String }) openIcon = '';
+  @property({ type: String, attribute: 'open-icon' }) openIcon = '';
 
   /** 自定义关闭状态图标 */
-  @property({ type: String }) closeIcon = '';
+  @property({ type: String, attribute: 'close-icon' }) closeIcon = '';
 
   change() {
     if (this.disabled || this.loading) return;
     this.checked = !this.checked;
-    // console.debug('changed!!');
+    // logger.debug(Tag, 'changed!!');
     // 触发自定义事件供外部监听
     this.dispatchEvent(new CustomEvent('hm-switch-change', {
       detail: { checked: this.checked },
@@ -64,11 +66,11 @@ export class HmSwitch extends LitElement {
   }
 
   render() {
+    // @touchstart="${this.change}"
     return html`
 <div
   class="switch ${this.disabled ? 'disabled' : ''} ${this.loading ? 'loading' : ''} ${this.checked ? 'checked' : ''}"
   @click="${this.change}"
-  @touchstart="${this.change}"
   style="--switch-color: ${this.color}"
 >
   <div class="switch-inner">

@@ -1,8 +1,12 @@
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { dialogHolder } from '../holders/dialog';
+import { holders } from '../core/holders';
 
-class HmDialogApp extends LitElement {
+/**
+ * 对话框模块
+ * @slot - 默认slot
+ */
+export class HmDialogApp extends LitElement {
     @property({ type: Boolean })
     dialogOpen = false;
 
@@ -42,19 +46,17 @@ class HmDialogApp extends LitElement {
         `;
     }
 }
-let dialogApp: HmDialogApp;
+/**
+ * 默认的对话框模块
+ */
+export const dialogApp: HmDialogApp = document.createElement('hm-dialog-app') as HmDialogApp;;
 /** 初始化对话框模块 */
-async function initDialogApp() {
+export async function initDialogApp() {
     customElements.define('hm-dialog-app', HmDialogApp);
-    dialogApp = document.createElement('hm-dialog-app') as HmDialogApp;
     dialogApp.dialogOpen = false;
     dialogApp.message = '请做出选择';
     dialogApp.closeCallback = null;
     dialogApp.cancelCallback = null;
     dialogApp.confirmCallback = null;
-    dialogHolder.append(dialogApp);
-}
-export {
-    dialogApp,
-    initDialogApp
+    holders.dialogHolder.append(dialogApp);
 }

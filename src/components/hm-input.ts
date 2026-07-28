@@ -9,18 +9,32 @@ import { customElement, property } from 'lit/decorators.js';
  * <hm-input label="密码" icon="password" placeholder="请输入密码"></hm-input>
  *
  * @example <caption>禁用状态</caption>
- * <hm-input label="禁用输入框" value="已禁用" enable="false"></hm-input>
+ * <hm-input label="禁用输入框" value="已禁用" disabled="true"></hm-input>
  *
  * @example <caption>只读状态</caption>
  * <hm-input label="只读输入框" value="只读内容" readonly="true"></hm-input>
+ *
+ * @example <caption>双向数据绑定</caption>
+ * <!-- 在父组件中监听hm-input-change事件 -->
+ * <hm-input label="用户名" value="${this.username}" @hm-input-change="${(e) => this.username = e.detail.value}"></hm-input>
+ * 
+ * <!-- 或者在JavaScript中监听事件 -->
+ * const inputElement = document.querySelector('hm-input');
+ * inputElement.addEventListener('hm-input-change', (e) => {
+ *   console.log('输入值改变:', e.detail.value);
+ *   // 更新你的数据模型
+ *   myDataModel.value = e.detail.value;
+ * });
  */
 @customElement('hm-input')
 export class HmInput extends LitElement {
     @property({ type: String })
     type = 'text';
+    
     /** 按钮图标 */
     @property({ type: String })
     icon = '';
+    
     /** 输入框标签 */
     @property({ type: String })
     label = '输入框';
@@ -29,14 +43,14 @@ export class HmInput extends LitElement {
     @property({ type: String })
     placeholder = '';
 
-    /** 是否启用 */
-    @property({ type: Boolean })
-    enable = true;
+    /** 是否禁用 */
+    @property({ type: Boolean, reflect: true })
+    disabled = false;
 
-    @property({ type: Boolean })
+    @property({ type: Boolean, reflect: true })
     readonly = false;
 
-    @property()
+    @property({ type: String, reflect: true })
     value = '';
 
     static styles = css`
@@ -85,6 +99,10 @@ export class HmInput extends LitElement {
     private _handleInput(e: Event) {
         const target = e.target as HTMLInputElement;
         this.value = target.value;
+        
+        // 同步到属性系统
+        this.requestUpdate('value', this.value);
+        
         this.dispatchEvent(new CustomEvent('hm-input-change', {
             detail: { value: this.value },
             bubbles: true,
@@ -99,8 +117,8 @@ export class HmInput extends LitElement {
   ${this.icon ? html`<hm-icon icon="${this.icon}" class="icon"></hm-icon>` : ''}
   <input 
     type="${this.type}"
-    value="${this.value}"
-    ?disabled="${!this.enable}"
+    .value="${this.value}"
+    ?disabled="${this.disabled}"
     ?readonly="${this.readonly}"
     placeholder="${this.placeholder}"
     style="padding-left: ${this.icon ? '24px' : '8px'};"
